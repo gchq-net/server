@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="govuk-template govuk-html-class">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %} | GCHQ.NET</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <link rel="apple-touch-icon" sizes="180x180" href="/static/img/apple-touch-icon.png?v=2024">
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png?v=2024">
+        <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png?v=2024">
+        <link rel="manifest" href="/static/img/site.webmanifest?v=2024">
+        <link rel="mask-icon" href="/static/img/safari-pinned-tab.svg?v=2024" color="#1d70b8">
+        <link rel="shortcut icon" href="/static/img/favicon.ico?v=2024">
+        <meta name="msapplication-TileColor" content="#2b5797">
+        <meta name="msapplication-config" content="/static/img/browserconfig.xml?v=2024">
+        <meta name="theme-color" content="#ffffff">
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <!-- <meta property="og:image" content="YOUR-DOMAIN/images/govuk-opengraph-image.png"> -->
+    </head>
+
+    <body class="govuk-template__body" data-test="My value" data-other="report:details">
+        <script>
+            document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
+        </script>
+        {% block body %}{% endblock %}
+        <script src="{% static 'js/main.js' %}"></script>
+    </body>
+
+</html>

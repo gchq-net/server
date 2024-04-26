@@ -1,0 +1,16 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+  <!-- {-- % include "components/govuk/cookie_banner.html" % --} -->
+  <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+  {% include "components/govuk/header.html" %}
+  <div class="govuk-width-container">
+    {% include "components/govuk/phase-banner.html" %}
+    <!-- <a href="#" class="govuk-back-link">Back</a> -->
+    <main class="govuk-main-wrapper govuk-main-class" id="main-content">
+      <h1 class="govuk-heading-xl">{% block title %}{% endblock %}</h1>
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  {% include "components/govuk/footer.html" %}
+{% endblock %}
