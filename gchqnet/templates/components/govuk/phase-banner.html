@@ -3,8 +3,11 @@
         <strong class="govuk-tag govuk-phase-banner__content__tag">
             Beta
         </strong>
-        <span class="govuk-phase-banner__text">
-            This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.
+        <span class="govuk-phase-banner__text gchqnet-phase-banner__text">
+            <span class="gchqnet-phase-banner__service-info">This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.</span>
+            {% if user.is_authenticated %}
+                <span class="gchqnet-phase-banner__login-status">Logged in as {{ user.display_name }}</span>
+            {% endif %}
         </span>
     </p>
 </div>

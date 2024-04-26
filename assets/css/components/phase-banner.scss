@@ -1,0 +1,15 @@
+.gchqnet-phase-banner {
+    &__text {
+        width: 100%;
+    }
+
+    &__login-status {
+        float: right;
+    }
+
+    &__service-info {
+        @include govuk-media-query(mobile, desktop) {
+            display: none;
+        }
+    }
+}
