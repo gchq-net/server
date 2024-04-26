@@ -1,0 +1,11 @@
+.gchqnet-header {
+    &__logo {
+        width: 36px;
+        vertical-align: middle;
+    }
+
+    &__logotext {
+        font-weight: $govuk-font-weight-bold;
+        vertical-align: middle;
+    }
+}

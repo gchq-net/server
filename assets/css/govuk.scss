@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+$govuk-font-family: 'Inter', Arial, sans-serif;
+$govuk-font-weight-regular: 400 !default;
+$govuk-font-weight-bold: 600 !default;
+
+@function do_not_load_images($n) {
+    @return '';
+  }
+
+$govuk-image-url-function: 'do_not_load_images';
+
+@import "../../node_modules/govuk-frontend/dist/govuk/all";
