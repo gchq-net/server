@@ -38,10 +38,10 @@
           </li>
           {% if user.is_authenticated %}
             <li class="govuk-header__navigation-item">
-              <a class="govuk-header__link" href="#">
-                Hi {{ user.display_name }}!
-              </a>
-              <a class="govuk-header__link" href="#">
+              <form id="logoutForm" method="post" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+              </form>
+              <a class="govuk-header__link" href="#logout" onclick="document.getElementById('logoutForm').submit(); return false;">
                 Logout
               </a>
             </li>
