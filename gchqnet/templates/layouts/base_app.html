@@ -9,6 +9,7 @@
     <!-- <a href="#" class="govuk-back-link">Back</a> -->
     <main class="govuk-main-wrapper govuk-main-class" id="main-content">
       <h1 class="govuk-heading-xl">{% block title %}{% endblock %}</h1>
+      {% include "components/messages.html" %}
       {% block content %}{% endblock %}
     </main>
   </div>
