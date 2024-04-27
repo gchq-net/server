@@ -36,13 +36,10 @@
               About
             </a>
           </li>
-          {% if user.is_authenticated %}
+          {% if user.is_superuser %}
             <li class="govuk-header__navigation-item">
-              <form id="logoutForm" method="post" action="{% url 'accounts:logout' %}">
-                {% csrf_token %}
-              </form>
-              <a class="govuk-header__link" href="#logout" onclick="document.getElementById('logoutForm').submit(); return false;">
-                Logout
+              <a class="govuk-header__link" href="{% url 'admin:index' %}">
+                Admin
               </a>
             </li>
           {% endif %}
