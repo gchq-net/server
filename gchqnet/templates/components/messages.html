@@ -1,7 +1,7 @@
 {% if messages %}
     <ul class="messages">
         {% for message in messages %}
-            {% include "components/govuk/notification-banner.html" with title="Info" variant=message.tags heading=message %}
+            {% include "components/govuk/notification-banner.html" with title="Info" variant=message.level_tag heading=message %}
         {% endfor %}
     </ul>
 {% endif %}
