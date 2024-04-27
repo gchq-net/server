@@ -16,6 +16,8 @@ ALLOWED_HOSTS: list[str] = []
 
 INSTALLED_APPS = [
     "gchqnet.accounts",
+    "crispy_forms",
+    "crispy_forms_gds",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -114,3 +116,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "accounts.User"
 LOGOUT_REDIRECT_URL = "/"
+
+# Crispy Forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["gds"]
+CRISPY_TEMPLATE_PACK = "gds"
