@@ -90,9 +90,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-        # if self.is_superuser and not self.email:
-        #     raise ValidationError("Superusers must provide an email address")
-
     def get_full_name(self) -> str:
         return self.display_name
 
