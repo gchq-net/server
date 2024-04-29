@@ -21,6 +21,7 @@ djhtml = "^3.0.6"
 mypy = "^1.7"
 django-coverage-plugin = "^3.1.0"
 django-stubs = {version = "^4.2.7", extras = ["compatible-mypy"]}
+factory-boy = "^3.3.0"
 
 [tool.ruff]
 target-version = "py311"
@@ -73,7 +74,7 @@ disallow_untyped_decorators = true
 check_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = ["crispy_forms.*", "crispy_forms_gds.*"]
+module = ["crispy_forms.*", "crispy_forms_gds.*", "factory.*"]
 ignore_missing_imports = true
 
 
