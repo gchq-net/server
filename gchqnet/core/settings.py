@@ -17,6 +17,7 @@ ALLOWED_HOSTS: list[str] = []
 INSTALLED_APPS = [
     "gchqnet.accounts",
     "gchqnet.hexpansion",
+    "gchqnet.quest",
     "crispy_forms",
     "crispy_forms_gds",
     "django.contrib.admin",
