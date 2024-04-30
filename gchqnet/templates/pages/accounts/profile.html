@@ -1,0 +1,9 @@
+{% extends "layouts/base_app.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">You can update your profile information below:</p>
+  {% crispy form %}
+{% endblock %}

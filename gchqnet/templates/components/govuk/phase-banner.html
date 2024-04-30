@@ -12,7 +12,7 @@
                 <span class="gchqnet-phase-banner__login-status">
                     <span>Hi, <strong>{{ user.display_name }}</strong></span>
                     <span>|</span>
-                    <a class="govuk-link" href="#">My Profile</a>
+                    <a class="govuk-link" href="{% url 'accounts:profile' %}">My Profile</a>
                     <span>|</span>
                     <a class="govuk-link" href="#logout" onclick="document.getElementById('logoutForm').submit(); return false;">
                         Logout

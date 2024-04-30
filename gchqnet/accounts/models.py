@@ -7,6 +7,7 @@ from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
 from django.db import models
+from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -53,7 +54,14 @@ class User(AbstractBaseUser, PermissionsMixin):
             "unique": _("A user with that username already exists."),
         },
     )
-    display_name = models.CharField(_("display name"), max_length=30, unique=True)
+    display_name = models.CharField(
+        _("display name"),
+        max_length=30,
+        unique=True,
+        error_messages={
+            "unique": _("Another player already has that display name"),
+        },
+    )
 
     email = models.EmailField(_("email address"), blank=True)
     is_active = models.BooleanField(
@@ -79,7 +87,12 @@ class User(AbstractBaseUser, PermissionsMixin):
                 check=~models.Q(is_superuser=True, email=""),
                 name="superuser_must_have_email",
                 violation_error_message="Any user with superuser permissions must have an email address",
-            )
+            ),
+            models.UniqueConstraint(
+                Lower("display_name"),
+                name="unique_display_name",
+                violation_error_message="Another player already has that display name",
+            ),
         ]
 
     @property
