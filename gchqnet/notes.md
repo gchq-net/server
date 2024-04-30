@@ -1,0 +1,11 @@
+- Users (players)
+- Badges
+- Hexpansions
+    - installed at a location by a user
+- Locations / Geolocations
+    - have an integer value
+- RawCaptureEvent
+- CaptureEvent
+
+- Achievements
+- Tiers / User Ranks

@@ -20,5 +20,8 @@ class Hexpansion(models.Model):
     created_by = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="+")
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ("human_identifier",)
+
     def __str__(self) -> str:
         return f"Hexpansion {self.human_identifier}"

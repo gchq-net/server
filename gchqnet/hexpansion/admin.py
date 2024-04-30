@@ -6,11 +6,19 @@ from .models import Hexpansion
 
 class HexpansionAdmin(admin.ModelAdmin):
     list_display = ("human_identifier", "eeprom_serial_number", "serial_number")
-    list_filter = ("hardware_revision",)
-    readonly_fields = ("id", "eeprom_serial_number", "serial_number", "created_by", "created_at", "updated_at")
+    list_filter = ("hardware_revision", ("installation", admin.EmptyFieldListFilter))
+    readonly_fields = (
+        "id",
+        "installation",
+        "eeprom_serial_number",
+        "serial_number",
+        "created_by",
+        "created_at",
+        "updated_at",
+    )
     search_fields = ("human_identifier", "eeprom_serial_number", "serial_number")
     fieldsets = (
-        (None, {"fields": ("human_identifier",)}),
+        (None, {"fields": ("human_identifier", "installation")}),
         (
             ("Hardware Info"),
             {
@@ -21,8 +29,12 @@ class HexpansionAdmin(admin.ModelAdmin):
                 ),
             },
         ),
-        ("Database Info", {"fields": ("id", "created_at", "created_by", "updated_at")}),
+        ("Database Info", {"classes": ["collapse"], "fields": ("id", "created_at", "created_by", "updated_at")}),
     )
+
+    # @admin.display(description="Installation")
+    # def installation_info(self, obj: Hexpansion) -> bool:
+    #     return obj.installation
 
     def has_add_permission(self, request: HttpRequest, obj: Hexpansion | None = None) -> bool:
         """Disable manual creation of Hexpansions."""
