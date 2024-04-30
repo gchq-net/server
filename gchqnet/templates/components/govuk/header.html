@@ -36,13 +36,10 @@
               About
             </a>
           </li>
-          {% if user.is_authenticated %}
+          {% if user.is_superuser %}
             <li class="govuk-header__navigation-item">
-              <a class="govuk-header__link" href="#">
-                Hi {{ user.display_name }}!
-              </a>
-              <a class="govuk-header__link" href="#">
-                Logout
+              <a class="govuk-header__link" href="{% url 'admin:index' %}">
+                Admin
               </a>
             </li>
           {% endif %}
