@@ -18,7 +18,7 @@ class LoginPageMixin(ContextMixin, View):
         if next_q := self.request.GET.get("next"):
             query_string = f"?next={next_q}"
         else:
-            query_string = None
+            query_string = ""
         return super().get_context_data(
             query_string=query_string,
             **kwargs,
