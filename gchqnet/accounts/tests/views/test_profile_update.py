@@ -20,7 +20,7 @@ class TestProfileUpdateView:
 
     def test_unauthenticated(self, client: Client) -> None:
         resp = client.get(self.url)
-        assertRedirects(resp, "/accounts/login/?next=/accounts/profile", 302, fetch_redirect_response=False)
+        assertRedirects(resp, "/accounts/login/?next=/accounts/profile/", 302, fetch_redirect_response=False)
 
     def test_get(self, client: Client, user: User) -> None:
         # Arrange
