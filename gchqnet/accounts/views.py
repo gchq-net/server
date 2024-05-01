@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, UpdateView
 
-from gchqnet.accounts.mixins import PublicUsersOnlyMixin
+from gchqnet.accounts.mixins import LoginPageMixin
 
 from .forms import CredentialsLoginForm, ProfileUpdateForm
 from .models import User
@@ -35,14 +35,14 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class LoginLandingView(PublicUsersOnlyMixin, TemplateView):
+class LoginLandingView(LoginPageMixin, TemplateView):
     template_name = "pages/accounts/login_landing.html"
 
 
-class CredentialsLoginView(PublicUsersOnlyMixin, DjangoLoginView):
+class CredentialsLoginView(LoginPageMixin, DjangoLoginView):
     template_name = "pages/accounts/login_credentials.html"
     form_class = CredentialsLoginForm
 
 
-class BadgeLoginView(PublicUsersOnlyMixin, TemplateView):
+class BadgeLoginView(LoginPageMixin, TemplateView):
     template_name = "pages/accounts/login_badge.html"
