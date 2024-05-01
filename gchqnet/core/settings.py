@@ -38,6 +38,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+if DEBUG:
+    INSTALLED_APPS.insert(0, "debug_toolbar")
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+
+    INTERNAL_IPS = [
+        "127.0.0.1",
+        "::1",
+    ]
+
 ROOT_URLCONF = "gchqnet.core.urls"
 
 TEMPLATES = [
