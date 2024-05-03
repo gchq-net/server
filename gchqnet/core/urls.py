@@ -11,9 +11,8 @@ urlpatterns = [
     path("accounts/", include("gchqnet.accounts.urls", namespace="accounts")),
     path("api/", include(api_urls)),
     path("", lambda r: render(r, "pages/home.html"), name="home"),
-
-    path('api/openapi.json', SpectacularJSONAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='api-docs'),
+    path("api/openapi.json", SpectacularJSONAPIView.as_view(), name="schema"),
+    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="api-docs"),
 ]
 
 if settings.DEBUG:

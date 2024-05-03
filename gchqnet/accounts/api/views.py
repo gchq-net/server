@@ -8,27 +8,29 @@ from .serializers import UserProfileSerializer
 
 
 @extend_schema_view(
-    get=extend_schema(summary='Get current user', responses=UserProfileSerializer),
-    patch=extend_schema(summary='Partially update current user', request=UserProfileSerializer, responses=UserProfileSerializer),
-    put=extend_schema(summary='Update current user', request=UserProfileSerializer, responses=UserProfileSerializer),
+    get=extend_schema(summary="Get current user", responses=UserProfileSerializer),
+    patch=extend_schema(
+        summary="Partially update current user", request=UserProfileSerializer, responses=UserProfileSerializer
+    ),
+    put=extend_schema(summary="Update current user", request=UserProfileSerializer, responses=UserProfileSerializer),
 )
-@api_view(['GET', 'PUT', 'PATCH'])
+@api_view(["GET", "PUT", "PATCH"])
 @permission_classes([IsAuthenticated])
 def profile(request: Request) -> Response:
-    if request.method in ['PUT', 'PATCH']:
-        partial = request.method == 'PATCH'
+    if request.method in ["PUT", "PATCH"]:
+        partial = request.method == "PATCH"
         serializer = UserProfileSerializer(
             instance=request.user,
             data=request.data,
             partial=partial,
-            context={'request': request},
+            context={"request": request},
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
     else:
         serializer = UserProfileSerializer(
             instance=request.user,
-            context={'request': request},
+            context={"request": request},
         )
 
     return Response(serializer.data)

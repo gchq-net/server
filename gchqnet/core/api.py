@@ -15,6 +15,6 @@ def get_api_version(request: Request) -> Response:
 
 
 urlpatterns = [
-    path('version/', get_api_version, name='api_get_version'),
-    path('users/me/', profile, name='api_users_me'),
+    path("version/", get_api_version, name="api_get_version"),
+    path("users/me/", profile, name="api_users_me"),
 ]
