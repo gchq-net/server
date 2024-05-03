@@ -20,6 +20,7 @@ pytest-django = "^4.8.0"
 djhtml = "^3.0.6"
 mypy = "^1.7"
 django-coverage-plugin = "^3.1.0"
+django-debug-toolbar = "^4.3.0"
 django-stubs = {version = "^4.2.7", extras = ["compatible-mypy"]}
 factory-boy = "^3.3.0"
 

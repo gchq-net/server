@@ -4,12 +4,15 @@ from typing import TYPE_CHECKING
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView
+from django.views.generic import TemplateView, UpdateView
 
-from .forms import ProfileUpdateForm
+from gchqnet.accounts.mixins import LoginPageMixin
+
+from .forms import CredentialsLoginForm, ProfileUpdateForm
 from .models import User
 
 if TYPE_CHECKING:
@@ -30,3 +33,16 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         messages.success(self.request, "Updated profile successfully.")
         return super().form_valid(form)
+
+
+class LoginLandingView(LoginPageMixin, TemplateView):
+    template_name = "pages/accounts/login_landing.html"
+
+
+class CredentialsLoginView(LoginPageMixin, DjangoLoginView):
+    template_name = "pages/accounts/login_credentials.html"
+    form_class = CredentialsLoginForm
+
+
+class BadgeLoginView(LoginPageMixin, TemplateView):
+    template_name = "pages/accounts/login_badge.html"

@@ -2,13 +2,13 @@
 <header class="govuk-header" data-module="govuk-header">
   <div class="govuk-header__container govuk-width-container">
     <div class="govuk-header__logo">
-      <a href="#" class="govuk-header__link govuk-header__link--homepage">
+      <a href="{% url 'home' %}" class="govuk-header__link govuk-header__link--homepage">
         <img src="{% static 'img/logo-white-notext.png' %}" class="gchqnet-header__logo" />
         <span class="gchqnet-header__logotext">GCHQ.NET</span>
       </a>
     </div>
     <div class="govuk-header__content">
-      <a href="#" class="govuk-header__link govuk-header__service-name">
+      <a href="{% url 'home' %}" class="govuk-header__link govuk-header__service-name">
         Great Camp Hexpansion Quest
       </a>
       <nav aria-label="Menu" class="govuk-header__navigation">
@@ -17,7 +17,7 @@
         </button>
         <ul id="navigation" class="govuk-header__navigation-list">
           <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
-            <a class="govuk-header__link" href="#">
+            <a class="govuk-header__link" href="{% url 'home' %}">
               Live Scores
             </a>
           </li>

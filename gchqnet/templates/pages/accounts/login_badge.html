@@ -1,0 +1,17 @@
+{% extends "layouts/base_app.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login to GCHQ.NET{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Login using your badge</h1>
+
+      {% include 'components/govuk/notification-banner.html' with heading='This feature is not implemented yet.' %}
+    </div>
+  </div>
+
+  <h2 class="govuk-heading-m">Other ways to login</h2>
+  <p class="govuk-body">If you have set a password on your account, you can <a href="{% url 'accounts:login_credentials' %}{{ query_string}}">login using your password</a>.</p>
+{% endblock %}
