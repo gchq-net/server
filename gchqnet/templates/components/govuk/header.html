@@ -16,7 +16,7 @@
           Menu
         </button>
         <ul id="navigation" class="govuk-header__navigation-list">
-          <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
+          <li class="govuk-header__navigation-item {% if request.resolver_match.view_name == 'home' %}govuk-header__navigation-item--active{% endif %}">
             <a class="govuk-header__link" href="{% url 'home' %}">
               Live Scores
             </a>
@@ -26,8 +26,8 @@
               How to Play
             </a>
           </li>
-          <li class="govuk-header__navigation-item">
-            <a class="govuk-header__link" href="#">
+          <li class="govuk-header__navigation-item {% if request.resolver_match.view_name == 'quest:dashboard' %}govuk-header__navigation-item--active{% endif %}">
+            <a class="govuk-header__link" href="{% url 'quest:dashboard' %}">
               My Finds
             </a>
           </li>

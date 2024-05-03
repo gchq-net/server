@@ -1,0 +1,18 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}My Finds{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">You have found nothing lol</p>
+  <div class="gchqnet-hexgrid__outer">
+    <div class="gchqnet-hexgrid__inner">
+      {% for tile in tiles %}
+        <div class="gchqnet-hexgrid__hex {% if tile.found %}gchqnet-hexgrid__hex--found{% endif %}">
+            <p class="gchqnet-hexgrid__hex_content">
+                #{{tile.id}}<br/>{% if tile.found %}Found{% else %}Unfound{% endif %}
+            </p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
