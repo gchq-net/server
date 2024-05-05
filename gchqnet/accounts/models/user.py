@@ -1,22 +1,25 @@
 from __future__ import annotations
 
-import uuid
 from typing import Any, TypeVar
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
-from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django_stubs_ext import WithAnnotations
 
 _T = TypeVar("_T", bound=models.Model)
 
 
-class UserManager(BaseUserManager[_T]):
+class UserQuerySet(models.QuerySet[WithAnnotations["User"]]):
+    pass
+
+
+class _UserManager(BaseUserManager[_T]):
     """
     Custom UserManager to handle is_staff not existing.
 
@@ -41,6 +44,10 @@ class UserManager(BaseUserManager[_T]):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(username, email, password, **extra_fields)  # type: ignore[attr-defined]
+
+
+class UserManager(_UserManager.from_queryset(UserQuerySet)):  # type: ignore[misc]
+    pass
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -115,28 +122,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject: str, message: str, from_email: str | None = None, **kwargs: Any) -> None:
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
-
-
-class Badge(models.Model):
-    id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
-    mac_address = models.CharField(
-        "MAC Address",
-        max_length=17,
-        unique=True,
-        help_text="IEEE 802 format, e.g 12-34-56-78-90-AB-CD",
-        validators=[
-            RegexValidator(
-                "^([0-9A-F]{2}[-]){5}([0-9A-F]{2})$", "The MAC address does not appear to be in the correct format."
-            )
-        ],
-    )
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="badges")
-    is_enabled = models.BooleanField(
-        default=True, help_text="Is the badge enabled? i.e can it be used to capture locations?"
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self) -> str:
-        return self.mac_address
