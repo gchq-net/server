@@ -16,7 +16,19 @@ _T = TypeVar("_T", bound=models.Model)
 
 
 class UserQuerySet(models.QuerySet[WithAnnotations["User"]]):
-    pass
+    def with_current_score(self) -> UserQuerySet:
+        return self.annotate(
+            current_score=models.functions.Coalesce(
+                models.Sum("capture_events__location__difficulty"),
+                models.Value(0),
+            ),
+        )
+
+    def with_capture_count(self) -> UserQuerySet:
+        return self.annotate(capture_count=models.Count("capture_events"))
+
+    def with_scoreboard_fields(self) -> UserQuerySet:
+        return self.with_capture_count().with_current_score()
 
 
 class _UserManager(BaseUserManager[_T]):
