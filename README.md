@@ -20,7 +20,11 @@ Firstly, install the Python dependencies using poetry: `poetry install`.
 
 You can enter the virtualenv by running `poetry shell` or run commands using `poetry run <cmd>`.
 
-For development, we are using sqlite at the moment. You can create the sqlite database by running `./manage.py migrate`
+You need a PostgreSQL database. This project **only** supports PostgreSQL.
+
+You can run a copy of PostgreSQL for development by running `docker-compose up -d`
+
+Once the database is connected, setup the tables by running: `./manage.py migrate`
 
 A superuser can be created by running `./manage.py createsuperuser`
 

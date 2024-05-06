@@ -76,8 +76,13 @@ WSGI_APPLICATION = "gchqnet.core.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",  # Database name
+        "USER": "postgres",  # PostgreSQL username
+        "PASSWORD": "postgres",  # PostgreSQL password
+        "HOST": "localhost",  # Database server
+        "PORT": "",  # Database port (leave blank for default)
+        "CONN_MAX_AGE": 300,  # Max database connection age
     }
 }
 
