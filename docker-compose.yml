@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+      # dev or production
+      target: dev
+    volumes:
+      - ./:/app/
+    ports:
+      - 8000:8000
+
+  compiler:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    volumes:
+      - ./:/app/
