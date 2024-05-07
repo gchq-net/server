@@ -10,7 +10,7 @@ class LoginPageMixin(ContextMixin, View):
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if request.user.is_authenticated:
             messages.info(request, "You are already logged in.")
-            return redirect("home")
+            return redirect("quest:home")
 
         return super().dispatch(request, *args, **kwargs)  # type: ignore[return-value]
 
