@@ -140,3 +140,8 @@ class Badge(models.Model):
 
     def __str__(self) -> str:
         return self.mac_address
+
+    @property
+    def model_name(self) -> str:
+        """Hardcode for now, we assume all badges are Tildagon."""
+        return "EMF Tildagon (2024)"
