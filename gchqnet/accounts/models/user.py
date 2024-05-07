@@ -7,7 +7,7 @@ from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
 from django.db import models
-from django.db.models.functions import Lower
+from django.db.models.functions import DenseRank, Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_stubs_ext import WithAnnotations
@@ -28,7 +28,8 @@ class UserQuerySet(models.QuerySet[WithAnnotations["User"]]):
         return self.annotate(capture_count=models.Count("capture_events"))
 
     def with_scoreboard_fields(self) -> UserQuerySet:
-        return self.with_capture_count().with_current_score()
+        qs = self.with_capture_count().with_current_score()
+        return qs.annotate(rank=models.Window(expression=DenseRank(), order_by=models.F("current_score").desc()))
 
 
 class _UserManager(BaseUserManager[_T]):
