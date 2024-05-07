@@ -59,7 +59,7 @@ class BadgeLoginLandingView(LoginPageMixin, TemplateView):
 class BadgeLoginUsernamePromptView(LoginPageMixin, FormView):
     template_name = "pages/accounts/login_badge_username.html"
     form_class = BadgeLoginUsernameForm
-    success_url = reverse_lazy("accounts:login_badge_challenge")  # TODO: NEXT URL
+    success_url = reverse_lazy("accounts:login_badge_challenge")
 
     def form_valid(self, form: BadgeLoginUsernameForm) -> HttpResponse:
         self.request.session["badge_login__user_id"] = form.cleaned_data["account_name"].id
