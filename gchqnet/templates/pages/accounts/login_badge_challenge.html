@@ -1,0 +1,19 @@
+{% extends "layouts/base_app.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login to GCHQ.NET using your badge{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Please enter your security code</h1>
+      <p class="govuk-body">We need to be able to verify you own your badge to be able to log you in.</p>
+      <p class="govuk-body">Your security code is shown on the online access page of the GCHQ.NET badge app.</p>
+      <p class="govuk-body">Security codes will change every 30 seconds, so please make sure you enter it immediately.</p>
+      {% crispy form %}
+    </div>
+  </div>
+
+  <h2 class="govuk-heading-m">Other ways to login</h2>
+  <p class="govuk-body">If you have set a password on your account, you can <a href="{% url 'accounts:login_credentials' %}{{ query_string }}">login using your password</a>.</p>
+{% endblock %}
