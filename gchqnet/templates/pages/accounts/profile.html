@@ -4,6 +4,41 @@
 {% block title %}My Profile{% endblock %}
 
 {% block content %}
-  <p class="govuk-body">You can update your profile information below:</p>
-  {% crispy form %}
+  <div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">
+      My Profile
+    </h2>
+    <ul class="govuk-tabs__list">
+      <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+        <a class="govuk-tabs__tab" href="#details">
+          My details
+        </a>
+      </li>
+      <li class="govuk-tabs__list-item">
+        <a class="govuk-tabs__tab" href="#badges">
+          My badges
+        </a>
+      </li>
+    </ul>
+    <div class="govuk-tabs__panel" id="details">
+      <h2 class="govuk-heading-l">My details</h2>
+      <p class="govuk-body">You can update your profile details below:</p>
+      {% crispy form %}
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="badges">
+      <h2 class="govuk-heading-l">My badges</h2>
+      <p class="govuk-body">You have {{ badges|length }} badge{{ badges|pluralize }} connected to your account.</p>
+      {% include "components/accounts/badge-list.html" with badges=badges %}
+      <details class="govuk-details">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">
+            How to connect my badge?
+          </span>
+        </summary>
+        <div class="govuk-details__text">
+          You will need to contact an administrator to connect a badge to an existing account. Please get in touch and we'll be happy to help you.
+        </div>
+      </details>
+    </div>
+  </div>
 {% endblock %}

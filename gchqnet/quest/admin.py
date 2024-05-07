@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.forms import BaseFormSet, ModelForm
 from django.http import HttpRequest
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 
-from .models import Coordinates, Location, LocationInstallation
+from .models import CaptureEvent, Coordinates, Location, LocationInstallation, RawCaptureEvent
 
 
 class CoordinatesAdmin(admin.StackedInline):
@@ -56,4 +58,74 @@ class LocationAdmin(admin.ModelAdmin):
         return False
 
 
+class ViewOnlyMixin:
+    def has_add_permission(self, request: HttpRequest) -> bool:
+        return False
+
+    def has_change_permission(self, request: HttpRequest, obj: RawCaptureEvent | None = None) -> bool:
+        return False
+
+    def has_delete_permission(self, request: HttpRequest, obj: RawCaptureEvent | None = None) -> bool:
+        return False
+
+
+class RawCaptureEventAdmin(ViewOnlyMixin, admin.ModelAdmin):
+    model = RawCaptureEvent
+
+    list_display = ("badge", "hexpansion", "created_at", "created_by")
+    fieldsets = (
+        (None, {"fields": ("badge", "hexpansion")}),
+        ("Capture Event", {"fields": ("capture_event",)}),
+        ("Database Info", {"classes": ["collapse"], "fields": ("id", "created_at", "created_by", "updated_at")}),
+    )
+
+    @admin.display(description="Associated Capture Event")
+    def capture_event(self, obj: RawCaptureEvent) -> str | None:
+        if event := CaptureEvent.objects.filter(raw_capture_event=obj).first():
+            url = reverse("admin:quest_captureevent_change", args=[event.id])
+            return mark_safe(f'<a href="{url}">{event}</a>')  # noqa: S308
+        return None
+
+
+class CaptureEventAdmin(ViewOnlyMixin, admin.ModelAdmin):
+    model = CaptureEvent
+
+    list_display = ("location", "created_by", "created_at")
+    fieldsets = (
+        (None, {"fields": ("location",)}),
+        (
+            "Raw Capture Event",
+            {
+                "fields": (
+                    "capturing_user",
+                    "badge",
+                    "hexpansion",
+                    "raw_capture_event",
+                )
+            },
+        ),
+        ("Database Info", {"classes": ["collapse"], "fields": ("id", "created_at", "created_by", "updated_at")}),
+    )
+
+    @admin.display(description="User")
+    def capturing_user(self, obj: CaptureEvent) -> str:
+        user = obj.raw_capture_event.badge.user
+        url = reverse("admin:accounts_user_change", args=[user.id])
+        return mark_safe(f'<a href="{url}">{user}</a>')  # noqa: S308
+
+    @admin.display(description="Badge")
+    def badge(self, obj: CaptureEvent) -> str:
+        badge = obj.raw_capture_event.badge
+        url = reverse("admin:accounts_badge_change", args=[badge.id])
+        return mark_safe(f'<a href="{url}">{badge}</a>')  # noqa: S308
+
+    @admin.display(description="Hexpansion")
+    def hexpansion(self, obj: CaptureEvent) -> str:
+        hexpansion = obj.raw_capture_event.hexpansion
+        url = reverse("admin:hexpansion_hexpansion_change", args=[hexpansion.id])
+        return mark_safe(f'<a href="{url}">{hexpansion}</a>')  # noqa: S308
+
+
 admin.site.register(Location, LocationAdmin)
+admin.site.register(RawCaptureEvent, RawCaptureEventAdmin)
+admin.site.register(CaptureEvent, CaptureEventAdmin)
