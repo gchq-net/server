@@ -16,5 +16,5 @@ class BadgeFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = "accounts.Badge"
 
-    mac_address = factory.Faker("hexify", text="^^:^^:^^:^^:^^:^^", upper=True)
+    mac_address = factory.Faker("hexify", text="^^-^^-^^-^^-^^-^^", upper=True)
     user = factory.SubFactory(UserFactory)
