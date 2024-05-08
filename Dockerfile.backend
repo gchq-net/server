@@ -1,0 +1,40 @@
+ARG PYTHON_VERSION=3.11-alpine
+FROM python:${PYTHON_VERSION} AS base
+
+WORKDIR /app
+
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    VIRTUAL_ENV=/.venv \
+    PATH="/.venv/bin:$PATH"
+
+FROM base as builder-production
+
+RUN pip install wheel poetry
+COPY poetry.lock pyproject.toml ./
+RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --without dev --no-root
+
+FROM builder-production as builder-dev
+
+RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --no-root
+FROM base as production
+COPY --from=builder-production /app/${VIRTUAL_ENV} ${VIRTUAL_ENV}
+COPY . .
+
+USER 1000:1000
+
+ENTRYPOINT ["./entrypoint"]
+
+FROM base as dev
+
+ENV DEBUG=True
+COPY --from=builder-dev /app/${VIRTUAL_ENV} ${VIRTUAL_ENV}
+COPY . .
+
+USER 1000:1000
+
+ENTRYPOINT ["./entrypoint"]
