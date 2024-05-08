@@ -7,6 +7,8 @@ SETTINGS_MODULE:=gchqnet.core.settings
 
 all: type test format lint
 
+fix: lint-fix format
+
 lint: 
 	$(CMD) ruff check $(PYMODULE)
 
