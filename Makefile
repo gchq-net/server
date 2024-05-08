@@ -30,7 +30,7 @@ format-check:
 	$(CMD) ruff format --check $(PYMODULE)
 
 type: 
-	$(CMD) mypy $(PYMODULE)
+	$(CMD) mypy --no-incremental $(PYMODULE)
 
 test: | $(PYMODULE)
 	DJANGO_SETTINGS_MODULE=$(SETTINGS_MODULE) $(CMD) pytest -vv --cov=$(PYMODULE) $(PYMODULE)
