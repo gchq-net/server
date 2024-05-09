@@ -1,0 +1,25 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}Leaderboard: {{ object.display_name }}{% endblock %}
+
+{% block content %}
+  <div class="govuk-tabs">
+    <ul class="govuk-tabs__list">
+      <li class="govuk-tabs__list-item {% if active_tab == 'scores' %}govuk-tabs__list-item--selected{% endif %}">
+        <a class="govuk-tabs__tab" href="{% url 'quest:leaderboard_detail' object.id %}">
+          Scores
+        </a>
+      </li>
+      {% if request.user == object.owner %}
+        <li class="govuk-tabs__list-item {% if active_tab == 'settings' %}govuk-tabs__list-item--selected{% endif %}">
+          <a class="govuk-tabs__tab" href="{% url 'quest:leaderboard_detail_settings' object.id %}">
+            Settings
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+    <div class="govuk-tabs__panel">
+      {% block panel_content %}{% endblock %}
+    </div>
+  </div>
+{% endblock %}

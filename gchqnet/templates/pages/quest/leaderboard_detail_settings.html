@@ -1,0 +1,35 @@
+{% extends "pages/quest/leaderboard_detail_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block panel_content %}
+  <h2 class="govuk-heading-l">Settings</h2>
+  <p class="govuk-body">You are the owner of this leaderboard.</p>
+
+  <h3 class="govuk-heading-m">Update details</h3>
+  {% crispy form %}
+
+  <h3 class="govuk-heading-m">Invite other players</h3>
+  {% if object.enable_invites %}
+    {% include "components/govuk/warning-text.html" with warning_text="Any player with this link can join your leaderboard. Share it carefully!" %}
+    <p class="govuk-body">You can invite other players to join this leaderboard by send them the link below.</p>
+
+    <div class="govuk-form-group">
+      <input class="govuk-input govuk-!-width-three-quarters" id="invite-link" name="invite-link" type="text" value="{{ invite_link }}">
+      <button class="govuk-button" id="copy-invite-link-button">
+        Copy to clipboard
+      </button>
+    </div>
+    <script>
+      var copyInviteButton = document.querySelector('#copy-invite-link-button');
+
+      copyInviteButton.addEventListener('click', function(event) {
+        var copyInviteInput = document.querySelector('#invite-link');
+        copyInviteInput.select();
+        copyInviteInput.setSelectionRange(0, 99999); // For mobile devices
+        navigator.clipboard.writeText(copyInviteInput.value);
+      });
+    </script>
+  {% else %}
+    <p class="govuk-body">Invites are currently disabled. Other players will not be able to join.</p>
+  {% endif %}
+{% endblock %}

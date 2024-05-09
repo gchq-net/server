@@ -1,0 +1,12 @@
+{% extends "pages/quest/leaderboard_detail_base.html" %}
+
+{% block panel_content %}
+  <h2 class="govuk-heading-l">Scores</h2>
+
+  {% include "components/quest/leaderboard-table.html" with players=page_obj %}
+  {% if page_obj %}
+    {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
+  {% else %}
+    <p class="govuk-body">There are no results. Perhaps check that you spelled your search correctly?</p>
+  {% endif %}
+{% endblock %}

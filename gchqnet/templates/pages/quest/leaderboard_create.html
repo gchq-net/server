@@ -1,0 +1,10 @@
+{% extends "layouts/base_app.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Leaderboard{% endblock %}
+
+{% block content %}
+  {% include "components/govuk/warning-text.html" with warning_text="We regret that we cannot prevent the solar lizards from monitoring private leaderboads. GCHQ.NET accepts no responsibility for loss of limbs." %}
+  <p class="govuk-body">A private leaderboard for you, your friends and enemies to compete directly.</p>
+  {% crispy form %}
+{% endblock %}

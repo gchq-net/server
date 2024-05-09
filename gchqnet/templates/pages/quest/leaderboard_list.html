@@ -1,0 +1,20 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}My Leaderboards{% endblock %}
+
+{% block action_buttons %}
+  <a class="govuk-button gchqnet-page-header-actions__action" data-module="govuk-button" href="{% url 'quest:leaderboard_create' %}">
+    Create Leaderboard
+  </a>
+{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">You are a member of {{ page_obj.paginator.count }} leaderboard{{ page_obj.paginator.count|pluralize }}.</p>
+
+  {% include "components/quest/leaderboard-list.html" with leaderboards=page_obj %}
+  {% if page_obj %}
+    {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
+  {% else %}
+    <p class="govuk-body">You aren't a member of any leaderboards. Why not <a href="{% url 'quest:leaderboard_create' %}">create one</a>?</p>
+  {% endif %}
+{% endblock %}
