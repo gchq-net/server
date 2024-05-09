@@ -29,3 +29,7 @@ class Badge(models.Model):
 
     def __str__(self) -> str:
         return self.mac_address
+
+    @property
+    def model_name(self) -> str:
+        return "EMF Tildagon (2024)"
