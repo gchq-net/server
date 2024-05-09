@@ -35,6 +35,7 @@
           {% endfor %}
         </tbody>
       </table>
+      {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" page_obj=finds %}
     </div>
   </div>
 {% endblock %}
