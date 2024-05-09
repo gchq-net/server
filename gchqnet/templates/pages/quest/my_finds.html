@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  <div style="float: right;" class="govuk-checkboxes" data-module="govuk-checkboxes">
+  <div class="govuk-checkboxes gchqnet-finds-table__checkbox" data-module="govuk-checkboxes">
     <div class="govuk-checkboxes__item">
       <input class="govuk-checkboxes__input" id="hidemissing" name="hidemissing" type="checkbox">
       <label class="govuk-label govuk-checkboxes__label" for="hidemissing">
@@ -39,7 +39,7 @@
               <td class="govuk-table__cell">{{ capture.raw_capture_event.created_at }}</td>
               <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
           {% else %}
-            <tr class="govuk-table__row quest-missing" bgcolor="#d3d3d3">
+            <tr class="govuk-table__row gchqnet-finds-table__row--missing">
               <th scope="row" class="govuk-table__header">???</th>
               <td class="govuk-table__cell">{{ location.difficulty }}</td>
               <td class="govuk-table__cell">{{ location.hint }}</td>
@@ -52,7 +52,7 @@
   </div>
   <script>
     document.querySelector("#hidemissing").addEventListener("change", function() {
-      var missing = document.querySelectorAll(".quest-missing");
+      var missing = document.querySelectorAll(".gchqnet-finds-table__row--missing");
       if (this.checked) {
         missing.forEach(function(element) {
           element.style.display = "none";
