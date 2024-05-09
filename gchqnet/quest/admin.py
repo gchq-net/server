@@ -48,7 +48,6 @@ class LocationAdmin(admin.ModelAdmin):
             instance.created_by = request.user
         return instance
 
-
     def save_formset(self, request: HttpRequest, form: ModelForm, formset: BaseFormSet, change: bool) -> None:  # noqa: FBT001
         instances = formset.save(commit=False)  # type: ignore[attr-defined]
         for obj in instances:
