@@ -1,0 +1,11 @@
+{% extends "layouts/base_app.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Invite: {{ leaderboard }}{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">You have been invited to the private leaderboard: "{{ leaderboard }}" by {{ inviter }}.</p>
+  {% include "components/govuk/warning-text.html" with warning_text="We regret that we cannot prevent the solar lizards from monitoring private leaderboads. GCHQ.NET accepts no responsibility for loss of limbs." %}
+  <p class="govuk-body">Private leaderboards enable you, your friends and enemies to compete directly.</p>
+  {% crispy form %}
+{% endblock %}
