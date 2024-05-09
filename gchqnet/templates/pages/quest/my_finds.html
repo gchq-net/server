@@ -53,15 +53,10 @@
   <script>
     document.querySelector("#hidemissing").addEventListener("change", function() {
       var missing = document.querySelectorAll(".gchqnet-finds-table__row--missing");
-      if (this.checked) {
-        missing.forEach(function(element) {
-          element.style.display = "none";
-        });
-      } else {
-        missing.forEach(function(element) {
-          element.style.display = "";
-        });
-      }
+      var state = this.checked ? "none" : "";
+      missing.forEach(function(element) {
+        element.style.display = state;
+      });
     });
   </script>
 {% endblock %}
