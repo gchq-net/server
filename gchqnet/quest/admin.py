@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from .models import CaptureEvent, Coordinates, Location, LocationInstallation, RawCaptureEvent
+from .models import CaptureEvent, Coordinates, Leaderboard, Location, LocationInstallation, RawCaptureEvent
 
 
 class CoordinatesAdmin(admin.StackedInline):
@@ -47,7 +47,6 @@ class LocationAdmin(admin.ModelAdmin):
         if created:
             instance.created_by = request.user
         return instance
-
 
     def save_formset(self, request: HttpRequest, form: ModelForm, formset: BaseFormSet, change: bool) -> None:  # noqa: FBT001
         instances = formset.save(commit=False)  # type: ignore[attr-defined]
@@ -129,6 +128,29 @@ class CaptureEventAdmin(ViewOnlyMixin, admin.ModelAdmin):
         return mark_safe(f'<a href="{url}">{hexpansion}</a>')  # noqa: S308
 
 
+class LeaderboardAdmin(admin.ModelAdmin):
+    filter_horizontal = ("members",)
+    list_display = ("display_name", "owner")
+    search_fields = ("display_name", "owner__display_name", "owner__username")
+    readonly_fields = ("id", "created_at", "created_by", "updated_at", "member_count")
+    fieldsets = (
+        (None, {"fields": ("display_name", "owner", "enable_invites", "member_count", "members")}),
+        ("Database Info", {"classes": ["collapse"], "fields": ("id", "created_at", "created_by", "updated_at")}),
+    )
+
+    @admin.display(description="Member Count")
+    def member_count(self, obj: Leaderboard) -> int:
+        return obj.members.count()
+
+    def save_form(self, request: HttpRequest, form: ModelForm, change: bool) -> Leaderboard:  # noqa: FBT001
+        created = form.instance.created_at is None
+        instance = super().save_form(request, form, change)
+        if created:
+            instance.created_by = request.user
+        return instance
+
+
 admin.site.register(Location, LocationAdmin)
 admin.site.register(RawCaptureEvent, RawCaptureEventAdmin)
 admin.site.register(CaptureEvent, CaptureEventAdmin)
+admin.site.register(Leaderboard, LeaderboardAdmin)
