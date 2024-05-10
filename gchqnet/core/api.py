@@ -5,6 +5,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from gchqnet.accounts.api.views import profile
+from gchqnet.quest.api.views import GlobalScoreboardAPIView
 
 
 @api_view(["GET"])
@@ -17,4 +18,5 @@ def get_api_version(request: Request) -> Response:
 urlpatterns = [
     path("version/", get_api_version, name="api_get_version"),
     path("users/me/", profile, name="api_users_me"),
+    path("quest/scoreboards/global/", GlobalScoreboardAPIView.as_view(), name="api_quest_global_scoreboard"),
 ]

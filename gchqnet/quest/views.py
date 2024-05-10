@@ -32,7 +32,7 @@ class GlobalScoreboardView(ListView):
         # Only display users who are not administrators.
         qs = User.objects.filter(is_superuser=False)
         qs = qs.only("id", "display_name")
-        qs = qs.with_scoreboard_fields().order_by("rank", "display_name")
+        qs = qs.with_scoreboard_fields().order_by("rank", "capture_count", "display_name")
 
         if search_query := self.get_search_query():
             # Construct a CTE expression manually as the Django ORM does not support them
