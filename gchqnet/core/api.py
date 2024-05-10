@@ -1,22 +1,18 @@
 from django.urls import path
-from rest_framework import permissions
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.request import Request
-from rest_framework.response import Response
+from drf_spectacular.views import SpectacularJSONAPIView, SpectacularSwaggerView
+from rest_framework import routers
 
 from gchqnet.accounts.api.views import profile
-from gchqnet.quest.api.views import GlobalScoreboardAPIView
+from gchqnet.quest.api.views import GlobalScoreboardAPIView, PrivateScoreboardAPIViewset
 
+router = routers.DefaultRouter()
+router.register("quest/scoreboards", PrivateScoreboardAPIViewset, basename="quest_private_scoreboards")
 
-@api_view(["GET"])
-@permission_classes([permissions.AllowAny])
-def get_api_version(request: Request) -> Response:
-    """Get the API version."""
-    return Response({"version": "1.0.0"})
-
+app_name = "api"
 
 urlpatterns = [
-    path("version/", get_api_version, name="api_get_version"),
-    path("users/me/", profile, name="api_users_me"),
-    path("quest/scoreboards/global/", GlobalScoreboardAPIView.as_view(), name="api_quest_global_scoreboard"),
-]
+    path("users/me/", profile, name="users_me"),
+    path("quest/scoreboards/global/", GlobalScoreboardAPIView.as_view(), name="quest_global_scoreboard"),
+    path("openapi.json", SpectacularJSONAPIView.as_view(), name="schema"),
+    path("docs/", SpectacularSwaggerView.as_view(url_name="api:schema"), name="docs"),
+] + router.urls

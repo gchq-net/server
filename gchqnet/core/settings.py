@@ -156,5 +156,4 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Great Camp Hexpansion Quest API. You may need to log in to view all endpoints.",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SERVE_PUBLIC": False,
 }

@@ -1,7 +1,13 @@
+from __future__ import annotations
+
 import uuid
+from typing import TYPE_CHECKING
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+if TYPE_CHECKING:
+    from gchqnet.accounts.models import User
 
 
 class LocationDifficulty(models.IntegerChoices):
@@ -144,3 +150,11 @@ class Leaderboard(models.Model):
 
     def __str__(self) -> str:
         return self.display_name
+
+    @property
+    def scores(self) -> models.QuerySet[User]:
+        return (
+            self.members.only("id", "username", "display_name")
+            .with_scoreboard_fields()  # type: ignore[attr-defined]
+            .order_by("rank", "capture_count", "display_name")
+        )
