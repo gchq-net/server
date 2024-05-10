@@ -17,6 +17,7 @@ ALLOWED_HOSTS: list[str] = []
 
 INSTALLED_APPS = [
     "gchqnet.accounts",
+    "gchqnet.content",
     "gchqnet.hexpansion",
     "gchqnet.quest",
     "crispy_forms",

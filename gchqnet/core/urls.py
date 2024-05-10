@@ -7,6 +7,7 @@ from gchqnet.core.api import urlpatterns as api_urls
 
 urlpatterns = [
     path("", include("gchqnet.quest.urls", namespace="quest")),
+    path("", include("gchqnet.content.urls", namespace="content")),
     path("admin/", admin.site.urls),
     path("accounts/", include("gchqnet.accounts.urls", namespace="accounts")),
     path("api/", include(api_urls)),

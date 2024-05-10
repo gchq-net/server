@@ -38,11 +38,6 @@
               My Leaderboards
             </a>
           </li>
-          <li class="govuk-header__navigation-item">
-            <a class="govuk-header__link" href="#">
-              About
-            </a>
-          </li>
           {% if user.is_superuser %}
             <li class="govuk-header__navigation-item">
               <a class="govuk-header__link" href="{% url 'admin:index' %}">
