@@ -66,6 +66,12 @@ class MyProfileView(LoginRequiredMixin, UpdateView):
         assert self.request.user.is_authenticated
         return self.request.user
 
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        user_id = self.request.session.get("_auth_user_id", -1)
+        kwargs["user"] = User.objects.get(id=user_id, is_active=True)
+        return kwargs
+
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         messages.success(self.request, "Updated profile successfully.")
         return super().form_valid(form)
