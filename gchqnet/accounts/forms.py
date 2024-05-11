@@ -58,7 +58,6 @@ class ProfileUpdateForm(forms.ModelForm):
         return current_password
 
     def clean_new_password2(self) -> None:
-        print(self.cleaned_data)
         if (
             # There is no valid value
             "current_password" not in self.cleaned_data
