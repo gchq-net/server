@@ -1,0 +1,71 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">Members of the general public who have acquired a licence to our online soul management platform may need to get in contact with us for help with various issues.</p>
+  {% include "components/govuk/warning-text.html" with warning_text="Unfortunately, we cannot guarantee that our support agents are as useless as our competitors'." %}
+
+  <h2 class="govuk-heading-m">Support Hours</h2>
+  <p class="govuk-body">Whilst we endeavour to answer your queries at any time, we can only offer formal support during our core hours of 08:51 to 8:53. Any support outside of these hours may only be provided in Welsh due to timezone accomodations.</p>
+  <p class="govuk-body">Welsh language support may actually be a large language model under the hood. If you suspect that your support agent might in fact be an AI operated by Elon Musk, please contact your nearest doughnut vendor.</p>
+
+  <div class="govuk-inset-text">
+    Okay, but actually we might be asleep and / or drunk. Please don't phone us at unreasonable hours.
+  </div>
+
+  <h2 class="govuk-heading-m">Contact Methods</h2>
+  <p class="govuk-body">We can be contacted via the following methods:</p>
+
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        DECT / POTS
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ dect_number }}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Fax
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ fax_number }}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Carrier Pigeon
+      </dt>
+      <dd class="govuk-summary-list__value">
+        Use a <em>magic RFC 1149-compliant</em> pigeon.
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Chaos Post
+      </dt>
+      <dd class="govuk-summary-list__value">
+        GCHQ.NET (DECT {{ dect_number }})<br>
+        ECS Village
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Amateur Radio
+      </dt>
+      <dd class="govuk-summary-list__value">
+        145.350MHz FM or SSB
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Shouting
+      </dt>
+      <dd class="govuk-summary-list__value">
+        Shout very loudly and our sentient wombat army might hear you.
+      </dd>
+    </div>
+  </dl>
+{% endblock %}
