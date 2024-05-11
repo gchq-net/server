@@ -22,7 +22,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
     current_password = forms.CharField(label="Current password", widget=forms.PasswordInput, required=False)
     new_password1 = forms.CharField(label="New password", widget=forms.PasswordInput, required=False)
-    new_password2 = forms.CharField(label="New password again", widget=forms.PasswordInput, required=False)
+    new_password2 = forms.CharField(label="Confirm new password", widget=forms.PasswordInput, required=False)
 
     class Meta:
         model = User
