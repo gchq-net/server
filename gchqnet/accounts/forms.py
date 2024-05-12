@@ -9,6 +9,7 @@ from crispy_forms_gds.layout import (
     Submit,
 )
 from django import forms
+from django.contrib.auth import password_validation
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 
@@ -21,17 +22,26 @@ class ProfileUpdateForm(forms.ModelForm):
     display_name = forms.CharField(max_length=30, help_text="A name or nickname to be displayed on the leaderboard")
 
     current_password = forms.CharField(label="Current password", widget=forms.PasswordInput, required=False)
-    new_password1 = forms.CharField(label="New password", widget=forms.PasswordInput, required=False)
-    new_password2 = forms.CharField(label="Confirm new password", widget=forms.PasswordInput, required=False)
+
+    new_password1 = forms.CharField(
+        label="New password",
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        strip=False,
+        required=False,
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+    new_password2 = forms.CharField(
+        label="Confirm new password",
+        strip=False,
+        required=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
 
     class Meta:
         model = User
         fields = (
             "username",
             "display_name",
-            "current_password",
-            "new_password1",
-            "new_password2",
         )
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -65,18 +75,20 @@ class ProfileUpdateForm(forms.ModelForm):
             and "current_password" not in self.errors
         ):
             raise ValidationError("You must enter your current password.")
-        password1 = self.cleaned_data["new_password1"]
+        password1 = self.cleaned_data.get("new_password1")
         password2 = self.cleaned_data["new_password2"]
         if password1 != password2:
             raise ValidationError("The new passwords do not match.")
+        if password2:
+            password_validation.validate_password(password2, self.user)
         return password2
 
     def save(self, commit: bool = True) -> User:  # noqa: FBT001, FBT002
-        if self.user.has_usable_password():
-            self.user.set_password(self.cleaned_data["new_password1"])
+        if self.user.has_usable_password() and self.cleaned_data["new_password2"]:
+            self.user.set_password(self.cleaned_data["new_password2"])
         if commit:
             self.user.save()
-        return self.user
+        return super().save(commit=commit)
 
 
 class CredentialsLoginForm(AuthenticationForm):

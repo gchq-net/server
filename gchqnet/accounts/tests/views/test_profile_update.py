@@ -20,7 +20,12 @@ class TestProfileUpdateView:
 
     def test_unauthenticated(self, client: Client) -> None:
         resp = client.get(self.url)
-        assertRedirects(resp, "/accounts/login/?next=/accounts/profile/", 302, fetch_redirect_response=False)
+        assertRedirects(
+            resp,
+            "/accounts/login/?next=/accounts/profile/",
+            302,
+            fetch_redirect_response=False,
+        )
 
     def test_get(self, client: Client, user: User) -> None:
         # Arrange
@@ -34,8 +39,17 @@ class TestProfileUpdateView:
         assertTemplateUsed(resp, "pages/accounts/profile.html")
 
         form = resp.context["form"]
-        assert form.fields.keys() == {"username", "display_name"}
-        assert form.initial == {"username": user.username, "display_name": user.display_name}
+        assert form.fields.keys() == {
+            "username",
+            "display_name",
+            "current_password",
+            "new_password1",
+            "new_password2",
+        }
+        assert form.initial == {
+            "username": user.username,
+            "display_name": user.display_name,
+        }
 
     @pytest.mark.parametrize(
         ("input_display_name", "saved_display_name"),
@@ -45,12 +59,25 @@ class TestProfileUpdateView:
             pytest.param("  whitespace  ", "whitespace", id="whitespace-is-stripped"),
         ],
     )
-    def test_post(self, client: Client, user: User, *, input_display_name: str, saved_display_name: str) -> None:
+    def test_post(
+        self,
+        client: Client,
+        user: User,
+        *,
+        input_display_name: str,
+        saved_display_name: str,
+    ) -> None:
         # Arrange
         client.force_login(user)
 
         # Act
-        resp = client.post(self.url, data={"username": user.username, "display_name": input_display_name})
+        resp = client.post(
+            self.url,
+            data={
+                "username": user.username,
+                "display_name": input_display_name,
+            },
+        )
 
         # Assert
         assertRedirects(resp, self.url, 302, 200)

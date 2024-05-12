@@ -5,10 +5,10 @@ from typing import TYPE_CHECKING, Any
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.contrib.auth.views import RedirectURLMixin
-from django.forms.models import BaseModelForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, resolve_url
 from django.urls import reverse_lazy
@@ -31,7 +31,6 @@ from .models import User
 
 if TYPE_CHECKING:
     from django.db.models import QuerySet
-    from django.forms import BaseModelForm
 
 
 class MyFindsView(LoginRequiredMixin, TemplateView):
@@ -62,18 +61,26 @@ class MyProfileView(LoginRequiredMixin, UpdateView):
     form_class = ProfileUpdateForm
     success_url = reverse_lazy("accounts:profile")
 
+    # @method_decorator(sensitive_post_parameters())
+    # @method_decorator(csrf_protect)
+    # @method_decorator(login_required)
+    # def dispatch(self, *args, **kwargs):
+    #    return super().dispatch(*args, **kwargs)
+
     def get_object(self, queryset: QuerySet[User] | None = None) -> User:
         assert self.request.user.is_authenticated
         return self.request.user
 
     def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
-        user_id = self.request.session.get("_auth_user_id", -1)
-        kwargs["user"] = User.objects.get(id=user_id, is_active=True)
+        kwargs["user"] = self.request.user
         return kwargs
 
-    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+    def form_valid(self, form: ProfileUpdateForm) -> HttpResponse:
         messages.success(self.request, "Updated profile successfully.")
+        form.save()
+        # Cycle sessions if password has changed
+        update_session_auth_hash(self.request, form.user)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
