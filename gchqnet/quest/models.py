@@ -29,6 +29,13 @@ class Location(models.Model):
             "unique": "Another location already has that display name",
         },
     )
+    hint = models.CharField(
+        "Hint",
+        help_text="This name is shown to players to help them find the location.",
+        max_length=60,
+    )
+
+    # Internal fields
     internal_name = models.CharField(
         "Internal name",
         help_text="This name is shown to admins and should be descriptive.",
@@ -36,9 +43,11 @@ class Location(models.Model):
         blank=True,
     )
     description = models.TextField(help_text="Further description of the location of the installation.", blank=True)
+    hexpansion = models.OneToOneField("hexpansion.Hexpansion", on_delete=models.PROTECT, related_name="location")
 
     difficulty = models.IntegerField(choices=LocationDifficulty)
 
+    # The creator is assumed to be the user that installed the location.
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="+")
     updated_at = models.DateTimeField(auto_now=True)
@@ -69,22 +78,6 @@ class Coordinates(models.Model):
         return f"({self.lat},{self.long})"
 
 
-class LocationInstallation(models.Model):
-    """If present, indicates that this location has been installed."""
-
-    id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
-
-    location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name="installation")
-    hexpansion = models.OneToOneField("hexpansion.Hexpansion", on_delete=models.PROTECT, related_name="installation")
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="+")
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self) -> str:
-        return f"Installed by {self.created_by} at {self.created_at}"
-
-
 class RawCaptureEvent(models.Model):
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
@@ -108,7 +101,6 @@ class CaptureEvent(models.Model):
         Location,
         on_delete=models.PROTECT,
         related_name="capture_events",
-        limit_choices_to={"installation__isnull": False},
     )
 
     # The created_by field here should not be relied upon for auditing scorekeeping.

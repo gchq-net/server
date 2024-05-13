@@ -6,14 +6,14 @@ env = os.environ.copy()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-if 'SECRET_KEY' in env:
-    SECRET_KEY = env['SECRET_KEY']
+if "SECRET_KEY" in env:
+    SECRET_KEY = env["SECRET_KEY"]
 
-if 'ALLOWED_HOSTS' in env:
-    ALLOWED_HOSTS = env['ALLOWED_HOSTS'].split(',')
+if "ALLOWED_HOSTS" in env:
+    ALLOWED_HOSTS = env["ALLOWED_HOSTS"].split(",")
 
-if 'CSRF_TRUSTED_ORIGINS' in env:
-    CSRF_TRUSTED_ORIGINS = env['CSRF_TRUSTED_ORIGINS'].split(',')
+if "CSRF_TRUSTED_ORIGINS" in env:
+    CSRF_TRUSTED_ORIGINS = env["CSRF_TRUSTED_ORIGINS"].split(",")
 
 # Application definition
 INSTALLED_APPS = [

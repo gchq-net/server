@@ -41,7 +41,7 @@ class Command(BaseCommand):
             sample = random.sample(locations, k=random.randint(0, len(locations)))  # noqa: S311
             for location in sample:
                 raw_event = RawCaptureEvent.objects.create(
-                    badge=badge, hexpansion=location.installation.hexpansion, created_by=badge.user
+                    badge=badge, hexpansion=location.hexpansion, created_by=badge.user
                 )
                 CaptureEvent.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
 

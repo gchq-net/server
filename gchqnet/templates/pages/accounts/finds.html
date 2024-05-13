@@ -34,9 +34,9 @@
               <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
           {% else %}
             <tr class="govuk-table__row quest-missing" bgcolor="#d3d3d3">
-              <th scope="row" class="govuk-table__header">-</th>
+              <th scope="row" class="govuk-table__header">???</th>
               <td class="govuk-table__cell">{{ location.difficulty }}</td>
-              <td class="govuk-table__cell">HINT HERE</td>
+              <td class="govuk-table__cell">{{ location.hint }}</td>
               <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
           {% endif %}
           </tr>

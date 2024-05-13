@@ -10,5 +10,5 @@ urlpatterns = [
     path("api/", include("gchqnet.core.api", namespace="api")),
 ]
 
-if apps.is_installed('debug_toolbar'):
+if apps.is_installed("debug_toolbar"):
     urlpatterns.append(path("__debug__/", include("debug_toolbar.urls")))

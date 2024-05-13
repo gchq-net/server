@@ -85,7 +85,7 @@ disallow_untyped_decorators = true
 check_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = ["crispy_forms.*", "crispy_forms_gds.*", "factory.*"]
+module = ["crispy_forms.*", "crispy_forms_gds.*", "debug_toolbar.*", "factory.*"]
 ignore_missing_imports = true
 
 
@@ -94,7 +94,7 @@ module = ["*.tests.*"]
 disable_error_code = ["arg-type"]
 
 [tool.django-stubs]
-django_settings_module = "gchqnet.core.settings"
+django_settings_module = "gchqnet.core.settings.dev"
 
 [tool.coverage.run]
 plugins = [

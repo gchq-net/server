@@ -6,7 +6,7 @@ from .base import *  # noqa
 DEBUG = False
 
 # Read db info from DATABASE_URL
-DATABASES['default'] = dj_database_url.config(  # noqa: F405
+DATABASES["default"] = dj_database_url.config(  # type: ignore  # noqa: F405
     conn_max_age=600,
     conn_health_checks=True,
 )

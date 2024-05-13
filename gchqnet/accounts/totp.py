@@ -4,7 +4,7 @@ from pyotp import TOTP
 
 class CustomTOTP(TOTP):
     def __init__(self, mac_address: str) -> None:
-        secret = mac_address + settings.SECRET_KEY
+        secret = mac_address + str(settings.SECRET_KEY)
         super().__init__(secret)
 
     def byte_secret(self) -> bytes:

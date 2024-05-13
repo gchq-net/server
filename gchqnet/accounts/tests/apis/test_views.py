@@ -18,7 +18,7 @@ class TestGetCurrentUserAPIView:
     def test_get_unauthenticated(self, client: Client) -> None:
         resp = client.get(self.url)
 
-        assert resp.status_code == HTTPStatus.UNAUTHORIZED
+        assert resp.status_code == HTTPStatus.FORBIDDEN
         assert resp.json() == {"detail": "Authentication credentials were not provided."}
 
     def test_get(self, client: Client, user: User) -> None:

@@ -10,6 +10,7 @@ DEBUG = True
 # Debug Toolbar
 try:
     import debug_toolbar  # noqa
+
     INSTALLED_APPS.insert(0, "debug_toolbar")  # noqa: F405
     MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")  # noqa: F405
     INTERNAL_IPS = [
@@ -20,7 +21,7 @@ except ImportError:
     pass
 
 # Template Debugging
-TEMPLATES[0]["OPTIONS"]["debug"] = True  # noqa
+TEMPLATES[0]["OPTIONS"]["debug"] = True  # type: ignore[index]  # noqa: F405
 
 # Import settings from local.py if it exists.
 try:
