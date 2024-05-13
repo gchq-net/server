@@ -8,12 +8,16 @@ ALLOWED_HOSTS = ["*"]
 DEBUG = True
 
 # Debug Toolbar
-INSTALLED_APPS.insert(0, "debug_toolbar")  # noqa: F405
-MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")  # noqa: F405
-INTERNAL_IPS = [
-    "127.0.0.1",
-    "::1",
-]
+try:
+    import debug_toolbar  # noqa
+    INSTALLED_APPS.insert(0, "debug_toolbar")  # noqa: F405
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")  # noqa: F405
+    INTERNAL_IPS = [
+        "127.0.0.1",
+        "::1",
+    ]
+except ImportError:
+    pass
 
 # Template Debugging
 TEMPLATES[0]["OPTIONS"]["debug"] = True  # noqa
