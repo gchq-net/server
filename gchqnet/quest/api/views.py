@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import filters, permissions, serializers, viewsets
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -85,3 +86,21 @@ class PrivateScoreboardAPIViewset(viewsets.ReadOnlyModelViewSet):
         Scores are returned in order of rank.
         """
         return super().list(request, *args, **kwargs)
+
+
+@extend_schema(summary="Get currently found locations as GeoJSON", tags=["Locations"])
+@api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated])
+def my_finds_geojson(request: Request) -> Response:
+    data = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {"id": 1, "name": "GCHQ.NET Scoreboard (Easy)"},
+                "geometry": {"coordinates": [-2.3771737, 52.0437116], "type": "Point"},
+                "id": 0,
+            }
+        ],
+    }
+    return Response(data)
