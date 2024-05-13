@@ -132,7 +132,6 @@ CRISPY_TEMPLATE_PACK = "gds"
 # Rest Framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ],
     # By default, only allow admin users to access an endpoint.
