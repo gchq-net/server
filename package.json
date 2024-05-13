@@ -12,13 +12,13 @@
   },
   "targets": {
     "css": {
-      "source": "assets/css/main.scss",
-      "distDir": "gchqnet/static_compiled/css"
+      "source": "assets/main.scss",
+      "distDir": "gchqnet/static_compiled/"
     },
     "js": {
-      "source": "assets/js/main.js",
+      "source": "assets/main.js",
       "outputFormat": "global",
-      "distDir": "gchqnet/static_compiled/js"
+      "distDir": "gchqnet/static_compiled/"
     }
   }
 }
