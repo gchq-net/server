@@ -200,3 +200,7 @@ class MyFindsView(LoginRequiredMixin, TemplateView):
             finds=finds,
             **kwargs,
         )
+
+
+class MyFindsMapView(LoginRequiredMixin, TemplateView):
+    template_name = "pages/quest/my_finds_map.html"
