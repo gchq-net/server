@@ -52,10 +52,10 @@ class UserAdmin(DjangoUserAdmin):
     list_display = ("username", "email", "display_name", "is_superuser")
     list_filter = ("is_superuser", "is_active", "groups")
     search_fields = ("username", "display_name", "email")
-    readonly_fields = ("last_login", "date_joined")
+    readonly_fields = ("api_token", "last_login", "date_joined")
     fieldsets = (
         (None, {"fields": ("username", "password")}),
-        (_("Personal info"), {"fields": ("display_name", "email")}),
+        (_("Personal info"), {"fields": ("display_name", "email", "api_token")}),
         (
             _("Permissions"),
             {

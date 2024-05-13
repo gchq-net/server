@@ -133,6 +133,7 @@ CRISPY_TEMPLATE_PACK = "gds"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
+        "gchqnet.accounts.auth.UserTokenAuthentication",
     ],
     # By default, only allow admin users to access an endpoint.
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAdminUser"],

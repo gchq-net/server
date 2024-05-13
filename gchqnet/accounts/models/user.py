@@ -12,6 +12,8 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_stubs_ext import WithAnnotations
 
+from gchqnet.accounts.tokens import generate_api_token
+
 _T = TypeVar("_T", bound=models.Model)
 
 
@@ -94,6 +96,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    api_token = models.CharField("API Token", unique=True, max_length=32, default=generate_api_token)
 
     objects = UserManager()
 
