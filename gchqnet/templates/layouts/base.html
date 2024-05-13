@@ -14,7 +14,9 @@
         <meta name="msapplication-TileColor" content="#2b5797">
         <meta name="msapplication-config" content="/static/img/browserconfig.xml?v=2024">
         <meta name="theme-color" content="#ffffff">
-        <link rel="stylesheet" href="{% static 'main.css' %}">
+        {% block css %}
+            <link rel="stylesheet" href="{% static 'main.css' %}">
+        {% endblock %}
         <!-- <meta property="og:image" content="YOUR-DOMAIN/images/govuk-opengraph-image.png"> -->
     </head>
 
@@ -23,7 +25,9 @@
             document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
         </script>
         {% block body %}{% endblock %}
-        <script src="{% static 'main.js' %}"></script>
+        {% block js %}
+            <script src="{% static 'main.js' %}"></script>
+        {% endblock %}
     </body>
 
 </html>
