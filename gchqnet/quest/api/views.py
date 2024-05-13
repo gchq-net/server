@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from django.core.exceptions import ObjectDoesNotExist
 from drf_spectacular.utils import extend_schema
 from rest_framework import filters, permissions, serializers, viewsets
 from rest_framework.decorators import api_view, permission_classes
@@ -100,6 +101,13 @@ def my_finds_geojson(request: Request) -> Response:
         difficulty = LocationDifficulty(capture.location.difficulty).label
         return f"{capture.location.display_name} ({difficulty})"
 
+    def _has_coords(capture: CaptureEvent) -> bool:
+        try:
+            _ = capture.location.coordinates
+            return True
+        except ObjectDoesNotExist:
+            return False
+
     data = {
         "type": "FeatureCollection",
         "features": [
@@ -116,7 +124,7 @@ def my_finds_geojson(request: Request) -> Response:
                 "id": 0,
             }
             for idx, capture in enumerate(captures)
-            if capture.location.coordinates
+            if _has_coords(capture)
         ],
     }
     return Response(data, content_type="application/geo+json")
