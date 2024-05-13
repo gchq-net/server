@@ -1,20 +1,21 @@
 import os
 from pathlib import Path
 
+env = os.environ.copy()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-h8r*-vs$2a^4-aljj-h$#fajj#srrd39s=3=)re=hgz7vc6m2!"  # noqa: S105
+if 'SECRET_KEY' in env:
+    SECRET_KEY = env['SECRET_KEY']
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+if 'ALLOWED_HOSTS' in env:
+    ALLOWED_HOSTS = env['ALLOWED_HOSTS'].split(',')
 
-ALLOWED_HOSTS: list[str] = []
-
+if 'CSRF_TRUSTED_ORIGINS' in env:
+    CSRF_TRUSTED_ORIGINS = env['CSRF_TRUSTED_ORIGINS'].split(',')
 
 # Application definition
-
 INSTALLED_APPS = [
     "gchqnet.accounts",
     "gchqnet.content",
@@ -42,15 +43,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-if DEBUG:
-    INSTALLED_APPS.insert(0, "debug_toolbar")
-    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
-
-    INTERNAL_IPS = [
-        "127.0.0.1",
-        "::1",
-    ]
-
 ROOT_URLCONF = "gchqnet.core.urls"
 
 TEMPLATES = [
@@ -65,7 +57,6 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
-            "debug": DEBUG,
         },
     },
 ]
