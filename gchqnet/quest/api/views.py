@@ -116,6 +116,7 @@ def my_finds_geojson(request: Request) -> Response:
                 "id": 0,
             }
             for idx, capture in enumerate(captures)
+            if capture.location.coordinates
         ],
     }
     return Response(data, content_type="application/geo+json")
