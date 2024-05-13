@@ -24,6 +24,5 @@ urlpatterns = [
         name="login_credentials",
     ),
     path("logout/", LogoutView.as_view(), name="logout"),
-    path("profile/", views.MyProfileView.as_view(), name="profile"),
-    path("finds/", views.MyFindsView.as_view(), name="finds"),
+    path("profile/", views.MyProfileView.as_view(), name="profile")
 ]

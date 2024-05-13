@@ -9,11 +9,11 @@ from django.forms import BaseModelForm
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
+from django.views.generic import CreateView, DetailView, FormView, ListView, TemplateView, UpdateView
 
 from gchqnet.accounts.models import User, UserQuerySet
 from gchqnet.quest.forms import LeaderboardCreateForm, LeaderboardInviteAcceptDeclineForm, LeaderboardUpdateForm
-from gchqnet.quest.models import Leaderboard
+from gchqnet.quest.models import CaptureEvent, Leaderboard, Location
 
 
 class GlobalScoreboardView(ListView):
@@ -178,3 +178,25 @@ class LeaderboardInviteDetailView(LoginRequiredMixin, FormView):
         else:
             messages.info(request, "Invitation declined.")
             return redirect("quest:home")
+
+
+class MyFindsView(LoginRequiredMixin, TemplateView):
+    template_name = "pages/quest/my_finds.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        assert self.request.user.is_authenticated
+        locations = Location.objects.all()
+        captures = self.request.user.capture_events.select_related("location")
+
+        def find_capture(location: Location) -> CaptureEvent | None:
+            try:
+                return next(capture for capture in captures if capture.location == location)
+            except StopIteration:
+                return None
+
+        finds = {location: find_capture(location) for location in locations}
+
+        return super().get_context_data(
+            finds=finds,
+            **kwargs,
+        )
