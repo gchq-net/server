@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gchqnet.settings.production")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gchqnet.core.settings.production")
 
 application = get_asgi_application()
