@@ -23,8 +23,8 @@ class Command(BaseCommand):
         force_color: bool,
         skip_checks: bool,
     ) -> None:
-        RawCaptureEvent.objects.all().delete()
         CaptureEvent.objects.all().delete()
+        RawCaptureEvent.objects.all().delete()
         Location.objects.all().delete()
         Hexpansion.objects.all().delete()
         User.objects.filter(is_superuser=False).delete()
