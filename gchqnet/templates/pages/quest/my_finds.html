@@ -2,6 +2,12 @@
 
 {% block title %}My Finds{% endblock %}
 
+{% block action_buttons %}
+  <a class="govuk-button gchqnet-page-header-actions__action" data-module="govuk-button" href="{% url 'quest:my_finds_map' %}">
+    View Map
+  </a>
+{% endblock %}
+
 {% block content %}
   <div style="float: right;" class="govuk-checkboxes" data-module="govuk-checkboxes">
     <div class="govuk-checkboxes__item">

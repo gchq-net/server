@@ -144,7 +144,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "GCHQ.NET API",
-    "DESCRIPTION": "Great Camp Hexpansion Quest API. You may need to log in to view all endpoints.",
+    "DESCRIPTION": "Great Camp Hexpansion Quest API",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }

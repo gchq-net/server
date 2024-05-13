@@ -1,0 +1,22 @@
+{% extends "layouts/base_app.html" %}
+{% load static %}
+
+{% block title %}Map{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'map/map.css' %}">
+    <script src="{% static 'map/map.js' %}"></script>
+    <noscript>You need Javascript enabled to view this map.</noscript>
+    <p class="govuk-body">You can view hexpansions that you have found on the map below.</p>
+    <div id="map"></div>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'map/map.css' %}">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'map/map.js' %}">
+{% endblock %}

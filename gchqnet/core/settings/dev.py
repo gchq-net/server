@@ -25,6 +25,6 @@ TEMPLATES[0]["OPTIONS"]["debug"] = True  # type: ignore[index]  # noqa: F405
 
 # Import settings from local.py if it exists.
 try:
-    from .local import *  # noqa: F403
+    from .local import *  # type: ignore[import-not-found,unused-ignore]  # noqa: F403
 except ImportError:
     pass

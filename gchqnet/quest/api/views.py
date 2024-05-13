@@ -2,14 +2,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from django.core.exceptions import ObjectDoesNotExist
 from drf_spectacular.utils import extend_schema
 from rest_framework import filters, permissions, serializers, viewsets
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from gchqnet.accounts.models.user import User
-from gchqnet.quest.models import Leaderboard
+from gchqnet.quest.models import CaptureEvent, Leaderboard, LocationDifficulty
 
 from .serializers import LeaderboardSerializer, LeaderboardWithScoresSerializer, ScoreboardEntrySerializer
 
@@ -85,3 +87,44 @@ class PrivateScoreboardAPIViewset(viewsets.ReadOnlyModelViewSet):
         Scores are returned in order of rank.
         """
         return super().list(request, *args, **kwargs)
+
+
+@extend_schema(summary="Get currently found locations as GeoJSON", tags=["Locations"])
+@api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated])
+def my_finds_geojson(request: Request) -> Response:
+    assert request.user.is_authenticated
+
+    captures = request.user.capture_events.select_related("location", "location__coordinates")
+
+    def _name(capture: CaptureEvent) -> str:
+        difficulty = LocationDifficulty(capture.location.difficulty).label
+        return f"{capture.location.display_name} ({difficulty})"
+
+    def _has_coords(capture: CaptureEvent) -> bool:
+        try:
+            _ = capture.location.coordinates
+            return True
+        except ObjectDoesNotExist:
+            return False
+
+    data = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {
+                    "id": idx,
+                    "name": _name(capture),
+                },
+                "geometry": {
+                    "coordinates": [capture.location.coordinates.long, capture.location.coordinates.lat],
+                    "type": "Point",
+                },
+                "id": 0,
+            }
+            for idx, capture in enumerate(captures)
+            if _has_coords(capture)
+        ],
+    }
+    return Response(data, content_type="application/geo+json")
