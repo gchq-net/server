@@ -19,6 +19,11 @@
           My badges
         </a>
       </li>
+      <li class="govuk-tabs__list-item">
+        <a class="govuk-tabs__tab" href="#api">
+          API Access
+        </a>
+      </li>
     </ul>
     <div class="govuk-tabs__panel" id="details">
       <h2 class="govuk-heading-l">My details</h2>
@@ -39,6 +44,31 @@
           You will need to contact an administrator to connect a badge to an existing account. Please get in touch and we'll be happy to help you.
         </div>
       </details>
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="api">
+      <h2 class="govuk-heading-l">API Access</h2>
+      <p class="govuk-body">The GCHQ.NET API can be used to synergistically integrate the GCHQ.NET REST API Framework Platform System Cloud Service into your own projects.</p>
+      <p class="govuk-body">Each user has one API token, which has full access to your account.</p>
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="api-token">
+          API Token
+        </label>
+        <input class="govuk-input govuk-!-width-three-quarters" id="api-token" name="api-token" type="text" value="{{ request.user.api_token }}" readonly>
+        <button class="govuk-button" id="copy-api-token-button">
+          Copy to clipboard
+        </button>
+      </div>
+      <p class="govuk-body">There is <a href="{% url 'api:docs' %}">documentation available for the API endpoints</a>.</p>
+      <script>
+        var copyAPITokenButton = document.querySelector('#copy-api-token-button');
+
+        copyAPITokenButton.addEventListener('click', function(event) {
+          var copyAPITokenInput = document.querySelector('#api-token');
+          copyAPITokenInput.select();
+          copyAPITokenInput.setSelectionRange(0, 99999); // For mobile devices
+          navigator.clipboard.writeText(copyAPITokenInput.value);
+        });
+      </script>
     </div>
   </div>
 {% endblock %}
