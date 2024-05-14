@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from django.conf import settings
 from django.contrib import messages
@@ -23,8 +23,8 @@ from gchqnet.accounts.mixins import LoginPageMixin
 from .forms import (
     BadgeLoginChallengeForm,
     BadgeLoginUsernameForm,
-    CredentialsLoginForm,
     BaseProfileUpdateForm,
+    CredentialsLoginForm,
     PasswordProfileUpdateForm,
     TOTPProfileUpdateForm,
 )
@@ -41,7 +41,8 @@ class MyProfileView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("accounts:profile")
 
     def get_form_class(self) -> type[BaseProfileUpdateForm]:
-        if self.request.user.password and self.request.user.has_usable_password():
+        user = cast(User, self.request.user)
+        if user and user.has_usable_password():
             return PasswordProfileUpdateForm
         else:
             return TOTPProfileUpdateForm
@@ -89,9 +90,7 @@ class BadgeLoginUsernamePromptView(LoginPageMixin, FormView):
     success_url = reverse_lazy("accounts:login_badge_challenge")
 
     def form_valid(self, form: BadgeLoginUsernameForm) -> HttpResponse:
-        self.request.session["badge_login__user_id"] = form.cleaned_data[
-            "account_name"
-        ].id
+        self.request.session["badge_login__user_id"] = form.cleaned_data["account_name"].id
         resp = super().form_valid(form)
         if next_q := self.request.GET.get("next"):
             resp["Location"] += f"?next={next_q}"
@@ -121,9 +120,7 @@ class BadgeLoginChallengePromptView(LoginPageMixin, RedirectURLMixin, FormView):
     def form_valid(self, form: BadgeLoginChallengeForm) -> HttpResponse:
         del self.request.session["badge_login__user_id"]
         if form.user.is_superuser:
-            messages.info(
-                self.request, "Please login with a password for security purposes."
-            )
+            messages.info(self.request, "Please login with a password for security purposes.")
             return redirect("accounts:login_credentials")
         else:
             auth_login(self.request, form.user)

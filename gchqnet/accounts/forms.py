@@ -26,9 +26,7 @@ def verify_security_code(user: User, code: str) -> bool:
 
 class BaseProfileUpdateForm(forms.ModelForm):
     username = forms.CharField(disabled=True, label="Account name")
-    display_name = forms.CharField(
-        max_length=30, help_text="A name or nickname to be displayed on the leaderboard"
-    )
+    display_name = forms.CharField(max_length=30, help_text="A name or nickname to be displayed on the leaderboard")
 
     auth_success = False
     auth_error_msg = "You must authenticate first"
@@ -91,9 +89,7 @@ class BaseProfileUpdateForm(forms.ModelForm):
 
 
 class PasswordProfileUpdateForm(BaseProfileUpdateForm):
-    current_password = forms.CharField(
-        label="Current password", widget=forms.PasswordInput, required=False
-    )
+    current_password = forms.CharField(label="Current password", widget=forms.PasswordInput, required=False)
     auth_error_msg = "That password is incorrect"
 
     field_order = [
@@ -106,20 +102,14 @@ class PasswordProfileUpdateForm(BaseProfileUpdateForm):
 
     def clean_current_password(self) -> str:
         current_password = self.cleaned_data["current_password"]
-        if (
-            self.user.has_usable_password()
-            and current_password
-            and not self.user.check_password(current_password)
-        ):
+        if self.user.has_usable_password() and current_password and not self.user.check_password(current_password):
             raise ValidationError("That password is incorrect.")
         self.auth_success = True
         return current_password
 
 
 class TOTPProfileUpdateForm(BaseProfileUpdateForm):
-    security_code = forms.CharField(
-        label="Badge Security Code", min_length=6, max_length=6, required=False
-    )
+    security_code = forms.CharField(label="Badge Security Code", min_length=6, max_length=6, required=False)
     auth_error_msg = "That isn't the correct code"
 
     field_order = [
@@ -155,19 +145,13 @@ class BadgeLoginUsernameForm(forms.Form):
 
     def clean_account_name(self) -> User:
         try:
-            return User.objects.get(
-                username=self.cleaned_data["account_name"], is_active=True
-            )
+            return User.objects.get(username=self.cleaned_data["account_name"], is_active=True)
         except User.DoesNotExist as e:
-            raise ValidationError(
-                "Unable to find your account name. Have you spelled it correctly?"
-            ) from e
+            raise ValidationError("Unable to find your account name. Have you spelled it correctly?") from e
 
 
 class BadgeLoginChallengeForm(forms.Form):
-    security_code = forms.CharField(
-        label="Security Code", min_length=6, max_length=6, required=True
-    )
+    security_code = forms.CharField(label="Security Code", min_length=6, max_length=6, required=True)
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.user = kwargs.pop("user")
