@@ -20,7 +20,7 @@ class MyAuthenticationScheme(OpenApiAuthenticationExtension):  # type: ignore[no
         }
 
 
-router = routers.DefaultRouter()
+router = routers.SimpleRouter()
 router.register("scoreboards", PrivateScoreboardAPIViewset, basename="quest_private_scoreboards")
 
 app_name = "api"
