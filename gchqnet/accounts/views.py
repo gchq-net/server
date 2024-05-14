@@ -41,7 +41,7 @@ class MyProfileView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("accounts:profile")
 
     def get_form_class(self) -> type[BaseProfileUpdateForm]:
-        if self.request.user.has_usable_password():
+        if self.request.user.password and self.request.user.has_usable_password():
             return PasswordProfileUpdateForm
         else:
             return TOTPProfileUpdateForm
