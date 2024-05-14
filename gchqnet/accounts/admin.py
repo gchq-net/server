@@ -6,6 +6,8 @@ from django.forms import ModelForm
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
+from gchqnet.accounts.totp import CustomTOTP
+
 from .models import Badge, User
 
 
@@ -18,10 +20,14 @@ class BadgeAdminForm(ModelForm):
 
 class BadgeAdminMixin(admin.options.BaseModelAdmin):
     form = BadgeAdminForm
-    readonly_fields = ("id", "created_at", "updated_at")
+    readonly_fields = ("id", "totp_code", "created_at", "updated_at")
 
     def has_delete_permission(self, request: HttpRequest, obj: Badge | None = None) -> bool:
         return False
+
+    @admin.display(description="Current OTP Code")
+    def totp_code(self, badge: Badge) -> str:
+        return CustomTOTP(badge.mac_address).now()
 
 
 class BadgeInlineAdmin(BadgeAdminMixin, admin.StackedInline):

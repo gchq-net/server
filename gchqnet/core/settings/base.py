@@ -135,8 +135,6 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "gchqnet.accounts.auth.UserTokenAuthentication",
     ],
-    # By default, only allow admin users to access an endpoint.
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAdminUser"],
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
