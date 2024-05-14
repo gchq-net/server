@@ -1,4 +1,5 @@
 {% extends "layouts/base_app.html" %}
+{% load location_tags %}
 
 {% block title %}My Finds{% endblock %}
 
@@ -9,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-  <div style="float: right;" class="govuk-checkboxes" data-module="govuk-checkboxes">
+  <div class="govuk-checkboxes gchqnet-finds-table__checkbox" data-module="govuk-checkboxes">
     <div class="govuk-checkboxes__item">
       <input class="govuk-checkboxes__input" id="hidemissing" name="hidemissing" type="checkbox">
       <label class="govuk-label govuk-checkboxes__label" for="hidemissing">
@@ -35,13 +36,13 @@
           {% if capture %}
             <tr class="govuk-table__row">
               <th scope="row" class="govuk-table__header">{{ location.display_name }}</th>
-              <td class="govuk-colour__red govuk-table__cell">{{ location.difficulty }}</td>
+              <td class="govuk-colour__red govuk-table__cell">{{ location.difficulty|difficulty_label }}</td>
               <td class="govuk-table__cell">{{ capture.raw_capture_event.created_at }}</td>
               <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
           {% else %}
-            <tr class="govuk-table__row quest-missing" bgcolor="#d3d3d3">
+            <tr class="govuk-table__row gchqnet-finds-table__row--missing">
               <th scope="row" class="govuk-table__header">???</th>
-              <td class="govuk-table__cell">{{ location.difficulty }}</td>
+              <td class="govuk-table__cell">{{ location.difficulty|difficulty_label }}</td>
               <td class="govuk-table__cell">{{ location.hint }}</td>
               <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
           {% endif %}
@@ -52,16 +53,11 @@
   </div>
   <script>
     document.querySelector("#hidemissing").addEventListener("change", function() {
-      var missing = document.querySelectorAll(".quest-missing");
-      if (this.checked) {
-        missing.forEach(function(element) {
-          element.style.display = "none";
-        });
-      } else {
-        missing.forEach(function(element) {
-          element.style.display = "";
-        });
-      }
+      var missing = document.querySelectorAll(".gchqnet-finds-table__row--missing");
+      var state = this.checked ? "none" : "";
+      missing.forEach(function(element) {
+        element.style.display = state;
+      });
     });
   </script>
 {% endblock %}
