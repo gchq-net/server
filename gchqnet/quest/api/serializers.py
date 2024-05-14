@@ -4,6 +4,12 @@ from gchqnet.accounts.models import User
 from gchqnet.quest.models import Leaderboard
 
 
+class LeaderboardLinkedUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["username", "display_name"]
+
+
 class ScoreboardEntrySerializer(serializers.ModelSerializer):
     rank = serializers.IntegerField()
     capture_count = serializers.IntegerField()
@@ -15,8 +21,8 @@ class ScoreboardEntrySerializer(serializers.ModelSerializer):
 
 
 class LeaderboardSerializer(serializers.ModelSerializer):
-    owner = serializers.StringRelatedField()
-    created_by = serializers.StringRelatedField()
+    owner = LeaderboardLinkedUserSerializer()
+    created_by = LeaderboardLinkedUserSerializer()
 
     class Meta:
         model = Leaderboard
