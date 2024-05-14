@@ -11,9 +11,15 @@ package-mode = false
 python = "^3.11"
 Django = "^5.0.4"
 crispy-forms-gds = "^0.3.1"
+django-stubs-ext = "^5.0.0"
 djangorestframework = "^3.15.1"
 drf-spectacular = "^0.27.2"
 pyotp = "^2.9.0"
+
+[tool.poetry.group.prod.dependencies]
+uvicorn = "^0.29.0"
+dj-database-url = "^2.1.0"
+psycopg = "^3.1.19"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.2"
@@ -79,7 +85,7 @@ disallow_untyped_decorators = true
 check_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = ["crispy_forms.*", "crispy_forms_gds.*", "factory.*"]
+module = ["crispy_forms.*", "crispy_forms_gds.*", "debug_toolbar.*", "factory.*"]
 ignore_missing_imports = true
 
 
@@ -88,7 +94,7 @@ module = ["*.tests.*"]
 disable_error_code = ["arg-type"]
 
 [tool.django-stubs]
-django_settings_module = "gchqnet.core.settings"
+django_settings_module = "gchqnet.core.settings.dev"
 
 [tool.coverage.run]
 plugins = [

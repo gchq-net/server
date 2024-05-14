@@ -1,0 +1,48 @@
+{% extends "layouts/base_app.html" %}
+{% load static %}
+
+{% block title %}About GCHQ.NET{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">The Great Camp Hexpansion Quest (GCHQ.NET) is a distributed interactive game for attendees of <a href="https://emfcamp.org">Electromagnetic Field 2024</a>.</p>
+
+  <div class="govuk-inset-text">
+    GCHQ.NET is not associated with the UK Government or any entity associated with the UK Government.
+  </div>
+
+  <h2 class="govuk-heading-m">Get Help</h2>
+  <p class="govuk-body">If you need help playing the game or have had a problem, please <a href="{% url 'content:contact' %}">contact us</a> directly.</p>
+
+
+  <h2 class="govuk-heading-m">Press Enquiries and Complaints</h2>
+  <p class="govuk-body">If you have a press enquiry or complaint, please <a href="{% url 'content:contact' %}">contact us</a> directly.</p>
+
+  <h2 class="govuk-heading-m">Licence Notice</h2>
+  <p class="govuk-body">Services provided by GCHQ.NET, including but not limited to the GCHQ.NET badge app, backend services, scoreboards and website are built using open source software.</p>
+  <p class="govuk-body">Most source code and hardware designs are open source and published on the <a href="https://github.com/gchq-net">GCHQ.NET GitHub account</a>.</p>
+  <div class="govuk-inset-text">
+    The source code of this site is not yet published, to prevent <em>spoilers</em>.
+  </div>
+  <div class="govuk-body">This site uses or derives code from the following open source projects:</div>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li><a href="https://github.com/alphagov/govuk-frontend">GOV.UK Frontend</a></li>
+    <li><a href="https://github.com/ministryofjustice/moj-frontend">MOJ Frontend</a></li>
+    <li><a href="https://github.com/django/django">Django</a>, <a href="https://github.com/encode/django-rest-framework">Django REST Framework</a>, and <a href="https://github.com/tfranzel/drf-spectacular">DRF Spectacular</a></li>
+    <li><a href="https://github.com/django-crispy-forms/django-crispy-forms">Crispy Forms</a> and <a href="https://github.com/wildfish/crispy-forms-gds">Crispy Forms GDS</a></li>
+    <li><a href="https://github.com/pyauth/pyotp">PyOTP</a></li>
+    <li><a href="https://github.com/emfcamp/map">EMF Map</a></li>
+  </ul>
+
+  <h2 class="govuk-heading-m">Acknowledgements</h2>
+  <p class="govuk-body">We would like to thank the following, without whom this project would not have been possible:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>Electromagnetic Field Organising Team</li>
+    <li>Electromagnetic Field Installations Team</li>
+    <li>Electromagnetic Field NOC Team</li>
+    <li>Electromagnetic Field Badge Team</li>
+    <li>{{ admin_count }} volunteer{{ admin_count|pluralize }} who designed, built, deployed and are supporting GCHQ.NET</li>
+    <li><a href="{% static 'img/why.webp' %}">The 13th Flute-Wielding Platoon of Y Fenni</a></li>
+  </ul>
+
+{% endblock %}

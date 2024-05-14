@@ -14,7 +14,9 @@ urlpatterns = [
     path("leaderboards/<uuid:pk>/", views.LeaderboardDetailView.as_view(), name="leaderboard_detail"),
     path(
         "leaderboards/<uuid:pk>/settings/",
-        views.LeaderboardDetailSettings.as_view(),
+        views.LeaderboardDetailSettingsView.as_view(),
         name="leaderboard_detail_settings",
     ),
+    path("my-finds/", views.MyFindsView.as_view(), name="my_finds"),
+    path("my-finds/map/", views.MyFindsMapView.as_view(), name="my_finds_map"),
 ]

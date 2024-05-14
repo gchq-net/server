@@ -26,21 +26,14 @@
               How to Play
             </a>
           </li>
-          {% if user.is_authenticated %}
-            <li class="govuk-header__navigation-item">
-              <a class="govuk-header__link" href="{% url 'accounts:finds' %}">
-                My Finds
-              </a>
-            </li>
-          {% endif %}
           <li class="govuk-header__navigation-item">
-            <a class="govuk-header__link" href="{% url 'quest:leaderboard_list' %}">
-              My Leaderboards
+            <a class="govuk-header__link" href="{% url 'quest:my_finds' %}">
+              My Finds
             </a>
           </li>
           <li class="govuk-header__navigation-item">
-            <a class="govuk-header__link" href="#">
-              About
+            <a class="govuk-header__link" href="{% url 'quest:leaderboard_list' %}">
+              My Leaderboards
             </a>
           </li>
           {% if user.is_superuser %}

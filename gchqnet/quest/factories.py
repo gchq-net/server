@@ -1,18 +1,17 @@
 import factory
 import factory.fuzzy
 
-from gchqnet.accounts.factories import UserFactory
 from gchqnet.hexpansion.factories import HexpansionFactory
 
 from .models import LocationDifficulty
 
 
-class LocationInstallationFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = "quest.LocationInstallation"
+class CoordinatesFactory(factory.django.DjangoModelFactory):
+    lat = factory.fuzzy.FuzzyFloat(52.03887, 52.04396)
+    long = factory.fuzzy.FuzzyFloat(-2.38255, -2.37431)
 
-    hexpansion = factory.SubFactory(HexpansionFactory)
-    created_by = factory.SubFactory(UserFactory)
+    class Meta:
+        model = "quest.Coordinates"
 
 
 class LocationFactory(factory.django.DjangoModelFactory):
@@ -21,5 +20,9 @@ class LocationFactory(factory.django.DjangoModelFactory):
 
     display_name = factory.Faker("slug")
     description = factory.Faker("paragraph")
+    hint = factory.Faker("slug")
     difficulty = factory.fuzzy.FuzzyChoice(LocationDifficulty)
-    installation = factory.RelatedFactory(LocationInstallationFactory, factory_related_name="location")
+    hexpansion = factory.SubFactory(HexpansionFactory)
+    coordinates = factory.RelatedFactory(
+        CoordinatesFactory, factory_related_name="location", created_by=factory.SelfAttribute("location.created_by")
+    )

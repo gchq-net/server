@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from .models import CaptureEvent, Coordinates, Leaderboard, Location, LocationInstallation, RawCaptureEvent
+from .models import CaptureEvent, Coordinates, Leaderboard, Location, RawCaptureEvent
 
 
 class CoordinatesAdmin(admin.StackedInline):
@@ -13,24 +13,17 @@ class CoordinatesAdmin(admin.StackedInline):
     readonly_fields = ("id", "created_at", "created_by", "updated_at")
 
 
-class LocationInstallationAdmin(admin.StackedInline):
-    model = LocationInstallation
-    autocomplete_fields = ("hexpansion",)
-    fields = ("hexpansion", "created_at", "created_by", "updated_at")
-    readonly_fields = ("id", "created_at", "created_by", "updated_at")
-    extra = 0
-
-
 class LocationAdmin(admin.ModelAdmin):
     model = Location
-    inlines = (CoordinatesAdmin, LocationInstallationAdmin)
+    inlines = (CoordinatesAdmin,)
     exclude = ("created_by",)
     list_display = ("display_name", "internal_name", "difficulty", "coordinates")
-    list_filter = ("difficulty", ("installation", admin.EmptyFieldListFilter))
+    list_filter = ("difficulty",)
     readonly_fields = ("id", "created_at", "created_by", "updated_at")
+    autocomplete_fields = ("hexpansion",)
     search_fields = ("display_name", "internal_name")
     fieldsets = (
-        (None, {"fields": ("display_name", "difficulty")}),
+        (None, {"fields": ("display_name", "difficulty", "hint")}),
         (
             "Internal Info",
             {
