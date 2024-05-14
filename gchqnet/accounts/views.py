@@ -24,7 +24,9 @@ from .forms import (
     BadgeLoginChallengeForm,
     BadgeLoginUsernameForm,
     CredentialsLoginForm,
-    ProfileUpdateForm,
+    BaseProfileUpdateForm,
+    PasswordProfileUpdateForm,
+    TOTPProfileUpdateForm,
 )
 from .models import User
 
@@ -35,14 +37,14 @@ if TYPE_CHECKING:
 class MyProfileView(LoginRequiredMixin, UpdateView):
     template_name = "pages/accounts/profile.html"
     model = User
-    form_class = ProfileUpdateForm
+    form_class = PasswordProfileUpdateForm
     success_url = reverse_lazy("accounts:profile")
 
-    # @method_decorator(sensitive_post_parameters())
-    # @method_decorator(csrf_protect)
-    # @method_decorator(login_required)
-    # def dispatch(self, *args, **kwargs):
-    #    return super().dispatch(*args, **kwargs)
+    def get_form_class(self) -> type[BaseProfileUpdateForm]:
+        if self.request.user.has_usable_password():
+            return PasswordProfileUpdateForm
+        else:
+            return TOTPProfileUpdateForm
 
     def get_object(self, queryset: QuerySet[User] | None = None) -> User:
         assert self.request.user.is_authenticated
@@ -53,7 +55,7 @@ class MyProfileView(LoginRequiredMixin, UpdateView):
         kwargs["user"] = self.request.user
         return kwargs
 
-    def form_valid(self, form: ProfileUpdateForm) -> HttpResponse:
+    def form_valid(self, form: BaseProfileUpdateForm) -> HttpResponse:
         messages.success(self.request, "Updated profile successfully.")
         form.save()
         # Cycle sessions if password has changed
@@ -87,7 +89,9 @@ class BadgeLoginUsernamePromptView(LoginPageMixin, FormView):
     success_url = reverse_lazy("accounts:login_badge_challenge")
 
     def form_valid(self, form: BadgeLoginUsernameForm) -> HttpResponse:
-        self.request.session["badge_login__user_id"] = form.cleaned_data["account_name"].id
+        self.request.session["badge_login__user_id"] = form.cleaned_data[
+            "account_name"
+        ].id
         resp = super().form_valid(form)
         if next_q := self.request.GET.get("next"):
             resp["Location"] += f"?next={next_q}"
@@ -117,7 +121,9 @@ class BadgeLoginChallengePromptView(LoginPageMixin, RedirectURLMixin, FormView):
     def form_valid(self, form: BadgeLoginChallengeForm) -> HttpResponse:
         del self.request.session["badge_login__user_id"]
         if form.user.is_superuser:
-            messages.info(self.request, "Please login with a password for security purposes.")
+            messages.info(
+                self.request, "Please login with a password for security purposes."
+            )
             return redirect("accounts:login_credentials")
         else:
             auth_login(self.request, form.user)
