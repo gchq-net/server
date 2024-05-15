@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING
 
 from django.db import models
 
+from gchqnet.quest.repository import get_private_scoreboard
+
 if TYPE_CHECKING:
     from gchqnet.accounts.models import User
 
@@ -35,8 +37,4 @@ class Leaderboard(models.Model):
 
     @property
     def scores(self) -> models.QuerySet[User]:
-        return (
-            self.members.only("id", "username", "display_name")
-            .with_scoreboard_fields()  # type: ignore[attr-defined]
-            .order_by("rank", "capture_count", "display_name")
-        )
+        return get_private_scoreboard(self)

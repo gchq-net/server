@@ -10,13 +10,14 @@ from rest_framework.generics import ListAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from gchqnet.accounts.models.user import User
+from gchqnet.accounts.models.user import UserQuerySet
 from gchqnet.quest.models import CaptureEvent, Leaderboard, LocationDifficulty
+from gchqnet.quest.repository import get_global_scoreboard
 
 from .serializers import LeaderboardSerializer, LeaderboardWithScoresSerializer, ScoreboardEntrySerializer
 
 if TYPE_CHECKING:
-    from django.db.models.query import QuerySet, RawQuerySet
+    from django.db.models.query import QuerySet
 
 
 class GlobalScoreboardAPIView(ListAPIView):
@@ -26,20 +27,8 @@ class GlobalScoreboardAPIView(ListAPIView):
     ordering_fields = ["rank", "capture_count", "current_score", "display_name"]
     ordering = ["rank", "capture_count", "display_name"]
 
-    def get_queryset(self) -> RawQuerySet:
-        qs = User.objects.filter(is_superuser=False)
-        qs = qs.only("id", "username", "display_name")
-        qs = qs.with_scoreboard_fields()
-
-        if search_query := self.request.query_params.get("search"):
-            # Construct a CTE expression manually as the Django ORM does not support them
-            # Hack for case-insensitivity that works across both SQLite and PostgreSQL
-            qs = User.objects.raw(
-                f"SELECT * FROM ({qs.query}) as u0 WHERE Lower(display_name) LIKE Lower(%s)",  # noqa: S608
-                [f"%{search_query}%"],
-            )
-
-        return qs
+    def get_queryset(self) -> UserQuerySet:
+        return get_global_scoreboard()
 
     @extend_schema(summary="Get the global scoreboard", tags=["Scoreboards"])
     def get(self, request: Request, *args: Any, **kwargs: Any) -> Response:
