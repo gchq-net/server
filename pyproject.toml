@@ -15,6 +15,7 @@ django-stubs-ext = "^5.0.0"
 djangorestframework = "^3.15.1"
 drf-spectacular = "^0.27.2"
 pyotp = "^2.9.0"
+queryish = "^0.2"
 
 [tool.poetry.group.prod.dependencies]
 uvicorn = "^0.29.0"
@@ -85,7 +86,7 @@ disallow_untyped_decorators = true
 check_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = ["crispy_forms.*", "crispy_forms_gds.*", "debug_toolbar.*", "factory.*"]
+module = ["crispy_forms.*", "crispy_forms_gds.*", "debug_toolbar.*", "factory.*", "queryish.*"]
 ignore_missing_imports = true
 
 
