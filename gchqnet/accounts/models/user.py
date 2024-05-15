@@ -7,7 +7,7 @@ from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
 from django.db import models
-from django.db.models.functions import DenseRank, Lower
+from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_stubs_ext import WithAnnotations
@@ -18,20 +18,7 @@ _T = TypeVar("_T", bound=models.Model)
 
 
 class UserQuerySet(models.QuerySet[WithAnnotations["User"]]):
-    def with_current_score(self) -> UserQuerySet:
-        return self.annotate(
-            current_score=models.functions.Coalesce(
-                models.Sum("capture_events__location__difficulty"),
-                models.Value(0),
-            ),
-        )
-
-    def with_capture_count(self) -> UserQuerySet:
-        return self.annotate(capture_count=models.Count("capture_events"))
-
-    def with_scoreboard_fields(self) -> UserQuerySet:
-        qs = self.with_capture_count().with_current_score()
-        return qs.annotate(rank=models.Window(expression=DenseRank(), order_by=models.F("current_score").desc()))
+    pass
 
 
 class _UserManager(BaseUserManager[_T]):

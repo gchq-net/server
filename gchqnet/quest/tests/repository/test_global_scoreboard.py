@@ -4,6 +4,7 @@ from gchqnet.accounts.models import User
 from gchqnet.hexpansion.factories import HexpansionFactory
 from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models import CaptureEvent, Location, RawCaptureEvent
+from gchqnet.quest.repository import _annotate_scoreboard_query
 
 
 @pytest.mark.django_db
@@ -20,13 +21,13 @@ class TestUserScoreBoardAnnotation:
         return location
 
     def test_no_capture(self, user: User) -> None:
-        queried_user = User.objects.with_scoreboard_fields().get(id=user.id)
+        queried_user = _annotate_scoreboard_query(User.objects.all()).get(id=user.id)
 
         assert queried_user.current_score == 0
 
     def test_one_capture(self, user_with_badge: User) -> None:
         location = self._generate_capture(user_with_badge)
-        queried_user = User.objects.with_scoreboard_fields().get(id=user_with_badge.id)
+        queried_user = _annotate_scoreboard_query(User.objects.all()).get(id=user_with_badge.id)
 
         # Score should be exactly the value of that location.
         assert queried_user.current_score == location.difficulty
@@ -36,7 +37,7 @@ class TestUserScoreBoardAnnotation:
         location_1 = self._generate_capture(user_with_badge)
         location_2 = self._generate_capture(user_with_badge)
 
-        queried_user = User.objects.with_scoreboard_fields().get(id=user_with_badge.id)
+        queried_user = _annotate_scoreboard_query(User.objects.all()).get(id=user_with_badge.id)
 
         # Score should be the sum of those locations
         assert queried_user.current_score == location_1.difficulty + location_2.difficulty

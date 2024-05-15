@@ -21,7 +21,12 @@ class GlobalScoreboardView(ListView):
         return query
 
     def get_queryset(self) -> UserQuerySet:
-        return get_global_scoreboard(search_query=self.get_search_query())
+        qs = get_global_scoreboard()
+
+        if search_query := self.get_search_query():
+            qs = qs.filter(display_name__ilike=search_query)
+
+        return qs
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         return super().get_context_data(

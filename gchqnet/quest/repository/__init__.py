@@ -2,6 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from django.db import models
+from django.db.models.functions import DenseRank
+
+from gchqnet.accounts.models import User
+
 from .cache import CachedScoreboardQuerySet
 
 if TYPE_CHECKING:
@@ -13,24 +18,24 @@ if TYPE_CHECKING:
 
 def _annotate_scoreboard_query(qs: UserQuerySet | QuerySet[User]) -> UserQuerySet:
     qs = qs.only("id", "username", "display_name")
-    qs = qs.with_scoreboard_fields()  # type: ignore[attr-defined]
+    qs = qs.annotate(
+        capture_count=models.Count("capture_events"),
+        current_score=models.functions.Coalesce(
+            models.Sum("capture_events__location__difficulty"),
+            models.Value(0),
+        ),
+        rank=models.Window(expression=DenseRank(), order_by=models.F("current_score").desc()),
+    )
     qs = qs.order_by("rank", "capture_count", "display_name")
     return qs  # type: ignore[return-value]
 
 
-def get_global_scoreboard(*, search_query: str | None = None) -> CachedScoreboardQuerySet:
-    from gchqnet.accounts.models.user import User
-
+def get_global_scoreboard() -> CachedScoreboardQuerySet:
     # Only display users who are not administrators.
     qs = User.objects.filter(is_superuser=False)
     qs = _annotate_scoreboard_query(qs)
-
-    qsi = CachedScoreboardQuerySet(qs, "global")
-
-    if search_query:
-        qsi = qsi.filter(display_name__ilike=search_query)
-
-    return qsi
+    cached_qs = CachedScoreboardQuerySet(qs, "global")
+    return cached_qs
 
 
 def get_private_scoreboard(leaderboard: Leaderboard) -> CachedScoreboardQuerySet:
