@@ -39,6 +39,8 @@ class LocationAdmin(admin.ModelAdmin):
         instance = super().save_form(request, form, change)
         if created:
             instance.created_by = request.user
+
+        instance.capture_events.update(score=instance.difficulty)
         return instance
 
     def save_formset(self, request: HttpRequest, form: ModelForm, formset: BaseFormSet, change: bool) -> None:  # noqa: FBT001
@@ -87,7 +89,7 @@ class CaptureEventAdmin(ViewOnlyMixin, admin.ModelAdmin):
 
     list_display = ("location", "created_by", "created_at")
     fieldsets = (
-        (None, {"fields": ("location",)}),
+        (None, {"fields": ("location", "score")}),
         (
             "Raw Capture Event",
             {

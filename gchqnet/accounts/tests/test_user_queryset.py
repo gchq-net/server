@@ -15,7 +15,9 @@ class TestUserScoreBoardAnnotation:
         assert badge
 
         raw_capture = RawCaptureEvent.objects.create(badge=badge, hexpansion=hexpansion, created_by=user)
-        CaptureEvent.objects.create(raw_capture_event=raw_capture, location=location, created_by=user)
+        CaptureEvent.objects.create(
+            raw_capture_event=raw_capture, location=location, score=location.difficulty, created_by=user
+        )
 
         return location
 

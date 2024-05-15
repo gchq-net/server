@@ -4,7 +4,7 @@ import uuid
 
 from django.db import models
 
-from .location import Location
+from .location import Location, LocationDifficulty
 
 
 class RawCaptureEvent(models.Model):
@@ -31,6 +31,9 @@ class CaptureEvent(models.Model):
         on_delete=models.PROTECT,
         related_name="capture_events",
     )
+    # The score field here should not be relied upon for auditing scorekeeping.
+    # However, to make queries easier when generating the scoreboard, we add the data to this table
+    score = models.IntegerField(choices=LocationDifficulty, editable=False)
 
     # The created_by field here should not be relied upon for auditing scorekeeping.
     # However, to make queries easier when generating the scoreboard, we assume that a CaptureEvent

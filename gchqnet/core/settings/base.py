@@ -18,6 +18,7 @@ if "CSRF_TRUSTED_ORIGINS" in env:
 # Application definition
 INSTALLED_APPS = [
     "gchqnet.accounts",
+    "gchqnet.achievements",
     "gchqnet.content",
     "gchqnet.hexpansion",
     "gchqnet.quest",

@@ -13,17 +13,37 @@ from django.utils.translation import gettext_lazy as _
 from django_stubs_ext import WithAnnotations
 
 from gchqnet.accounts.tokens import generate_api_token
+from gchqnet.achievements.models import BasicAchievementEvent
+from gchqnet.quest.models.captures import CaptureEvent
 
 _T = TypeVar("_T", bound=models.Model)
 
 
 class UserQuerySet(models.QuerySet[WithAnnotations["User"]]):
     def with_current_score(self) -> UserQuerySet:
+        location_difficulty_subquery = models.Subquery(
+            CaptureEvent.objects.filter(created_by_id=models.OuterRef("id"))
+            .values("created_by_id")
+            .annotate(difficulty_sum=models.Sum("score"))
+            .values("difficulty_sum")[:1]
+        )
+
+        basic_achievements_subquery = models.Subquery(
+            BasicAchievementEvent.objects.filter(user_id=models.OuterRef("id"))
+            .values("user_id")
+            .annotate(
+                difficulty_sum=models.Sum("score"),
+            )
+            .values("difficulty_sum")[:1]
+        )
+
         return self.annotate(
-            current_score=models.functions.Coalesce(
-                models.Sum("capture_events__location__difficulty"),
-                models.Value(0),
-            ),
+            current_score=sum(
+                (
+                    models.functions.Coalesce(location_difficulty_subquery, models.Value(0)),
+                    models.functions.Coalesce(basic_achievements_subquery, models.Value(0)),
+                )
+            )
         )
 
     def with_capture_count(self) -> UserQuerySet:

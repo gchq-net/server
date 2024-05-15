@@ -7,6 +7,7 @@ from gchqnet.accounts.models.user import User
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models import CaptureEvent, Location, RawCaptureEvent
+from gchqnet.quest.models.leaderboard import Leaderboard
 
 
 class Command(BaseCommand):
@@ -23,6 +24,7 @@ class Command(BaseCommand):
         force_color: bool,
         skip_checks: bool,
     ) -> None:
+        Leaderboard.objects.all().delete()
         CaptureEvent.objects.all().delete()
         RawCaptureEvent.objects.all().delete()
         Location.objects.all().delete()
@@ -43,6 +45,8 @@ class Command(BaseCommand):
                 raw_event = RawCaptureEvent.objects.create(
                     badge=badge, hexpansion=location.hexpansion, created_by=badge.user
                 )
-                CaptureEvent.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
+                CaptureEvent.objects.create(
+                    raw_capture_event=raw_event, location=location, score=location.difficulty, created_by=badge.user
+                )
 
         self.stdout.write("Generated fake data")
