@@ -68,11 +68,11 @@ class BaseProfileUpdateForm(forms.ModelForm):
 
         return display_name
 
-    def clean_new_password2(self) -> None:
+    def clean_new_password2(self) -> str:
         password1 = self.cleaned_data.get("new_password1")
         password2 = self.cleaned_data.get("new_password2")
         if not password2 or self.errors:
-            return None
+            return ""
         if not self.auth_success:
             raise ValidationError(self.auth_error_msg)
         if password1 != password2:
@@ -90,7 +90,7 @@ class BaseProfileUpdateForm(forms.ModelForm):
 
 class PasswordProfileUpdateForm(BaseProfileUpdateForm):
     current_password = forms.CharField(label="Current password", widget=forms.PasswordInput, required=False)
-    auth_error_msg = "That password is incorrect"
+    auth_error_msg = "Please enter your current password"
 
     field_order = [
         "username",
@@ -102,7 +102,9 @@ class PasswordProfileUpdateForm(BaseProfileUpdateForm):
 
     def clean_current_password(self) -> str:
         current_password = self.cleaned_data["current_password"]
-        if self.user.has_usable_password() and current_password and not self.user.check_password(current_password):
+        if not current_password or not self.user.has_usable_password():
+            return ""
+        if not self.user.check_password(current_password):
             raise ValidationError("That password is incorrect.")
         self.auth_success = True
         return current_password
@@ -110,7 +112,7 @@ class PasswordProfileUpdateForm(BaseProfileUpdateForm):
 
 class TOTPProfileUpdateForm(BaseProfileUpdateForm):
     security_code = forms.CharField(label="Badge Security Code", min_length=6, max_length=6, required=False)
-    auth_error_msg = "That isn't the correct code"
+    auth_error_msg = "Please enter your badge security code"
 
     field_order = [
         "username",
@@ -122,6 +124,8 @@ class TOTPProfileUpdateForm(BaseProfileUpdateForm):
 
     def clean_security_code(self) -> str:
         security_code = self.cleaned_data["security_code"].strip()
+        if not security_code:
+            return ""
         if not verify_security_code(self.user, security_code):
             raise ValidationError("That isn't the correct code.")
         self.auth_success = True
