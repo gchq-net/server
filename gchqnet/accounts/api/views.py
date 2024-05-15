@@ -27,7 +27,7 @@ def profile(request: Request) -> Response:
 )
 @permission_classes([AllowAny])
 @api_view(["POST"])
-def get_token_from_totp(request: Request) -> Response:
+def get_auth_token(request: Request) -> Response:
     serializer = UserTokenRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
@@ -39,14 +39,19 @@ def get_token_from_totp(request: Request) -> Response:
     except User.DoesNotExist:
         raise exceptions.AuthenticationFailed() from None
 
-    security_code = serializer.validated_data["otp"]
-    is_valid = any(
-        CustomTOTP(mac_address).verify(security_code, valid_window=1)
-        for mac_address in user.badges.values_list("mac_address", flat=True)
-    )
+    if "otp" in serializer.validated_data:
+        security_code = serializer.validated_data["otp"]
+        is_valid = any(
+            CustomTOTP(mac_address).verify(security_code, valid_window=1)
+            for mac_address in user.badges.values_list("mac_address", flat=True)
+        )
 
-    if not is_valid or user.is_superuser:
-        raise exceptions.AuthenticationFailed()
+        if not is_valid or user.is_superuser:
+            raise exceptions.AuthenticationFailed()
+    else:
+        # Password Auth
+        if not user.check_password(serializer.validated_data["password"]):
+            raise exceptions.AuthenticationFailed()
 
     # For now, return the static token that every user has.
     response = UserTokenSerializer(
