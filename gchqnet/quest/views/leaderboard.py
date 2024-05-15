@@ -14,6 +14,7 @@ from django.views.generic import CreateView, DetailView, FormView, ListView, Upd
 from gchqnet.accounts.models import User
 from gchqnet.quest.forms import LeaderboardCreateForm, LeaderboardInviteAcceptDeclineForm, LeaderboardUpdateForm
 from gchqnet.quest.models import Leaderboard
+from gchqnet.quest.repository import get_private_scoreboard
 
 
 class LeaderboardListView(LoginRequiredMixin, ListView):
@@ -35,8 +36,7 @@ class LeaderboardDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView)
         except ValueError:
             page_num = 1
 
-        qs = self.object.members.only("id", "display_name")
-        qs = qs.with_scoreboard_fields().order_by("rank", "display_name")
+        qs = get_private_scoreboard(self.object)
 
         paginator = Paginator(qs, 15)
 
