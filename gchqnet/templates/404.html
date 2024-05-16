@@ -1,0 +1,19 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}Not Found{% endblock %}
+
+{% block content %}
+  <div class="govuk-error-summary" data-module="govuk-error-summary">
+    <div role="alert">
+      <h2 class="govuk-error-summary__title">
+        Error 404: Not Found
+      </h2>
+      <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+          <li>That page was not found. Perhaps it was eaten by Rishi Sunak?</li>
+          <li>Please eat sixteen bananas to continue.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}

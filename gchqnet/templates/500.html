@@ -1,0 +1,19 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}Server Error{% endblock %}
+
+{% block content %}
+  <div class="govuk-error-summary" data-module="govuk-error-summary">
+    <div role="alert">
+      <h2 class="govuk-error-summary__title">
+        Error 500: Server Error
+      </h2>
+      <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+          <li>Our ASR400 has run out of carpet.</li>
+          <li>Please eat sixteen bananas to continue.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}
