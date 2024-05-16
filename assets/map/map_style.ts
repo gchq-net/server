@@ -20,7 +20,7 @@ export default {
         },
         hexpansions: {
             type: 'geojson',
-            data: '/api/quest/locations/my-finds/',
+            data: '/api/locations/my-finds/',
             attribution: '© GCHQ.NET 2024'
         },
         slope: {
