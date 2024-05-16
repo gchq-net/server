@@ -19,7 +19,7 @@ class Leaderboard(models.Model):
         max_length=40,
     )
 
-    owner = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="leaderboards_created")
+    owner = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name="leaderboards_created")
     members = models.ManyToManyField("accounts.User", related_name="leaderboards")
     enable_invites = models.BooleanField(
         "Enable Invites",
@@ -29,7 +29,7 @@ class Leaderboard(models.Model):
 
     # The User that created the leaderboard is the admin.
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="+")
+    created_by = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name="+")
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:

@@ -5,9 +5,9 @@ import pytest
 from gchqnet.accounts.models import User
 from gchqnet.hexpansion.factories import HexpansionFactory
 from gchqnet.quest.factories import LocationFactory
-from gchqnet.quest.models import CaptureEvent, Location, RawCaptureEvent
+from gchqnet.quest.models import Location
 from gchqnet.quest.models.leaderboard import Leaderboard
-from gchqnet.quest.repository import get_global_scoreboard, get_private_scoreboard
+from gchqnet.quest.repository import get_global_scoreboard, get_private_scoreboard, record_attempted_capture
 
 
 def _generate_capture(user: User) -> Location:
@@ -16,9 +16,7 @@ def _generate_capture(user: User) -> Location:
     badge = user.badges.first()
     assert badge
 
-    raw_capture = RawCaptureEvent.objects.create(badge=badge, hexpansion=hexpansion, created_by=user)
-    CaptureEvent.objects.create(raw_capture_event=raw_capture, location=location, created_by=user)
-
+    record_attempted_capture(badge, hexpansion)
     return location
 
 

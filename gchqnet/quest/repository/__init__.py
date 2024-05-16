@@ -10,6 +10,7 @@ from gchqnet.accounts.models.badge import Badge
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.models.captures import CaptureEvent, CaptureLog, RawCaptureEvent
 from gchqnet.quest.models.location import Location
+from gchqnet.quest.models.scores import ScoreRecord
 
 if TYPE_CHECKING:  # pragma: nocover
     from django.db.models import QuerySet
@@ -19,11 +20,18 @@ if TYPE_CHECKING:  # pragma: nocover
 
 
 def _annotate_scoreboard_query(qs: UserQuerySet | QuerySet[User]) -> UserQuerySet:
+    score_sum_subquery = (
+        ScoreRecord.objects.filter(user_id=models.OuterRef("id"))
+        .values("user_id")
+        .annotate(total_score=models.Sum("score"))
+        .values("total_score")[:1]
+    )
+
     qs = qs.only("id", "username", "display_name")
     qs = qs.annotate(
         capture_count=models.Count("capture_events"),
         current_score=models.functions.Coalesce(
-            models.Sum("capture_events__location__difficulty"),
+            models.Subquery(score_sum_subquery),
             models.Value(0),
         ),
         rank=models.Window(expression=DenseRank(), order_by=models.F("current_score").desc()),
@@ -75,5 +83,6 @@ def record_attempted_capture(badge: Badge, hexpansion: Hexpansion) -> CaptureRes
         return CaptureResult(result="repeat", message="You have captured this before.")
 
     # Mark as captured.
-    CaptureEvent.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
+    ce = CaptureEvent.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
+    ScoreRecord.objects.create(capture_event=ce, user=badge.user, score=location.difficulty)
     return CaptureResult(result="success", message="Successfully captured")

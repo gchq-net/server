@@ -8,6 +8,7 @@ from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models import CaptureEvent, Location, RawCaptureEvent
 from gchqnet.quest.models.captures import CaptureLog
+from gchqnet.quest.models.scores import ScoreRecord
 
 
 class Command(BaseCommand):
@@ -48,8 +49,11 @@ class Command(BaseCommand):
                     )
                     CaptureLog.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
                     if i == 1:
-                        CaptureEvent.objects.create(
+                        capture_event = CaptureEvent.objects.create(
                             raw_capture_event=raw_event, location=location, created_by=badge.user
+                        )
+                        ScoreRecord.objects.create(
+                            capture_event=capture_event, user=badge.user, score=location.difficulty
                         )
 
         self.stdout.write("Generated fake data")
