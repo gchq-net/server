@@ -1,0 +1,108 @@
+{% extends "layouts/base_app.html" %}
+{% load location_tags static %}
+
+{% block title %}{{ object.display_name }}{% endblock %}
+
+{% block header %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="gchqnet-page-header-actions__title">
+        <h1 class="govuk-heading-xl">{{ object.display_name }}</h1>
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <link rel="stylesheet" href="{% static 'map/map.css' %}">
+      <script src="{% static 'map/map.js' %}"></script>
+      <noscript>You need Javascript enabled to view this map.</noscript>
+      <div id="map" style="min-height: 300px;"></div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  {% if capture_event %}
+    <p class="govuk-body">You have already found this hexpansion.</p>
+  {% else %}
+    <p class="govuk-body">You have not found this hexpansion yet.</p>
+  {% endif %}
+  <div class="govuk-tabs" data-module="govuk-tabs">
+    <ul class="govuk-tabs__list">
+      <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+        <a class="govuk-tabs__tab" href="#info">
+          Information
+        </a>
+      </li>
+      <li class="govuk-tabs__list-item">
+        <a class="govuk-tabs__tab" href="#activity">
+          Recent Activity
+        </a>
+      </li>
+    </ul>
+    <div class="govuk-tabs__panel" id="info">
+      <h2 class="govuk-heading-l">Information</h2>
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Name
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {% if capture_event %}{{ object.display_name }}{% else %}???{% endif %}
+          </dd>
+        </div>
+      </dl>
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Difficulty
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ object.difficulty|difficulty_label }}
+          </dd>
+        </div>
+      </dl>
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Hint
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ object.hint }}
+          </dd>
+        </div>
+      </dl>
+      {% if capture_event %}
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Found at
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ capture_event.created_at }}
+            </dd>
+          </div>
+        </dl>
+      {% endif %}
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="activity">
+      <h2 class="govuk-heading-l">Recent Activity</h2>
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Player</th>
+            <th scope="col" class="govuk-table__header">Found at</th>
+            <th scope="col" class="govuk-table__header"></th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for recent_capture in recent_captures %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">{{ recent_capture.created_by.display_name }}</td>
+              <td class="govuk-table__cell">{{ recent_capture.created_at }}</td>
+              <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

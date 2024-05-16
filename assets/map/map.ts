@@ -47,10 +47,15 @@ class EventMap {
                 style: map_style,
                 pitchWithRotate: false,
                 dragRotate: false,
-            })
+                attributionControl: false,
+            }),
         )
 
         this.map.touchZoomRotate.disableRotation()
+
+        this.map.addControl(new maplibregl.AttributionControl({
+            compact: true
+        }));
 
         this.map.addControl(new maplibregl.NavigationControl(), 'top-right')
 
