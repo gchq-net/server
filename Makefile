@@ -3,7 +3,7 @@
 CMD:=poetry run
 PYMODULE:=gchqnet
 MANAGEPY:=$(CMD) ./manage.py
-SETTINGS_MODULE:=gchqnet.core.settings.dev
+SETTINGS_MODULE:=gchqnet.core.settings.test
 
 all: type test format lint
 
