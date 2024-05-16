@@ -19,4 +19,5 @@ urlpatterns = [
     ),
     path("my-finds/", views.MyFindsView.as_view(), name="my_finds"),
     path("my-finds/map/", views.MyFindsMapView.as_view(), name="my_finds_map"),
+    path("players/<str:username>/", views.PlayerDetailView.as_view(), name="player_detail"),
 ]
