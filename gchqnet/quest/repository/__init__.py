@@ -7,8 +7,6 @@ from django.db.models.functions import DenseRank
 
 from gchqnet.accounts.models import User
 
-from .cache import CachedScoreboardQuerySet
-
 if TYPE_CHECKING:
     from django.db.models import QuerySet
 
@@ -30,15 +28,23 @@ def _annotate_scoreboard_query(qs: UserQuerySet | QuerySet[User]) -> UserQuerySe
     return qs  # type: ignore[return-value]
 
 
-def get_global_scoreboard() -> CachedScoreboardQuerySet:
+def get_global_scoreboard(*, search_query: str = "") -> UserQuerySet:
     # Only display users who are not administrators.
     qs = User.objects.filter(is_superuser=False)
     qs = _annotate_scoreboard_query(qs)
-    cached_qs = CachedScoreboardQuerySet(qs, "global")
-    return cached_qs
+
+    if search_query:
+        # Construct a CTE expression manually as the Django ORM does not support them
+        # Hack for case-insensitivity that works across both SQLite and PostgreSQL
+        qs = User.objects.raw(
+            f"SELECT * FROM ({qs.query}) as u0 WHERE Lower(display_name) LIKE Lower(%s)",  # noqa: S608
+            [f"%{search_query}%"],
+        )
+
+    return qs
 
 
-def get_private_scoreboard(leaderboard: Leaderboard) -> CachedScoreboardQuerySet:
+def get_private_scoreboard(leaderboard: Leaderboard) -> UserQuerySet:
     qs = leaderboard.members.all()
     qs = _annotate_scoreboard_query(qs)
-    return CachedScoreboardQuerySet(qs, str(leaderboard.id))
+    return qs

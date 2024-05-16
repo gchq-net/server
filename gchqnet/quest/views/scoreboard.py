@@ -12,7 +12,7 @@ class GlobalScoreboardView(ListView):
     paginate_by = 15
     ordering = ("rank",)
 
-    def get_search_query(self) -> str | None:
+    def get_search_query(self) -> str:
         if query := self.request.GET.get("search", ""):
             if "'" in query:
                 # TODO: Add achievement for attempting to hack us
@@ -21,12 +21,7 @@ class GlobalScoreboardView(ListView):
         return query
 
     def get_queryset(self) -> UserQuerySet:
-        qs = get_global_scoreboard()
-
-        if search_query := self.get_search_query():
-            qs = qs.filter(display_name__ilike=search_query)
-
-        return qs
+        return get_global_scoreboard(search_query=self.get_search_query())
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         return super().get_context_data(
