@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.contrib.auth.views import RedirectURLMixin
-from django.forms.models import BaseModelForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, resolve_url
 from django.urls import reverse_lazy
@@ -23,28 +23,44 @@ from gchqnet.accounts.mixins import LoginPageMixin
 from .forms import (
     BadgeLoginChallengeForm,
     BadgeLoginUsernameForm,
+    BaseProfileUpdateForm,
     CredentialsLoginForm,
-    ProfileUpdateForm,
+    PasswordProfileUpdateForm,
+    TOTPProfileUpdateForm,
 )
 from .models import User
 
 if TYPE_CHECKING:
     from django.db.models import QuerySet
-    from django.forms import BaseModelForm
 
 
 class MyProfileView(LoginRequiredMixin, UpdateView):
     template_name = "pages/accounts/profile.html"
     model = User
-    form_class = ProfileUpdateForm
+    form_class = PasswordProfileUpdateForm
     success_url = reverse_lazy("accounts:profile")
+
+    def get_form_class(self) -> type[BaseProfileUpdateForm]:
+        user = cast(User, self.request.user)
+        if user and user.has_usable_password():
+            return PasswordProfileUpdateForm
+        else:
+            return TOTPProfileUpdateForm
 
     def get_object(self, queryset: QuerySet[User] | None = None) -> User:
         assert self.request.user.is_authenticated
         return self.request.user
 
-    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def form_valid(self, form: BaseProfileUpdateForm) -> HttpResponse:
         messages.success(self.request, "Updated profile successfully.")
+        form.save()
+        # Cycle sessions if password has changed
+        update_session_auth_hash(self.request, form.user)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
