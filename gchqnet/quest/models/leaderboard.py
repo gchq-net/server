@@ -7,7 +7,7 @@ from django.db import models
 
 from gchqnet.quest.repository import get_private_scoreboard
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: nocover
     from gchqnet.accounts.models import User
 
 

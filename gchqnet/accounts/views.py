@@ -30,7 +30,7 @@ from .forms import (
 )
 from .models import User
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: nocover
     from django.db.models import QuerySet
 
 

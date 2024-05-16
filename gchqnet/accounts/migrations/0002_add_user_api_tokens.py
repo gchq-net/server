@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 import gchqnet.accounts.tokens
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: nocover
     from django.apps.registry import Apps
     from django.db.backends.base.schema import BaseDatabaseSchemaEditor
 

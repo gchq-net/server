@@ -7,7 +7,7 @@ from django.db.models.functions import DenseRank
 
 from gchqnet.accounts.models import User
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: nocover
     from django.db.models import QuerySet
 
     from gchqnet.accounts.models import User, UserQuerySet

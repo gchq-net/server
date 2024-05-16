@@ -9,7 +9,7 @@ from pytest_django.asserts import assertRedirects, assertTemplateUsed
 
 from gchqnet.accounts.totp import CustomTOTP
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: nocover
     from django.test import Client
 
     from gchqnet.accounts.models import User

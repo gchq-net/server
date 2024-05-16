@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 import django.db.models.deletion
 from django.db import migrations, models
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: nocover
     from django.apps.registry import Apps
     from django.db.backends.base.schema import BaseDatabaseSchemaEditor
 

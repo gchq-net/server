@@ -7,7 +7,7 @@ import pytest
 from django.test import Client
 from django.urls import reverse
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: nocover
     from gchqnet.accounts.models import User
 
 

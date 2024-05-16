@@ -8,7 +8,7 @@ from django.contrib.messages import SUCCESS, Message  # type: ignore[attr-define
 from django.urls import reverse_lazy
 from pytest_django.asserts import assertMessages, assertRedirects, assertTemplateUsed
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: nocover
     from django.test import Client
 
     from gchqnet.accounts.models import User

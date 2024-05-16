@@ -16,7 +16,7 @@ from gchqnet.quest.repository import get_global_scoreboard
 
 from .serializers import LeaderboardSerializer, LeaderboardWithScoresSerializer, ScoreboardEntrySerializer
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: nocover
     from django.db.models.query import QuerySet
 
 
