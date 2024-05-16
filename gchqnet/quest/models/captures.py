@@ -22,6 +22,32 @@ class RawCaptureEvent(models.Model):
         return f"Raw capture of {self.hexpansion} by {self.badge} at {self.created_at}"
 
 
+class CaptureLog(models.Model):
+    """
+    A log of a RawCaptureEvent being mapped to a real location.
+
+    Unlike CaptureEvents, these can be duplicated. There is no unique constraint.
+
+    Do not use for scoring. This is just a log of hexpansion -> location mapping at raw capture time.
+    """
+
+    id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
+
+    raw_capture_event = models.OneToOneField(RawCaptureEvent, on_delete=models.PROTECT, related_name="capture_log")
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.PROTECT,
+        related_name="capture_logs",
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="+")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f"{self.raw_capture_event.badge.user} attempted capture of {self.location} at {self.created_at}"
+
+
 class CaptureEvent(models.Model):
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 

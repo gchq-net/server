@@ -4,6 +4,8 @@ from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
+from gchqnet.quest.models.captures import CaptureLog
+
 from .models import CaptureEvent, Coordinates, Leaderboard, Location, RawCaptureEvent
 
 
@@ -70,24 +72,35 @@ class RawCaptureEventAdmin(ViewOnlyMixin, admin.ModelAdmin):
     list_display = ("badge", "hexpansion", "created_at", "created_by")
     fieldsets = (
         (None, {"fields": ("badge", "hexpansion")}),
-        ("Capture Event", {"fields": ("capture_event",)}),
+        ("Capture Event", {"fields": ("capture_event", "capture_log")}),
         ("Database Info", {"classes": ["collapse"], "fields": ("id", "created_at", "created_by", "updated_at")}),
     )
 
     @admin.display(description="Associated Capture Event")
     def capture_event(self, obj: RawCaptureEvent) -> str | None:
-        if event := CaptureEvent.objects.filter(raw_capture_event=obj).first():
-            url = reverse("admin:quest_captureevent_change", args=[event.id])
-            return mark_safe(f'<a href="{url}">{event}</a>')  # noqa: S308
-        return None
+        try:
+            capture_event = obj.capture_event
+            url = reverse("admin:quest_captureevent_change", args=[capture_event.id])
+            return mark_safe(f'<a href="{url}">{capture_event}</a>')  # noqa: S308
+        except CaptureEvent.DoesNotExist:
+            return "-"
+
+    @admin.display(description="Associated Capture Log")
+    def capture_log(self, obj: RawCaptureEvent) -> str | None:
+        try:
+            capture_log = obj.capture_log
+            url = reverse("admin:quest_capturelog_change", args=[capture_log.id])
+            return mark_safe(f'<a href="{url}">{capture_log}</a>')  # noqa: S308
+        except CaptureLog.DoesNotExist:
+            return "-"
 
 
 class CaptureEventAdmin(ViewOnlyMixin, admin.ModelAdmin):
     model = CaptureEvent
 
-    list_display = ("location", "created_by", "created_at")
+    list_display = ("location", "capture_log", "created_by", "created_at")
     fieldsets = (
-        (None, {"fields": ("location",)}),
+        (None, {"fields": ("location", "capture_log")}),
         (
             "Raw Capture Event",
             {
@@ -101,6 +114,15 @@ class CaptureEventAdmin(ViewOnlyMixin, admin.ModelAdmin):
         ),
         ("Database Info", {"classes": ["collapse"], "fields": ("id", "created_at", "created_by", "updated_at")}),
     )
+
+    @admin.display(description="Capture Log")
+    def capture_log(self, obj: CaptureEvent) -> str:
+        try:
+            capture_log = obj.raw_capture_event.capture_log
+            url = reverse("admin:quest_capturelog_change", args=[capture_log.id])
+            return mark_safe(f'<a href="{url}">{capture_log}</a>')  # noqa: S308
+        except CaptureLog.DoesNotExist:
+            return "-"
 
     @admin.display(description="User")
     def capturing_user(self, obj: CaptureEvent) -> str:
@@ -116,6 +138,54 @@ class CaptureEventAdmin(ViewOnlyMixin, admin.ModelAdmin):
 
     @admin.display(description="Hexpansion")
     def hexpansion(self, obj: CaptureEvent) -> str:
+        hexpansion = obj.raw_capture_event.hexpansion
+        url = reverse("admin:hexpansion_hexpansion_change", args=[hexpansion.id])
+        return mark_safe(f'<a href="{url}">{hexpansion}</a>')  # noqa: S308
+
+
+class CaptureLogAdmin(ViewOnlyMixin, admin.ModelAdmin):
+    model = CaptureLog
+
+    list_display = ("location", "capture_event", "created_by", "created_at")
+    fieldsets = (
+        (None, {"fields": ("location", "capture_event")}),
+        (
+            "Raw Capture Event",
+            {
+                "fields": (
+                    "capturing_user",
+                    "badge",
+                    "hexpansion",
+                    "raw_capture_event",
+                )
+            },
+        ),
+        ("Database Info", {"classes": ["collapse"], "fields": ("id", "created_at", "created_by", "updated_at")}),
+    )
+
+    @admin.display(description="Capture Event")
+    def capture_event(self, obj: CaptureLog) -> str:
+        try:
+            capture_event = obj.raw_capture_event.capture_event
+            url = reverse("admin:quest_captureevent_change", args=[capture_event.id])
+            return mark_safe(f'<a href="{url}">{capture_event}</a>')  # noqa: S308
+        except CaptureEvent.DoesNotExist:
+            return "-"
+
+    @admin.display(description="User")
+    def capturing_user(self, obj: CaptureLog) -> str:
+        user = obj.raw_capture_event.badge.user
+        url = reverse("admin:accounts_user_change", args=[user.id])
+        return mark_safe(f'<a href="{url}">{user}</a>')  # noqa: S308
+
+    @admin.display(description="Badge")
+    def badge(self, obj: CaptureLog) -> str:
+        badge = obj.raw_capture_event.badge
+        url = reverse("admin:accounts_badge_change", args=[badge.id])
+        return mark_safe(f'<a href="{url}">{badge}</a>')  # noqa: S308
+
+    @admin.display(description="Hexpansion")
+    def hexpansion(self, obj: CaptureLog) -> str:
         hexpansion = obj.raw_capture_event.hexpansion
         url = reverse("admin:hexpansion_hexpansion_change", args=[hexpansion.id])
         return mark_safe(f'<a href="{url}">{hexpansion}</a>')  # noqa: S308
@@ -146,4 +216,5 @@ class LeaderboardAdmin(admin.ModelAdmin):
 admin.site.register(Location, LocationAdmin)
 admin.site.register(RawCaptureEvent, RawCaptureEventAdmin)
 admin.site.register(CaptureEvent, CaptureEventAdmin)
+admin.site.register(CaptureLog, CaptureLogAdmin)
 admin.site.register(Leaderboard, LeaderboardAdmin)

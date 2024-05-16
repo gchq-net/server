@@ -7,6 +7,7 @@ from gchqnet.accounts.models.user import User
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models import CaptureEvent, Location, RawCaptureEvent
+from gchqnet.quest.models.captures import CaptureLog
 
 
 class Command(BaseCommand):
@@ -24,6 +25,7 @@ class Command(BaseCommand):
         skip_checks: bool,
     ) -> None:
         CaptureEvent.objects.all().delete()
+        CaptureLog.objects.all().delete()
         RawCaptureEvent.objects.all().delete()
         Location.objects.all().delete()
         Hexpansion.objects.all().delete()
@@ -40,9 +42,14 @@ class Command(BaseCommand):
         for badge in badges:
             sample = random.sample(locations, k=random.randint(0, len(locations)))  # noqa: S311
             for location in sample:
-                raw_event = RawCaptureEvent.objects.create(
-                    badge=badge, hexpansion=location.hexpansion, created_by=badge.user
-                )
-                CaptureEvent.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
+                for i in range(random.randint(1, 3)):  # noqa: S311
+                    raw_event = RawCaptureEvent.objects.create(
+                        badge=badge, hexpansion=location.hexpansion, created_by=badge.user
+                    )
+                    CaptureLog.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
+                    if i == 1:
+                        CaptureEvent.objects.create(
+                            raw_capture_event=raw_event, location=location, created_by=badge.user
+                        )
 
         self.stdout.write("Generated fake data")
