@@ -7,14 +7,16 @@
   <div class="govuk-width-container">
     {% include "components/govuk/phase-banner.html" %}
     <main class="govuk-main-wrapper govuk-main-class" id="main-content">
-      <div class="gchqnet-page-header-actions">
-        <div class="gchqnet-page-header-actions__title">
-          <h1 class="govuk-heading-xl">{% block title %}{% endblock %}</h1>
+      {% block header %}
+        <div class="gchqnet-page-header-actions">
+          <div class="gchqnet-page-header-actions__title">
+            <h1 class="govuk-heading-xl">{% block title %}{% endblock %}</h1>
+          </div>
+          <div class="gchqnet-page-header-actions__actions">
+            {% block action_buttons %}{% endblock %}
+          </div>
         </div>
-        <div class="gchqnet-page-header-actions__actions">
-          {% block action_buttons %}{% endblock %}
-        </div>
-      </div>
+      {% endblock %}
       {% include "components/messages.html" %}
       {% block content %}{% endblock %}
     </main>
