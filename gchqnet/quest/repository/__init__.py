@@ -1,11 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal, TypedDict
 
 from django.db import models
 from django.db.models.functions import DenseRank
 
 from gchqnet.accounts.models import User
+from gchqnet.accounts.models.badge import Badge
+from gchqnet.hexpansion.models import Hexpansion
+from gchqnet.quest.models.captures import CaptureEvent, CaptureLog, RawCaptureEvent
+from gchqnet.quest.models.location import Location
 
 if TYPE_CHECKING:  # pragma: nocover
     from django.db.models import QuerySet
@@ -48,3 +52,28 @@ def get_private_scoreboard(leaderboard: Leaderboard) -> UserQuerySet:
     qs = leaderboard.members.all()
     qs = _annotate_scoreboard_query(qs)
     return qs
+
+
+class CaptureResult(TypedDict):
+    result: Literal["success", "error", "repeat"]
+    message: str
+
+
+def record_attempted_capture(badge: Badge, hexpansion: Hexpansion) -> CaptureResult:
+    # Firstly, record it regardless.
+    raw_event = RawCaptureEvent.objects.create(badge=badge, hexpansion=hexpansion, created_by=badge.user)
+
+    try:
+        location = hexpansion.location
+    except Location.DoesNotExist:
+        return CaptureResult(result="error", message="Unable to find that hexpansion")
+
+    # Log that a capture attempt of a location was made.
+    CaptureLog.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
+
+    if CaptureEvent.objects.filter(created_by=badge.user, location=location).exists():
+        return CaptureResult(result="repeat", message="You have captured this before.")
+
+    # Mark as captured.
+    CaptureEvent.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
+    return CaptureResult(result="success", message="Successfully captured")
