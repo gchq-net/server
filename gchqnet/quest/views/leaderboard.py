@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.core.signing import BadSignature, Signer
 from django.db import models
 from django.forms import BaseModelForm
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
@@ -23,7 +23,7 @@ class LeaderboardListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self) -> models.QuerySet[Leaderboard]:
         assert self.request.user.is_authenticated
-        return self.request.user.leaderboards.all()
+        return self.request.user.leaderboards.order_by("display_name")
 
 
 class LeaderboardDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
@@ -95,17 +95,27 @@ class LeaderboardInviteDetailView(LoginRequiredMixin, FormView):
     form_class = LeaderboardInviteAcceptDeclineForm
 
     def dispatch(self, request: HttpRequest, invite_code: str, *args: Any, **kwargs: Any) -> HttpResponse:
-        assert self.request.user.is_authenticated
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+
+        assert request.user.is_authenticated
+
         signer = Signer()
         try:
             invite = signer.unsign_object(invite_code)
         except BadSignature:
-            raise Http404() from None
+            messages.info(request, "Sorry, that invitation link is not valid.")
+            return redirect("quest:home")
 
         leaderboard = get_object_or_404(Leaderboard, id=invite.get("l"))
+
+        if not leaderboard.enable_invites:
+            messages.info(request, "Sorry, that invitation link is no longer valid.")
+            return redirect("quest:home")
+
         inviter = User.objects.get(id=invite.get("u"))
 
-        if leaderboard.members.contains(self.request.user):
+        if leaderboard.members.contains(self.request.user):  # type: ignore[arg-type]
             messages.info(request, "You are already a member of this leaderboard.")
             return redirect("quest:leaderboard_detail", leaderboard.pk)
 

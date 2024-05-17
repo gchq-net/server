@@ -1,6 +1,7 @@
 import factory
 import factory.fuzzy
 
+from gchqnet.accounts.factories import UserFactory
 from gchqnet.hexpansion.factories import HexpansionFactory
 
 from .models import LocationDifficulty
@@ -26,3 +27,18 @@ class LocationFactory(factory.django.DjangoModelFactory):
     coordinates = factory.RelatedFactory(
         CoordinatesFactory, factory_related_name="location", created_by=factory.SelfAttribute("location.created_by")
     )
+
+    @classmethod
+    def _after_postgeneration(cls, instance, create, results=None) -> None:  # type: ignore  # noqa
+        """Save again the instance if creating and at least one hook ran."""
+        if create and results:
+            instance.save()
+
+
+class LeaderboardFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "quest.Leaderboard"
+
+    display_name = factory.Faker("slug")
+    owner = factory.SubFactory(UserFactory)
+    created_by = factory.SelfAttribute("owner")
