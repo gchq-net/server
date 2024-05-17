@@ -5,10 +5,12 @@ from gchqnet.accounts.models import User
 
 @pytest.fixture
 def user() -> User:
-    return User.objects.create(
+    user = User.objects.create(
         username="foo-username",
         display_name="foo",
     )
+    user.badges.create(mac_address="0A-23-45-67-89-AB")
+    return user
 
 
 @pytest.fixture

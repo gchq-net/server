@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any
 
 from django.conf import settings
 from django.contrib import messages
@@ -41,8 +41,7 @@ class MyProfileView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("accounts:profile")
 
     def get_form_class(self) -> type[BaseProfileUpdateForm]:
-        user = cast(User, self.request.user)
-        if user and user.has_usable_password():
+        if self.object.password and self.object.has_usable_password():
             return PasswordProfileUpdateForm
         else:
             return TOTPProfileUpdateForm
@@ -53,15 +52,20 @@ class MyProfileView(LoginRequiredMixin, UpdateView):
 
     def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
+        kwargs["user"] = self.object
         return kwargs
 
     def form_valid(self, form: BaseProfileUpdateForm) -> HttpResponse:
-        messages.success(self.request, "Updated profile successfully.")
-        form.save()
-        # Cycle sessions if password has changed
-        update_session_auth_hash(self.request, form.user)
-        return super().form_valid(form)
+        self.object = form.save()
+
+        if form.cleaned_data.get("new_password2"):
+            messages.success(self.request, "Your password has been changed.")
+            # Cycle sessions if password has changed
+            update_session_auth_hash(self.request, self.object)
+        else:
+            messages.success(self.request, "Updated profile successfully.")
+
+        return redirect(self.get_success_url())
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         assert self.request.user.is_authenticated
