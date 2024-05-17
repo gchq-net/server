@@ -100,7 +100,7 @@ class TestGetGlobalScoreboard:
                     "current_score": u2_score,
                 },
             ],
-            key=lambda o: o["rank"],  # type: ignore
+            key=lambda o: (o["rank"], o["capture_count"]),
         )
 
 
@@ -209,5 +209,5 @@ class TestPrivateScoreboard:
                     "current_score": u2_score,
                 },
             ],
-            key=lambda o: o["rank"],  # type: ignore
+            key=lambda o: (o["rank"], o["capture_count"]),
         )

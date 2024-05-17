@@ -4,9 +4,9 @@
   <h2 class="govuk-heading-l">Scores</h2>
 
   {% include "components/quest/leaderboard-table.html" with players=page_obj %}
-  {% if page_obj %}
-    {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
-  {% else %}
-    <p class="govuk-body">There are no results. Perhaps check that you spelled your search correctly?</p>
-  {% endif %}
+  {% comment %}
+    We can assume that there will always be members, as it is not possible to access this page
+    if not a member.
+  {% endcomment %}
+  {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
 {% endblock %}
