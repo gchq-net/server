@@ -6,9 +6,15 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from gchqnet.accounts.models.user import User
+from gchqnet.accounts.repository import check_badge_credentials
 from gchqnet.accounts.totp import CustomTOTP
 
-from .serializers import UserProfileSerializer, UserTokenRequestSerializer, UserTokenSerializer
+from .serializers import (
+    BadgeAPIRequestSerializer,
+    UserProfileSerializer,
+    UserTokenRequestSerializer,
+    UserTokenSerializer,
+)
 
 
 @extend_schema(summary="Get current user", responses=UserProfileSerializer, tags=["Users"])
@@ -59,3 +65,30 @@ def get_auth_token(request: Request) -> Response:
         context={"request": request},
     )
     return Response(response.data)
+
+
+@extend_schema(
+    summary="Get player info for current badge",
+    request=BadgeAPIRequestSerializer,
+    responses={200: UserProfileSerializer, 201: UserProfileSerializer},
+    tags=["Badge Internal API"],
+)
+@permission_classes([AllowAny])
+@api_view(["POST"])
+def badge_get_current_player(request: Request) -> Response:
+    serializer = BadgeAPIRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    result = check_badge_credentials(
+        serializer.validated_data["mac_address"],
+        serializer.validated_data["badge_secret"],
+    )
+
+    if result["result"] == "failure":
+        raise exceptions.AuthenticationFailed()
+
+    resp_serializer = UserProfileSerializer(
+        instance=result["user"],
+    )
+    status = 201 if result["new_user"] else 200
+    return Response(resp_serializer.data, status=status)
