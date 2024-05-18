@@ -9,7 +9,7 @@ def user() -> User:
         username="foo-username",
         display_name="foo",
     )
-    user.badges.create(mac_address="0A-23-45-67-89-AB")
+    user.badges.create(mac_address="0A-23-45-67-89-AB", secret="b" * 64)
     return user
 
 
