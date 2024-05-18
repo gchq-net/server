@@ -1,7 +1,13 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from django.db import models
 
-from gchqnet.accounts.models import User, UserQuerySet
 from gchqnet.quest.models.scores import ScoreRecord, UserScore
+
+if TYPE_CHECKING:
+    from gchqnet.accounts.models import User, UserQuerySet
 
 
 def get_current_score_for_user(user: User) -> int:

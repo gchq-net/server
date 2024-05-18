@@ -1,24 +1,20 @@
-<form id="logoutForm" method="post" action="{% url 'accounts:logout' %}">
-    {% csrf_token %}
-</form>
 <div class="govuk-phase-banner">
     <p class="govuk-phase-banner__content">
         <strong class="govuk-tag govuk-phase-banner__content__tag">
             Beta
         </strong>
         <span class="govuk-phase-banner__text gchqnet-phase-banner__text">
-            <span class="gchqnet-phase-banner__service-info">This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.</span>
             {% if request.user.is_authenticated %}
                 <span class="gchqnet-phase-banner__login-status">
                     <span>Hi, <strong>{{ request.user.display_name }}</strong></span>
                     <span>|</span>
                     <a class="govuk-link" href="{% url 'accounts:profile' %}">My Profile</a>
+
                     <span>|</span>
-                    <a class="govuk-link" href="#logout" onclick="document.getElementById('logoutForm').submit(); return false;">
-                        Logout
-                    </a>
+                    <span><strong>Score:</strong>&nbsp;{{ request.user.get_current_score }}</span>
                 </span>
             {% else %}
+                <span class="gchqnet-phase-banner__service-info">This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.</span>
                 <span class="gchqnet-phase-banner__login-status">
                     <a class="govuk-link" href="{% url 'accounts:login' %}">
                         Login
