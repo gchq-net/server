@@ -1,60 +1,62 @@
 {% load static %}
 <header class="govuk-header" data-module="govuk-header">
-  <div class="govuk-header__container govuk-width-container">
-    <div class="govuk-header__logo">
-      <a href="{% url 'quest:home' %}" class="govuk-header__link govuk-header__link--homepage">
-        <img src="{% static 'img/logo-white-notext.png' %}" class="gchqnet-header__logo" alt="GCHQ.NET Logo" />
-        <span class="gchqnet-header__logotext">GCHQ.NET</span>
-      </a>
+    <div class="govuk-header__container govuk-width-container">
+        <div class="govuk-header__logo">
+            <a href="{% url 'quest:home' %}" class="govuk-header__link govuk-header__link--homepage">
+                <img src="{% static 'img/logo-white-notext.png' %}" class="gchqnet-header__logo" alt="GCHQ.NET Logo" />
+                <span class="gchqnet-header__logotext">GCHQ.NET</span>
+            </a>
+        </div>
+        <div class="govuk-header__content">
+            <a href="{% url 'quest:home' %}" class="govuk-header__link govuk-header__service-name">
+                Great Camp Hexpansion Quest
+            </a>
+            <nav aria-label="Menu" class="govuk-header__navigation">
+                <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" hidden>
+                    Menu
+                </button>
+                {% with view=request.resolver_match.view_name %}
+                    <ul id="navigation" class="govuk-header__navigation-list">
+                        <li class="govuk-header__navigation-item {% if view == "quest:home" %}govuk-header__navigation-item--active{% endif %}">
+                            <a class="govuk-header__link" href="{% url 'quest:home' %}">
+                                Live Scores
+                            </a>
+                        </li>
+                        <li class="govuk-header__navigation-item {% if view == "content:play" %}govuk-header__navigation-item--active{% endif %}">
+                            <a class="govuk-header__link" href="{% url 'content:play' %}">
+                                How to Play
+                            </a>
+                        </li>
+                        <li class="govuk-header__navigation-item {% if view == "quest:my_finds" %}govuk-header__navigation-item--active{% endif %}">
+                            <a class="govuk-header__link" href="{% url 'quest:my_finds' %}">
+                                My Finds
+                            </a>
+                        </li>
+                        <li class="govuk-header__navigation-item {% if view == "quest:leaderboard_list" %}govuk-header__navigation-item--active{% endif %}">
+                            <a class="govuk-header__link" href="{% url 'quest:leaderboard_list' %}">
+                                My Leaderboards
+                            </a>
+                        </li>
+                        {% if request.user.is_authenticated %}
+                            <li class="govuk-header__navigation-item">
+                                <a class="govuk-header__link" href="#logout"  onclick="document.getElementById('logoutForm').submit(); return false;">
+                                    Logout
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                            <li class="govuk-header__navigation-item">
+                                <a class="govuk-header__link" href="{% url 'admin:index' %}">
+                                    Admin
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endwith %}
+            </nav>
+        </div>
     </div>
-    <div class="govuk-header__content">
-      <a href="{% url 'quest:home' %}" class="govuk-header__link govuk-header__service-name">
-        Great Camp Hexpansion Quest
-      </a>
-      <nav aria-label="Menu" class="govuk-header__navigation">
-        <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" hidden>
-          Menu
-        </button>
-        <ul id="navigation" class="govuk-header__navigation-list">
-          <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
-            <a class="govuk-header__link" href="{% url 'quest:home' %}">
-              Live Scores
-            </a>
-          </li>
-          <li class="govuk-header__navigation-item">
-            <a class="govuk-header__link" href="#">
-              How to Play
-            </a>
-          </li>
-          <li class="govuk-header__navigation-item">
-            <a class="govuk-header__link" href="{% url 'quest:my_finds' %}">
-              My Finds
-            </a>
-          </li>
-          <li class="govuk-header__navigation-item">
-            <a class="govuk-header__link" href="{% url 'quest:leaderboard_list' %}">
-              My Leaderboards
-            </a>
-          </li>
-          {% if request.user.is_authenticated %}
-            <li class="govuk-header__navigation-item">
-              <a class="govuk-header__link" href="#logout"  onclick="document.getElementById('logoutForm').submit(); return false;">
-                Logout
-              </a>
-            </li>
-          {% endif %}
-          {% if request.user.is_superuser %}
-            <li class="govuk-header__navigation-item">
-              <a class="govuk-header__link" href="{% url 'admin:index' %}">
-                Admin
-              </a>
-            </li>
-          {% endif %}
-        </ul>
-      </nav>
-    </div>
-  </div>
 </header>
 <form id="logoutForm" method="post" action="{% url 'accounts:logout' %}">
-  {% csrf_token %}
+    {% csrf_token %}
 </form>

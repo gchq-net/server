@@ -16,3 +16,7 @@ class AboutPage(TemplateView):
 class ContactPage(TemplateView):
     template_name = "pages/content/contact.html"
     extra_context = {"dect_number": "4247", "fax_number": "4248 (TBC)"}
+
+
+class PlayPage(TemplateView):
+    template_name = "pages/content/play.html"
