@@ -98,7 +98,7 @@
             <tr class="govuk-table__row">
               <td class="govuk-table__cell">{{ recent_capture.created_by.display_name }}</td>
               <td class="govuk-table__cell">{{ recent_capture.created_at }}</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
+              <td class="govuk-table__cell"><a class="govuk-link" href="{% url 'quest:player_detail' recent_capture.created_by.username %}">View</a></td>
             </tr>
           {% endfor %}
         </tbody>
