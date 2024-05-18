@@ -125,3 +125,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject: str, message: str, from_email: str | None = None, **kwargs: Any) -> None:
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def get_current_score(self) -> int:
+        from gchqnet.quest.repository.scores import get_current_score_for_user
+
+        return get_current_score_for_user(self)

@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
 
-from gchqnet.quest.models import CaptureEvent
-from gchqnet.quest.models.scores import ScoreRecord
+from gchqnet.accounts.models.user import User
+from gchqnet.quest.models import CaptureEvent, ScoreRecord
+from gchqnet.quest.repository import update_score_for_user
 
 
 class Command(BaseCommand):
@@ -41,3 +42,8 @@ class Command(BaseCommand):
                     score_record.save(update_fields=["score"])
 
         self.stdout.write(f"Checked {len(capture_events)} capture events")
+
+        for user in User.objects.all():
+            update_score_for_user(user)
+
+        self.stdout.write("Bumped scores for users")
