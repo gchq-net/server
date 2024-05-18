@@ -19,7 +19,7 @@
         Grade
       </dt>
       <dd class="govuk-summary-list__value">
-        {{ object.get_current_score | score_grade }}
+        <strong class="govuk-tag">{{ object.get_current_score | score_grade }}</strong>
       </dd>
     </div>
   </dl>
