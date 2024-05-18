@@ -52,3 +52,4 @@ def grade_for_score(score: int) -> str:
     for score_threshold, description in reversed(grades.items()):
         if score >= score_threshold:
             return description
+    return grades[0]
