@@ -3,5 +3,10 @@
 {% block title %}Logistics Admin{% endblock %}
 
 {% block content %}
-    <p class="govuk-body">Welcome to the logistics admin panel, you annoying sod.</p>
+  <p class="govuk-body">Welcome to the logistics admin panel, you annoying sod.</p>
+  <ul class="govuk-list">
+    <li>
+      <a class="govuk-link" href="{% url 'logistics:planned_list' %}">Planned Locations</a>
+    </li>
+  </ul>
 {% endblock %}
