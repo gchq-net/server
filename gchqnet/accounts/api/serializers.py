@@ -50,3 +50,8 @@ class BadgeAPIRequestSerializer(serializers.Serializer):
         min_length=64,
         validators=[RegexValidator("^[0-9a-f]{64}$", "The badge secret does not appear to be in the correct format.")],
     )
+
+
+class BadgeOTPResponseSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=30)
+    otp = serializers.CharField(min_length=6, max_length=6)
