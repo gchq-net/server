@@ -36,14 +36,14 @@
               My Leaderboards
             </a>
           </li>
-          {% if user.is_authenticated %}
+          {% if request.user.is_authenticated %}
             <li class="govuk-header__navigation-item">
               <a class="govuk-header__link" href="#logout"  onclick="document.getElementById('logoutForm').submit(); return false;">
                 Logout
               </a>
             </li>
           {% endif %}
-          {% if user.is_superuser %}
+          {% if request.user.is_superuser %}
             <li class="govuk-header__navigation-item">
               <a class="govuk-header__link" href="{% url 'admin:index' %}">
                 Admin
