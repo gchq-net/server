@@ -11,7 +11,10 @@ class PlayerDetailView(DetailView):
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
-    template_name = "pages/quest/player_detail.html"
+
+
+class PlayerFindsView(PlayerDetailView):
+    template_name = "pages/quest/player_detail_finds.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         finds = CaptureEvent.objects.filter(created_by=self.object).select_related("location").order_by("created_at")
@@ -24,6 +27,17 @@ class PlayerDetailView(DetailView):
         paginator = Paginator(finds, 20)
 
         return super().get_context_data(
+            active_tab="finds",
             finds=paginator.page(page_num),
+            **kwargs,
+        )
+
+
+class PlayerAchievementsView(PlayerDetailView):
+    template_name = "pages/quest/player_detail_achievements.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        return super().get_context_data(
+            active_tab="achievements",
             **kwargs,
         )

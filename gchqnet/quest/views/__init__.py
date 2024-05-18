@@ -7,7 +7,7 @@ from .leaderboard import (
 )
 from .locations import LocationDetailView
 from .my_finds import MyFindsMapView, MyFindsView
-from .players import PlayerDetailView
+from .players import PlayerAchievementsView, PlayerFindsView
 from .scoreboard import GlobalScoreboardView
 
 __all__ = [
@@ -20,5 +20,6 @@ __all__ = [
     "LocationDetailView",
     "MyFindsView",
     "MyFindsMapView",
-    "PlayerDetailView",
+    "PlayerFindsView",
+    "PlayerAchievementsView",
 ]
