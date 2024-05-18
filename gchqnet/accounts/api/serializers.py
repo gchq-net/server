@@ -6,10 +6,15 @@ from gchqnet.accounts.models import User
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    current_score = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = User
-        fields = ["username", "display_name"]
+        fields = ["username", "display_name", "current_score"]
         read_only_fields = ["username"]
+
+    def get_current_score(self, user: User) -> int:
+        return user.get_current_score()
 
 
 class UserTokenRequestSerializer(serializers.Serializer):
