@@ -3,17 +3,9 @@
 {% block title %}Player: {{ object.display_name }}{% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
-      <p class="govuk-body">Display name: {{ object.display_name }}</p>
-      {% if object.display_name != object.username %}
-        <p class="govuk-body">Account name: {{ object.username }}</p>
-      {% endif %}
-    </div>
-    <div class="govuk-grid-column-one-half">
-      <p class="govuk-body">Current score: {{ object.get_current_score }}</p>
-    </div>
-  </div>
+  <p class="govuk-body">
+    <strong>Current score:</strong> {{ object.get_current_score }}
+  </p>
   <div class="govuk-tabs">
     <ul class="govuk-tabs__list">
       <li class="govuk-tabs__list-item {% if active_tab == 'finds' %}govuk-tabs__list-item--selected{% endif %}">
