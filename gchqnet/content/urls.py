@@ -7,6 +7,7 @@ app_name = "content"
 
 urlpatterns = [
     path("about/", views.AboutPage.as_view(), name="about"),
+    path("play/", views.PlayPage.as_view(), name="play"),
     path("contact/", views.ContactPage.as_view(), name="contact"),
     path("400/", TemplateView.as_view(template_name="400.html")),
     path("403/", TemplateView.as_view(template_name="403.html")),
