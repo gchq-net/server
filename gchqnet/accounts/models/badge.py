@@ -12,7 +12,7 @@ class Badge(models.Model):
         "MAC Address",
         max_length=17,
         unique=True,
-        help_text="IEEE 802 format, e.g 12-34-56-78-90-AB-CD",
+        help_text="IEEE 802 format, e.g 12-34-56-78-90-AB",
         validators=[
             RegexValidator(
                 "^([0-9A-F]{2}[-]){5}([0-9A-F]{2})$", "The MAC address does not appear to be in the correct format."
@@ -24,6 +24,7 @@ class Badge(models.Model):
     is_enabled = models.BooleanField(
         default=True, help_text="Is the badge enabled? i.e can it be used to capture locations?"
     )
+    secret = models.CharField(max_length=64, editable=False, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
