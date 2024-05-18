@@ -20,5 +20,6 @@ urlpatterns = [
     path("locations/<uuid:pk>/", views.LocationDetailView.as_view(), name="location_detail"),
     path("my-finds/", views.MyFindsView.as_view(), name="my_finds"),
     path("my-finds/map/", views.MyFindsMapView.as_view(), name="my_finds_map"),
-    path("players/<str:username>/", views.PlayerDetailView.as_view(), name="player_detail"),
+    path("players/<str:username>/", views.PlayerFindsView.as_view(), name="player_detail"),
+    path("players/<str:username>/achievements/", views.PlayerAchievementsView.as_view(), name="player_achievements"),
 ]

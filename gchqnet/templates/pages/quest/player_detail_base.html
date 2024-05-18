@@ -1,0 +1,34 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}Player: {{ object.display_name }}{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body">Display name: {{ object.display_name }}</p>
+      {% if object.display_name != object.username %}
+        <p class="govuk-body">Username: {{ object.username }}</p>
+      {% endif %}
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body">Current score: {{ object.get_current_score }}</p>
+    </div>
+  </div>
+  <div class="govuk-tabs">
+    <ul class="govuk-tabs__list">
+      <li class="govuk-tabs__list-item {% if active_tab == 'finds' %}govuk-tabs__list-item--selected{% endif %}">
+        <a class="govuk-tabs__tab" href="{% url 'quest:player_detail' object.username %}">
+          Finds
+        </a>
+      </li>
+      <li class="govuk-tabs__list-item {% if active_tab == 'achievements' %}govuk-tabs__list-item--selected{% endif %}">
+        <a class="govuk-tabs__tab" href="{% url 'quest:player_achievements' object.username %}">
+          Achievements
+        </a>
+      </li>
+    </ul>
+    <div class="govuk-tabs__panel">
+      {% block panel_content %}{% endblock %}
+    </div>
+  </div>
+{% endblock %}
