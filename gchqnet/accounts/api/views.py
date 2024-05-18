@@ -11,6 +11,7 @@ from gchqnet.accounts.totp import CustomTOTP
 
 from .serializers import (
     BadgeAPIRequestSerializer,
+    BadgeOTPResponseSerializer,
     UserProfileSerializer,
     UserTokenRequestSerializer,
     UserTokenSerializer,
@@ -92,3 +93,30 @@ def badge_get_current_player(request: Request) -> Response:
     )
     status = 201 if result["new_user"] else 200
     return Response(resp_serializer.data, status=status)
+
+
+@extend_schema(
+    summary="Get OTP for current badge",
+    request=BadgeAPIRequestSerializer,
+    responses={200: BadgeOTPResponseSerializer},
+    tags=["Badge Internal API"],
+)
+@permission_classes([AllowAny])
+@api_view(["POST"])
+def badge_get_current_otp(request: Request) -> Response:
+    serializer = BadgeAPIRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    result = check_badge_credentials(
+        serializer.validated_data["mac_address"],
+        serializer.validated_data["badge_secret"],
+    )
+
+    if result["result"] == "failure":
+        raise exceptions.AuthenticationFailed()
+
+    totp = CustomTOTP(result["badge"].mac_address)
+
+    resp_serializer = BadgeOTPResponseSerializer(data={"username": result["user"].username, "otp": totp.now()})
+    assert resp_serializer.is_valid()
+    return Response(resp_serializer.data, status=200)
