@@ -147,3 +147,6 @@ class TestBadgeGetCurrentPlayerView:
             "username": user.username,
             "current_score": 0,
         }
+
+        badge.refresh_from_db()
+        assert badge.secret == "a" * 64
