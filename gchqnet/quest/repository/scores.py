@@ -38,3 +38,18 @@ def update_score_for_user(user: User) -> None:
         defaults={"current_score": _calculate_current_score_for_user(user)},
         create_defaults={"current_score": _calculate_current_score_for_user(user)},
     )
+
+
+def grade_for_score(score: int) -> str:
+    grades = {
+        0: "Just observing",
+        1: "Warming up",
+        50: "Hexpansion collector",
+        100: "Running around site",
+        400: "Missing talks",
+        800: "Badge destroyer",
+    }
+    for score_threshold, description in reversed(grades.items()):
+        if score >= score_threshold:
+            return description
+    return grades[0]
