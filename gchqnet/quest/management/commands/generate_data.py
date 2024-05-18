@@ -1,3 +1,4 @@
+import os
 import random
 
 from django.core.management.base import BaseCommand
@@ -26,6 +27,14 @@ class Command(BaseCommand):
         force_color: bool,
         skip_checks: bool,
     ) -> None:
+        if not os.environ.get("GCHQ_ENABLE_DATA_GENERATION", "false") == "true":
+            self.stdout.write("Data generation is disabled. Please set GCHQ_ENABLE_DATA_GENERATION=true env var.")
+            return
+
+        if not input("Please type 1449 as written: ") == "one thousand four hundred and forty nine":
+            self.stdout.write("Nope")
+            return
+
         CaptureEvent.objects.all().delete()
         CaptureLog.objects.all().delete()
         RawCaptureEvent.objects.all().delete()
