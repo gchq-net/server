@@ -1,11 +1,28 @@
 {% extends "layouts/base_app.html" %}
 
+{% load scores %}
+
 {% block title %}Player: {{ object.display_name }}{% endblock %}
 
 {% block content %}
-  <p class="govuk-body">
-    <strong>Current score:</strong> {{ object.get_current_score }}
-  </p>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Current score
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ object.get_current_score }}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Grade
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ object.get_current_score | score_grade }}
+      </dd>
+    </div>
+  </dl>
   <div class="govuk-tabs">
     <ul class="govuk-tabs__list">
       <li class="govuk-tabs__list-item {% if active_tab == 'finds' %}govuk-tabs__list-item--selected{% endif %}">
