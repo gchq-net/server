@@ -1,5 +1,6 @@
 {% extends "layouts/base_app.html" %}
 {% load location_tags %}
+{% load humanize %}
 
 {% block title %}My Finds{% endblock %}
 
@@ -37,7 +38,7 @@
             <tr class="govuk-table__row">
               <th scope="row" class="govuk-table__header">{{ location.display_name }}</th>
               <td class="govuk-colour__red govuk-table__cell">{{ location.difficulty|difficulty_label }}</td>
-              <td class="govuk-table__cell">{{ capture.raw_capture_event.created_at }}</td>
+              <td class="govuk-table__cell">{{ capture.raw_capture_event.created_at | naturaltime }}</td>
               <td class="govuk-table__cell"><a class="govuk-link" href="{% url 'quest:location_detail' location.id %}">View</a></td>
           {% else %}
             <tr class="govuk-table__row gchqnet-finds-table__row--missing">
