@@ -1,7 +1,7 @@
 from .captures import CaptureEvent, CaptureLog, RawCaptureEvent
 from .leaderboard import Leaderboard
 from .location import Coordinates, Location, LocationDifficulty
-from .scores import ScoreRecord
+from .scores import ScoreRecord, UserScore
 
 __all__ = [
     "CaptureEvent",
@@ -12,4 +12,5 @@ __all__ = [
     "LocationDifficulty",
     "RawCaptureEvent",
     "ScoreRecord",
+    "UserScore",
 ]

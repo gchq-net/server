@@ -9,6 +9,7 @@ from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models import CaptureEvent, Location, RawCaptureEvent
 from gchqnet.quest.models.captures import CaptureLog
 from gchqnet.quest.models.scores import ScoreRecord
+from gchqnet.quest.repository import update_score_for_user
 
 
 class Command(BaseCommand):
@@ -55,5 +56,7 @@ class Command(BaseCommand):
                         ScoreRecord.objects.create(
                             capture_event=capture_event, user=badge.user, score=location.difficulty
                         )
+
+            update_score_for_user(badge.user)
 
         self.stdout.write("Generated fake data")

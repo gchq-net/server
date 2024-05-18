@@ -6,7 +6,8 @@ from django.db import models
 from django.db.models.functions import DenseRank
 
 from gchqnet.accounts.models import User
-from gchqnet.quest.models.scores import ScoreRecord
+
+from .scores import annotate_current_score_for_user_queryset
 
 if TYPE_CHECKING:  # pragma: nocover
     from django.db.models import QuerySet
@@ -16,20 +17,10 @@ if TYPE_CHECKING:  # pragma: nocover
 
 
 def _annotate_scoreboard_query(qs: UserQuerySet | QuerySet[User]) -> UserQuerySet:
-    score_sum_subquery = (
-        ScoreRecord.objects.filter(user_id=models.OuterRef("id"))
-        .values("user_id")
-        .annotate(total_score=models.Sum("score"))
-        .values("total_score")[:1]
-    )
-
     qs = qs.only("id", "username", "display_name")
+    qs = annotate_current_score_for_user_queryset(qs)
     qs = qs.annotate(
         capture_count=models.Count("capture_events"),
-        current_score=models.functions.Coalesce(
-            models.Subquery(score_sum_subquery),
-            models.Value(0),
-        ),
         rank=models.Window(expression=DenseRank(), order_by=models.F("current_score").desc()),
     )
     qs = qs.order_by("rank", "capture_count", "display_name")

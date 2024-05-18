@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, TypedDict
+from typing import Literal, TypedDict
 
 from gchqnet.accounts.models.badge import Badge
 from gchqnet.hexpansion.models import Hexpansion
@@ -8,8 +8,7 @@ from gchqnet.quest.models.captures import CaptureEvent, CaptureLog, RawCaptureEv
 from gchqnet.quest.models.location import Location
 from gchqnet.quest.models.scores import ScoreRecord
 
-if TYPE_CHECKING:  # pragma: nocover
-    pass
+from .scores import update_score_for_user
 
 
 class CaptureResult(TypedDict):
@@ -35,4 +34,5 @@ def record_attempted_capture(badge: Badge, hexpansion: Hexpansion) -> CaptureRes
     # Mark as captured.
     ce = CaptureEvent.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
     ScoreRecord.objects.create(capture_event=ce, user=badge.user, score=location.difficulty)
+    update_score_for_user(badge.user)
     return CaptureResult(result="success", message="Successfully captured")
