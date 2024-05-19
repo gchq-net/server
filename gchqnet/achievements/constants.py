@@ -21,9 +21,14 @@ BUILTIN_BASIC_ACHIEVEMENTS = {
         "Totally not backdoored access",
     ),
     "b8f87b0b-eb90-490a-92b5-73096bdb592d": (
-        # Logged in via Telnet
+        # Logged in via Telnet - using OTP
         AchievementDifficulty.EASY,
         "Woefully insecure access",
+    ),
+    "6d540a11-7035-444a-934c-dbe8a733631e": (
+        # Logged in via Telnet - using password login
+        AchievementDifficulty.EASY,
+        "hunter2",
     ),
     "541a691e-2824-43e2-bfa7-d07deb3f636a": (
         # Logged in via Dial-up
