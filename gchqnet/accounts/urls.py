@@ -6,23 +6,23 @@ from . import views
 app_name = "accounts"
 
 urlpatterns = [
-    path("login/", views.LoginLandingView.as_view(), name="login"),
-    path("login/badge/", views.BadgeLoginLandingView.as_view(), name="login_badge"),
+    path("accounts/login/", views.LoginLandingView.as_view(), name="login"),
+    path("accounts/login/badge/", views.BadgeLoginLandingView.as_view(), name="login_badge"),
     path(
-        "login/badge/step-1/",
+        "accounts/login/badge/step-1/",
         views.BadgeLoginUsernamePromptView.as_view(),
         name="login_badge_username",
     ),
     path(
-        "login/badge/step-2/",
+        "accounts/login/badge/step-2/",
         views.BadgeLoginChallengePromptView.as_view(),
         name="login_badge_challenge",
     ),
     path(
-        "login/credentials/",
+        "accounts/login/credentials/",
         views.CredentialsLoginView.as_view(),
         name="login_credentials",
     ),
-    path("logout/", LogoutView.as_view(), name="logout"),
+    path("accounts/logout/", LogoutView.as_view(), name="logout"),
     path("profile/", views.MyProfileView.as_view(), name="profile"),
 ]
