@@ -12,6 +12,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
 from gchqnet.accounts.models import User
+from gchqnet.achievements.repository import award_builtin_basic_achievement
 from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.quest.forms import LeaderboardCreateForm, LeaderboardInviteAcceptDeclineForm, LeaderboardUpdateForm
 from gchqnet.quest.models import Leaderboard
@@ -93,6 +94,11 @@ class LeaderboardCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        assert self.request.user.is_authenticated
+
+        # Award created or joined a leaderboard
+        award_builtin_basic_achievement("193d8853-8000-4261-bdf0-80b73f88e970", self.request.user)
+
         messages.info(self.request, "Welcome. Increase your social credit score by inviting other humans.")
         return super().form_valid(form)
 
@@ -165,6 +171,8 @@ class LeaderboardInviteDetailView(LoginRequiredMixin, BreadcrumbsMixin, FormView
         if accepted:
             leaderboard.members.add(self.request.user)
             leaderboard.save()
+            # Award created or joined a leaderboard
+            award_builtin_basic_achievement("193d8853-8000-4261-bdf0-80b73f88e970", self.request.user)
             return redirect("quest:leaderboard_detail", leaderboard.id)
         else:
             messages.info(request, "Invitation declined.")
