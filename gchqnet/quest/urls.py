@@ -25,6 +25,11 @@ urlpatterns = [
         name="profile_achievements",
         kwargs={"current_user": True},
     ),
+    path(
+        "profile/to-find/",
+        views.MyProfileUnfoundLocationsView.as_view(),
+        name="profile_to_find",
+    ),
     path("profile/map/", views.MyProfileMapView.as_view(), name="profile_map"),
     path(
         "players/<str:username>/", views.PlayerFindsView.as_view(), name="player_detail", kwargs={"current_user": False}

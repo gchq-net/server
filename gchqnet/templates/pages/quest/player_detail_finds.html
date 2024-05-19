@@ -28,6 +28,10 @@
     </table>
     {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
   {% else %}
-    <p class="govuk-body">This player has not yet found anything.</p>
+    {% if current_user %}
+      <p class="govuk-body">You have not yet found anything. Check out <a href="{% url 'quest:profile_to_find' %}">To Find</a> for hints on where to look.</p>
+    {% else %}
+      <p class="govuk-body">This player has not yet found anything.</p>
+    {% endif %}
   {% endif %}
 {% endblock %}
