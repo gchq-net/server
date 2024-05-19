@@ -22,18 +22,31 @@ class PlayerFindsView(BasePlayerDetailView):
     template_name = "pages/quest/player_detail_finds.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        finds = CaptureEvent.objects.filter(created_by=self.object).select_related("location").order_by("created_at")
+        finds_qs = CaptureEvent.objects.filter(created_by=self.object).select_related("location").order_by("created_at")
 
         try:
             page_num = int(self.request.GET.get("page", 1))
         except ValueError:
             page_num = 1
 
-        paginator = Paginator(finds, 20)
+        paginator = Paginator(finds_qs, 20)
+
+        page = paginator.page(page_num)
+
+        if self.request.user.is_authenticated:
+            viewer_captures = set(
+                self.request.user.capture_events.filter(
+                    location__in=page.object_list.values("location_id"),  # type: ignore[attr-defined]
+                ).values_list("location_id", flat=True),
+            )
+            finds = ((obj, obj.location_id in viewer_captures) for obj in page.object_list)
+        else:
+            finds = ((obj, False) for obj in page.object_list)
 
         return super().get_context_data(
             active_tab="finds",
-            finds=paginator.page(page_num),
+            finds=finds,
+            page_obj=page,
             **kwargs,
         )
 
