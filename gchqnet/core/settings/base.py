@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "gchqnet.accounts",
     "gchqnet.content",
     "gchqnet.hexpansion",
+    "gchqnet.logistics",
     "gchqnet.quest",
     "crispy_forms",
     "crispy_forms_gds",

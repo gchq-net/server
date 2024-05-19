@@ -8,6 +8,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("gchqnet.accounts.urls", namespace="accounts")),
     path("api/", include("gchqnet.core.api", namespace="api")),
+    path("logistics/", include("gchqnet.logistics.urls", namespace="logistics")),
 ]
 
 if apps.is_installed("debug_toolbar"):

@@ -1,0 +1,20 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}Planned Locations{% endblock %}
+
+{% block action_buttons %}
+    <a class="govuk-button gchqnet-page-header-actions__action" data-module="govuk-button" href="{% url 'logistics:planned_create' %}">
+        Create planned location
+    </a>
+{% endblock %}
+
+{% block content %}
+    <p class="govuk-body">The following locations have been planned. God forbid you deploy them.</p>
+    {% include "components/logistics/planned-location-search.html" %}
+    {% include "components/logistics/planned-locations-table.html" with planned_locations=page_obj %}
+    {% if page_obj %}
+        {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
+    {% else %}
+        <p class="govuk-body">There are no planned locations. Maybe we deployed them? Maybe we are useless?</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "layouts/base_app.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ object }}{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">Please confirm that you wish to delete the planned location.</p>
+      {% crispy form %}
+    </div>
+  </div>
+{% endblock %}

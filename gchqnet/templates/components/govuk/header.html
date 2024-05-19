@@ -37,17 +37,17 @@
                                 My Leaderboards
                             </a>
                         </li>
+                        {% if request.user.is_superuser %}
+                            <li class="govuk-header__navigation-item {% if view == 'logistics:home' %}govuk-header__navigation-item--active{% endif %}">
+                                <a class="govuk-header__link" href="{% url 'logistics:home' %}">
+                                    Admin
+                                </a>
+                            </li>
+                        {% endif %}
                         {% if request.user.is_authenticated %}
                             <li class="govuk-header__navigation-item">
                                 <a class="govuk-header__link" href="#logout"  onclick="document.getElementById('logoutForm').submit(); return false;">
                                     Logout
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if request.user.is_superuser %}
-                            <li class="govuk-header__navigation-item">
-                                <a class="govuk-header__link" href="{% url 'admin:index' %}">
-                                    Admin
                                 </a>
                             </li>
                         {% endif %}

@@ -1,0 +1,32 @@
+{% load location_tags %}
+<table class="govuk-table govuk-table--small-text-until-tablet">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Internal Name</th>
+      <th scope="col" class="govuk-table__header">Display Name</th>
+      <th scope="col" class="govuk-table__header">Difficulty</th>
+      <th scope="col" class="govuk-table__header"></th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    {% for pl in planned_locations %}
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">{{ pl.internal_name }}</th>
+        <td class="govuk-table__cell">{{ pl.display_name }}</td>
+        <td class="govuk-table__cell">
+          {% if pl.difficulty %}
+            <strong class="govuk-tag">
+              {{ pl.difficulty|difficulty_label }}
+            </strong>
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td class="govuk-table__cell">
+          <a class="govuk-link" href="{% url 'logistics:planned_edit' pl.id %}">Edit</a>&nbsp;
+          <a class="govuk-link" href="#">Deploy</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
