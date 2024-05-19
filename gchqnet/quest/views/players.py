@@ -4,16 +4,21 @@ from django.core.paginator import Paginator
 from django.views.generic import DetailView
 
 from gchqnet.accounts.models import User
+from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.quest.models.captures import CaptureEvent
 
 
-class PlayerDetailView(DetailView):
+class BasePlayerDetailView(BreadcrumbsMixin, DetailView):
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
+    breadcrumbs = [(None, "Players")]
+
+    def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
+        return super().get_breadcrumbs() + [(None, self.object.display_name)]
 
 
-class PlayerFindsView(PlayerDetailView):
+class PlayerFindsView(BasePlayerDetailView):
     template_name = "pages/quest/player_detail_finds.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
@@ -33,7 +38,7 @@ class PlayerFindsView(PlayerDetailView):
         )
 
 
-class PlayerAchievementsView(PlayerDetailView):
+class PlayerAchievementsView(BasePlayerDetailView):
     template_name = "pages/quest/player_detail_achievements.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
