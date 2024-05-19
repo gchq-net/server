@@ -1,6 +1,8 @@
 from typing import Literal
 from uuid import UUID
 
+from django.db import models
+
 from gchqnet.accounts.models.user import User
 from gchqnet.quest.models.scores import ScoreRecord
 from gchqnet.quest.repository.scores import update_score_for_user
@@ -37,3 +39,14 @@ def award_builtin_basic_achievement(
         return "success"
     else:
         return "already_obtained"
+
+
+def get_achievements_for_user(user: User) -> models.QuerySet:
+    return (
+        user.basic_achievement_events.select_related("basic_achievement")
+        .annotate(
+            display_name=models.F("basic_achievement__display_name"),
+            difficulty=models.F("basic_achievement__difficulty"),
+        )
+        .order_by("-created_at")
+    )
