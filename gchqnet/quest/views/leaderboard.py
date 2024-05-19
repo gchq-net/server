@@ -82,7 +82,7 @@ class LeaderboardDetailSettingsView(LoginRequiredMixin, UserPassesTestMixin, Bre
         return reverse_lazy("quest:leaderboard_detail_settings", args=[self.object.id])
 
 
-class LeaderboardCreateView(LoginRequiredMixin, CreateView):
+class LeaderboardCreateView(LoginRequiredMixin, BreadcrumbsMixin, CreateView):
     model = Leaderboard
     template_name = "pages/quest/leaderboard_create.html"
     form_class = LeaderboardCreateForm
