@@ -24,7 +24,7 @@ class TestProfileUpdateView:
         resp = client.get(self.url)
         assertRedirects(
             resp,
-            "/accounts/login/?next=/accounts/profile/",
+            "/accounts/login/?next=/profile/",
             302,
             fetch_redirect_response=False,
         )
