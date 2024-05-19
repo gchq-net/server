@@ -53,3 +53,11 @@ class TestLogisticsPlannedEditView(LogisticsAccessTestMixin):
     def url(self) -> str:  # type: ignore[override]
         pl, _ = PlannedLocation.objects.get_or_create(internal_name="foo")
         return reverse("logistics:planned_edit", args=[pl.id])
+
+
+@pytest.mark.django_db
+class TestLogisticsPlannedDeleteView(LogisticsAccessTestMixin):
+    @property
+    def url(self) -> str:  # type: ignore[override]
+        pl, _ = PlannedLocation.objects.get_or_create(internal_name="foo")
+        return reverse("logistics:planned_delete", args=[pl.id])

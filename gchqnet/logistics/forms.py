@@ -4,7 +4,7 @@ from crispy_forms_gds.helper import FormHelper
 from crispy_forms_gds.layout import (
     Submit,
 )
-from django.forms import ModelForm
+from django.forms import Form, ModelForm
 
 from gchqnet.accounts.models.user import User
 from gchqnet.logistics.models import PlannedLocation
@@ -36,3 +36,10 @@ class PlannedLocationEditForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.add_input(Submit("submit", "Save"))
+
+
+class PlannedLocationDeleteForm(Form):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit("submit", "Confirm Delete", css_class="govuk-button--warning"))

@@ -14,9 +14,13 @@
         <th scope="row" class="govuk-table__header">{{ pl.internal_name }}</th>
         <td class="govuk-table__cell">{{ pl.display_name }}</td>
         <td class="govuk-table__cell">
-          <strong class="govuk-tag">
-            {{ pl.difficulty|difficulty_label }}
-          </strong>
+          {% if pl.difficulty %}
+            <strong class="govuk-tag">
+              {{ pl.difficulty|difficulty_label }}
+            </strong>
+          {% else %}
+            -
+          {% endif %}
         </td>
         <td class="govuk-table__cell">
           <a class="govuk-link" href="{% url 'logistics:planned_edit' pl.id %}">Edit</a>&nbsp;
