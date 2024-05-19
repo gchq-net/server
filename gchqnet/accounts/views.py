@@ -19,6 +19,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, TemplateView, UpdateView
 
 from gchqnet.accounts.mixins import LoginPageMixin
+from gchqnet.core.mixins import BreadcrumbsMixin
 
 from .forms import (
     BadgeLoginChallengeForm,
@@ -34,11 +35,12 @@ if TYPE_CHECKING:  # pragma: nocover
     from django.db.models import QuerySet
 
 
-class MyProfileView(LoginRequiredMixin, UpdateView):
+class MyProfileView(LoginRequiredMixin, BreadcrumbsMixin, UpdateView):
     template_name = "pages/accounts/profile.html"
     model = User
     form_class = PasswordProfileUpdateForm
     success_url = reverse_lazy("accounts:profile")
+    breadcrumbs = [(None, "My Profile")]
 
     def get_form_class(self) -> type[BaseProfileUpdateForm]:
         if self.object.password and self.object.has_usable_password():
@@ -75,23 +77,27 @@ class MyProfileView(LoginRequiredMixin, UpdateView):
         )
 
 
-class LoginLandingView(LoginPageMixin, TemplateView):
+class LoginLandingView(LoginPageMixin, BreadcrumbsMixin, TemplateView):
     template_name = "pages/accounts/login_landing.html"
+    breadcrumbs = [(None, "Login to GCHQ.NET")]
 
 
-class CredentialsLoginView(LoginPageMixin, DjangoLoginView):
+class CredentialsLoginView(LoginPageMixin, BreadcrumbsMixin, DjangoLoginView):
     template_name = "pages/accounts/login_credentials.html"
     form_class = CredentialsLoginForm
+    breadcrumbs = [(reverse_lazy("accounts:login"), "Login to GCHQ.NET"), (None, "Login using your password")]
 
 
-class BadgeLoginLandingView(LoginPageMixin, TemplateView):
+class BadgeLoginLandingView(LoginPageMixin, BreadcrumbsMixin, TemplateView):
     template_name = "pages/accounts/login_badge_landing.html"
+    breadcrumbs = [(reverse_lazy("accounts:login"), "Login to GCHQ.NET"), (None, "Login using your badge")]
 
 
-class BadgeLoginUsernamePromptView(LoginPageMixin, FormView):
+class BadgeLoginUsernamePromptView(LoginPageMixin, BreadcrumbsMixin, FormView):
     template_name = "pages/accounts/login_badge_username.html"
     form_class = BadgeLoginUsernameForm
     success_url = reverse_lazy("accounts:login_badge_challenge")
+    breadcrumbs = [(reverse_lazy("accounts:login"), "Login to GCHQ.NET"), (None, "Login using your badge")]
 
     def form_valid(self, form: BadgeLoginUsernameForm) -> HttpResponse:
         self.request.session["badge_login__user_id"] = form.cleaned_data["account_name"].id
@@ -101,9 +107,10 @@ class BadgeLoginUsernamePromptView(LoginPageMixin, FormView):
         return resp
 
 
-class BadgeLoginChallengePromptView(LoginPageMixin, RedirectURLMixin, FormView):
+class BadgeLoginChallengePromptView(LoginPageMixin, RedirectURLMixin, BreadcrumbsMixin, FormView):
     template_name = "pages/accounts/login_badge_challenge.html"
     form_class = BadgeLoginChallengeForm
+    breadcrumbs = [(reverse_lazy("accounts:login"), "Login to GCHQ.NET"), (None, "Login using your badge")]
 
     @method_decorator(sensitive_post_parameters())
     @method_decorator(csrf_protect)
