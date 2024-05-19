@@ -40,12 +40,7 @@
                         {% if request.user.is_superuser %}
                             <li class="govuk-header__navigation-item {% if view == 'logistics:home' %}govuk-header__navigation-item--active{% endif %}">
                                 <a class="govuk-header__link" href="{% url 'logistics:home' %}">
-                                    Log
-                                </a>
-                            </li>
-                            <li class="govuk-header__navigation-item">
-                                <a class="govuk-header__link" href="{% url 'admin:index' %}">
-                                    Adm
+                                    Admin
                                 </a>
                             </li>
                         {% endif %}
