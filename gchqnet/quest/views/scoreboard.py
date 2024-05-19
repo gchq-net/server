@@ -4,13 +4,15 @@ from django.contrib import messages
 from django.views.generic import ListView
 
 from gchqnet.accounts.models import UserQuerySet
+from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.quest.repository import get_global_scoreboard
 
 
-class GlobalScoreboardView(ListView):
+class GlobalScoreboardView(BreadcrumbsMixin, ListView):
     template_name = "pages/home.html"
     paginate_by = 15
     ordering = ("rank",)
+    breadcrumbs = [(None, "Global Leaderboard")]
 
     def get_search_query(self) -> str:
         if query := self.request.GET.get("search", ""):
