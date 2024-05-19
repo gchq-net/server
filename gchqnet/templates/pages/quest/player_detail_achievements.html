@@ -1,8 +1,14 @@
 {% extends "pages/quest/player_detail_base.html" %}
 
 {% load location_tags %}
+{% load humanize %}
 
 {% block panel_content %}
   <h2 class="govuk-heading-l">Achievements</h2>
-  TODO
+  {% if achievement_events %}
+    {% include "components/achievements/achievement-event-table.html" %}
+    {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" page_obj=achievement_events %}
+  {% else %}
+    <p class="govuk-body">This player has not yet been awarded any achievements.</p>
+  {% endif %}
 {% endblock %}

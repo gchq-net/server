@@ -1,9 +1,11 @@
 from typing import Any
 
 from django.core.paginator import Paginator
+from django.db import models
 from django.views.generic import DetailView
 
 from gchqnet.accounts.models import User
+from gchqnet.achievements.repository import get_achievements_for_user
 from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.quest.models.captures import CaptureEvent
 
@@ -54,8 +56,19 @@ class PlayerFindsView(BasePlayerDetailView):
 class PlayerAchievementsView(BasePlayerDetailView):
     template_name = "pages/quest/player_detail_achievements.html"
 
+    def get_achievements(self) -> models.QuerySet:
+        return get_achievements_for_user(self.object)
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        try:
+            page_num = int(self.request.GET.get("page", 1))
+        except ValueError:
+            page_num = 1
+
+        paginator = Paginator(self.get_achievements(), 20)
+
         return super().get_context_data(
             active_tab="achievements",
+            achievement_events=paginator.page(page_num),
             **kwargs,
         )

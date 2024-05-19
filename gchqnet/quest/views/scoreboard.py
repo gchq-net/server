@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.views.generic import ListView
 
 from gchqnet.accounts.models import UserQuerySet
+from gchqnet.achievements.repository import award_builtin_basic_achievement
 from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.quest.repository import get_global_scoreboard
 
@@ -17,7 +18,9 @@ class GlobalScoreboardView(BreadcrumbsMixin, ListView):
     def get_search_query(self) -> str:
         if query := self.request.GET.get("search", ""):
             if "'" in query:
-                # TODO: Add achievement for attempting to hack us
+                # Award achievement for hacking us
+                if self.request.user.is_authenticated:
+                    award_builtin_basic_achievement("f42b1ff0-f559-47d0-b6ec-b092169ccf9e", self.request.user)
                 messages.info(self.request, 'ERROR:  syntax error at or near "%"LINE 1: %\';')
             return query.strip()
         return query

@@ -6,9 +6,22 @@ from django.db import models
 class ScoreRecord(models.Model):
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
-    capture_event = models.OneToOneField("quest.CaptureEvent", on_delete=models.CASCADE, related_name="score_record")
+    capture_event = models.OneToOneField(
+        "quest.CaptureEvent", on_delete=models.CASCADE, related_name="score_record", null=True
+    )
+    basic_achievement_event = models.OneToOneField(
+        "achievements.BasicAchievementEvent", on_delete=models.CASCADE, related_name="score_record", null=True
+    )
     score = models.IntegerField()
     user = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name="score_records")
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(capture_event__isnull=False) | models.Q(basic_achievement_event__isnull=False),
+                name="ensure_linked_event",
+            )
+        ]
 
     def __str__(self) -> str:
         return "Score Record"

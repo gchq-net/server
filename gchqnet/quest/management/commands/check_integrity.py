@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from gchqnet.accounts.models.user import User
+from gchqnet.achievements.models import BasicAchievementEvent
 from gchqnet.quest.models import CaptureEvent, ScoreRecord
 from gchqnet.quest.repository import update_score_for_user
 
@@ -42,6 +43,20 @@ class Command(BaseCommand):
                     score_record.save(update_fields=["score"])
 
         self.stdout.write(f"Checked {len(capture_events)} capture events")
+
+        for bae in BasicAchievementEvent.objects.all():
+            try:
+                score_record = bae.score_record
+            except ScoreRecord.DoesNotExist:
+                self.stdout.write(f"Missing score record for {bae}. Fixing.")
+                ScoreRecord.objects.create(
+                    user=ce.created_by, basic_achievement_event=bae, score=bae.basic_achievement.difficulty
+                )
+            else:
+                if bae.basic_achievement.difficulty != score_record.score:
+                    self.stdout.write(f"Issue found with {bae} score")
+                    score_record.score = bae.basic_achievement.difficulty
+                    score_record.save(update_fields=["score"])
 
         for user in User.objects.all():
             update_score_for_user(user)
