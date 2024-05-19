@@ -76,7 +76,7 @@ class PlannedLocationEditView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, Upd
         (reverse_lazy("logistics:planned_list"), "Planned Locations"),
     ]
 
-    def get_breadcrumbs(self) -> list[tuple[str, str]]:
+    def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
         return super().get_breadcrumbs() + [(None, self.object.internal_name)]
 
     def get_success_url(self) -> str:
@@ -93,7 +93,7 @@ class PlannedLocationDeleteView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, D
         (reverse_lazy("logistics:planned_list"), "Planned Locations"),
     ]
 
-    def get_breadcrumbs(self) -> list[tuple[str, str]]:
+    def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
         return super().get_breadcrumbs() + [
             (reverse_lazy("logistics:planned_edit", args=[self.object.id]), self.object.internal_name),
             (None, "Delete"),

@@ -12,23 +12,29 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
 from gchqnet.accounts.models import User
+from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.quest.forms import LeaderboardCreateForm, LeaderboardInviteAcceptDeclineForm, LeaderboardUpdateForm
 from gchqnet.quest.models import Leaderboard
 from gchqnet.quest.repository import get_private_scoreboard
 
 
-class LeaderboardListView(LoginRequiredMixin, ListView):
+class LeaderboardListView(LoginRequiredMixin, BreadcrumbsMixin, ListView):
     template_name = "pages/quest/leaderboard_list.html"
     paginate_by = 15
+    breadcrumbs = [(None, "My Leaderboards")]
 
     def get_queryset(self) -> models.QuerySet[Leaderboard]:
         assert self.request.user.is_authenticated
         return self.request.user.leaderboards.order_by("display_name")
 
 
-class LeaderboardDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class LeaderboardDetailView(LoginRequiredMixin, UserPassesTestMixin, BreadcrumbsMixin, DetailView):
     model = Leaderboard
     template_name = "pages/quest/leaderboard_detail.html"
+    breadcrumbs = [(reverse_lazy("quest:leaderboard_list"), "My Leaderboards")]
+
+    def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
+        return super().get_breadcrumbs() + [(None, self.object.display_name)]
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         try:
@@ -50,10 +56,14 @@ class LeaderboardDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView)
         return self.get_object().members.filter(id=self.request.user.id).exists()
 
 
-class LeaderboardDetailSettingsView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class LeaderboardDetailSettingsView(LoginRequiredMixin, UserPassesTestMixin, BreadcrumbsMixin, UpdateView):
     model = Leaderboard
     template_name = "pages/quest/leaderboard_detail_settings.html"
     form_class = LeaderboardUpdateForm
+    breadcrumbs = [(reverse_lazy("quest:leaderboard_list"), "My Leaderboards")]
+
+    def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
+        return super().get_breadcrumbs() + [(None, self.object.display_name)]
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         signer = Signer()
@@ -75,6 +85,7 @@ class LeaderboardCreateView(LoginRequiredMixin, CreateView):
     model = Leaderboard
     template_name = "pages/quest/leaderboard_create.html"
     form_class = LeaderboardCreateForm
+    breadcrumbs = [(reverse_lazy("quest:leaderboard_list"), "My Leaderboards"), (None, "Create Leaderboard")]
 
     def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
@@ -90,9 +101,14 @@ class LeaderboardCreateView(LoginRequiredMixin, CreateView):
         return reverse("quest:leaderboard_detail", args=[self.object.id])
 
 
-class LeaderboardInviteDetailView(LoginRequiredMixin, FormView):
+class LeaderboardInviteDetailView(LoginRequiredMixin, BreadcrumbsMixin, FormView):
     template_name = "pages/quest/leaderboard_invite.html"
     form_class = LeaderboardInviteAcceptDeclineForm
+
+    breadcrumbs = [(reverse_lazy("quest:leaderboard_list"), "My Leaderboards")]
+
+    def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
+        return super().get_breadcrumbs() + [(None, "Leaderboard Invitation")]
 
     def dispatch(self, request: HttpRequest, invite_code: str, *args: Any, **kwargs: Any) -> HttpResponse:
         if not request.user.is_authenticated:

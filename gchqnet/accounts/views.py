@@ -69,7 +69,7 @@ class MyProfileView(LoginRequiredMixin, BreadcrumbsMixin, UpdateView):
 
         return redirect(self.get_success_url())
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs: Any) -> dict[Any, Any]:
         assert self.request.user.is_authenticated
         return super().get_context_data(
             badges=self.request.user.badges.all(),
