@@ -3,11 +3,13 @@ from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
+from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.quest.models import CaptureEvent, Location
 
 
-class MyFindsView(LoginRequiredMixin, TemplateView):
+class MyFindsView(LoginRequiredMixin, BreadcrumbsMixin, TemplateView):
     template_name = "pages/quest/my_finds.html"
+    breadcrumbs = [(None, "My Finds")]
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         assert self.request.user.is_authenticated
@@ -28,5 +30,6 @@ class MyFindsView(LoginRequiredMixin, TemplateView):
         )
 
 
-class MyFindsMapView(LoginRequiredMixin, TemplateView):
+class MyFindsMapView(LoginRequiredMixin, BreadcrumbsMixin, TemplateView):
     template_name = "pages/quest/my_finds_map.html"
+    breadcrumbs = [(None, "My Finds")]
