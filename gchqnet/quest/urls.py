@@ -13,6 +13,11 @@ urlpatterns = [
     ),
     path("leaderboards/<uuid:pk>/", views.LeaderboardDetailView.as_view(), name="leaderboard_detail"),
     path(
+        "leaderboards/<uuid:pk>/activity/",
+        views.LeaderboardDetailActivityView.as_view(),
+        name="leaderboard_detail_activity",
+    ),
+    path(
         "leaderboards/<uuid:pk>/settings/",
         views.LeaderboardDetailSettingsView.as_view(),
         name="leaderboard_detail_settings",

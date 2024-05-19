@@ -12,10 +12,12 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
 from gchqnet.accounts.models import User
+from gchqnet.achievements.models import BasicAchievementEvent
 from gchqnet.achievements.repository import award_builtin_basic_achievement
 from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.quest.forms import LeaderboardCreateForm, LeaderboardInviteAcceptDeclineForm, LeaderboardUpdateForm
 from gchqnet.quest.models import Leaderboard
+from gchqnet.quest.models.captures import CaptureEvent
 from gchqnet.quest.repository import get_private_scoreboard
 
 
@@ -50,6 +52,45 @@ class LeaderboardDetailView(LoginRequiredMixin, UserPassesTestMixin, Breadcrumbs
         return super().get_context_data(
             page_obj=paginator.page(page_num),
             active_tab="scores",
+            **kwargs,
+        )
+
+    def test_func(self) -> bool:
+        return self.get_object().members.filter(id=self.request.user.id).exists()
+
+
+class LeaderboardDetailActivityView(LoginRequiredMixin, UserPassesTestMixin, BreadcrumbsMixin, DetailView):
+    model = Leaderboard
+    template_name = "pages/quest/leaderboard_detail_activity.html"
+    breadcrumbs = [(reverse_lazy("quest:leaderboard_list"), "My Leaderboards")]
+
+    def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
+        return super().get_breadcrumbs() + [(None, self.object.display_name)]
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        player_qs = self.object.members.all()
+
+        ce_qs = CaptureEvent.objects.filter(
+            created_by__in=player_qs,
+        ).annotate(
+            player_name=models.F("created_by__display_name"),
+            difficulty=models.F("location__difficulty"),
+            type=models.Value("capture"),
+        )[:20]
+
+        bae_qs = BasicAchievementEvent.objects.filter(
+            user__in=player_qs,
+        ).annotate(
+            player_name=models.F("user__display_name"),
+            difficulty=models.F("basic_achievement__difficulty"),
+            type=models.Value("basic_achievement"),
+        )[:20]
+
+        both = list(ce_qs) + list(bae_qs)
+
+        return super().get_context_data(
+            active_tab="activity",
+            events=sorted(both, key=lambda x: x.created_at, reverse=True)[:20],
             **kwargs,
         )
 
