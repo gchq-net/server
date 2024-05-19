@@ -17,14 +17,14 @@ if TYPE_CHECKING:  # pragma: nocover
 
 
 @pytest.mark.django_db
-class TestProfileUpdateView:
-    url = reverse_lazy("accounts:profile")
+class TestAccountSettingsView:
+    url = reverse_lazy("accounts:settings")
 
     def test_unauthenticated(self, client: Client) -> None:
         resp = client.get(self.url)
         assertRedirects(
             resp,
-            "/accounts/login/?next=/profile/",
+            "/accounts/login/?next=/profile/settings/",
             302,
             fetch_redirect_response=False,
         )
@@ -38,7 +38,7 @@ class TestProfileUpdateView:
 
         # Assert
         assert resp.status_code == HTTPStatus.OK
-        assertTemplateUsed(resp, "pages/accounts/profile.html")
+        assertTemplateUsed(resp, "pages/accounts/settings.html")
 
         form = resp.context["form"]
         assert form.fields.keys() == {
@@ -64,7 +64,7 @@ class TestProfileUpdateView:
 
         # Assert
         assert resp.status_code == HTTPStatus.OK
-        assertTemplateUsed(resp, "pages/accounts/profile.html")
+        assertTemplateUsed(resp, "pages/accounts/settings.html")
 
         form = resp.context["form"]
         assert form.fields.keys() == {
@@ -109,7 +109,7 @@ class TestProfileUpdateView:
 
         # Assert
         assertRedirects(resp, self.url)
-        assertMessages(resp, [Message(SUCCESS, "Updated profile successfully.")])
+        assertMessages(resp, [Message(SUCCESS, "Updated account successfully.")])
 
         user.refresh_from_db()
         assert user.display_name == saved_display_name

@@ -8,10 +8,11 @@
                 <span class="gchqnet-phase-banner__login-status">
                     <span>Hi, <strong>{{ request.user.display_name }}</strong></span>
                     <span>|</span>
-                    <a class="govuk-link" href="{% url 'accounts:profile' %}">My Profile</a>
-
-                    <span>|</span>
                     <span><strong>Score:</strong>&nbsp;{{ request.user.get_current_score }}</span>
+                    <span>|</span>
+                    <a class="govuk-link" href="#logout" onclick="document.getElementById('logoutForm').submit(); return false;">
+                        Logout
+                    </a>
                 </span>
             {% else %}
                 <span class="gchqnet-phase-banner__service-info">This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.</span>
@@ -24,3 +25,6 @@
         </span>
     </p>
 </div>
+<form id="logoutForm" method="post" action="{% url 'accounts:logout' %}">
+    {% csrf_token %}
+</form>

@@ -1,17 +1,17 @@
 {% extends "layouts/base_app.html" %}
 {% load crispy_forms_tags %}
 
-{% block title %}My Profile{% endblock %}
+{% block title %}Settings{% endblock %}
 
 {% block content %}
   <div class="govuk-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">
-      My Profile
+      Settings
     </h2>
     <ul class="govuk-tabs__list">
       <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
-        <a class="govuk-tabs__tab" href="#details">
-          My details
+        <a class="govuk-tabs__tab" href="#account">
+          My account
         </a>
       </li>
       <li class="govuk-tabs__list-item">
@@ -25,9 +25,9 @@
         </a>
       </li>
     </ul>
-    <div class="govuk-tabs__panel" id="details">
-      <h2 class="govuk-heading-l">My details</h2>
-      <p class="govuk-body">You can update your profile details below:</p>
+    <div class="govuk-tabs__panel" id="account">
+      <h2 class="govuk-heading-l">My account</h2>
+      <p class="govuk-body">You can update your account below:</p>
       {% crispy form %}
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="badges">

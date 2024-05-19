@@ -6,7 +6,7 @@ from django.contrib.messages import INFO, Message  # type: ignore[attr-defined]
 from django.core.signing import Signer
 from django.test import Client
 from django.urls import reverse_lazy
-from pytest_django.asserts import assertContains, assertMessages, assertNotContains, assertRedirects, assertTemplateUsed
+from pytest_django.asserts import assertContains, assertMessages, assertRedirects, assertTemplateUsed
 
 from gchqnet.accounts.factories import UserFactory
 from gchqnet.accounts.models.user import User
@@ -117,7 +117,6 @@ class TestLeaderboardDetailView:
         assert resp.status_code == HTTPStatus.OK
         assertTemplateUsed(resp, "pages/quest/leaderboard_detail.html")
         assertContains(resp, f"Leaderboard: {leaderboard.display_name}")
-        assertNotContains(resp, "Settings")
 
         assert list(resp.context["page_obj"]) == [user]
 

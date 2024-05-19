@@ -24,7 +24,7 @@ def verify_security_code(user: User, code: str) -> bool:
     )
 
 
-class BaseProfileUpdateForm(forms.ModelForm):
+class BaseAccountSettingsForm(forms.ModelForm):
     username = forms.CharField(disabled=True, label="Account name")
     display_name = forms.CharField(max_length=30, help_text="A name or nickname to be displayed on the leaderboard")
 
@@ -56,7 +56,7 @@ class BaseProfileUpdateForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit("submit", "Update profile"))
+        self.helper.add_input(Submit("submit", "Update account"))
 
     def clean_display_name(self) -> str:
         display_name = self.cleaned_data["display_name"].strip()
@@ -88,7 +88,7 @@ class BaseProfileUpdateForm(forms.ModelForm):
         return super().save(commit=commit)
 
 
-class PasswordProfileUpdateForm(BaseProfileUpdateForm):
+class PasswordAccountSettingsForm(BaseAccountSettingsForm):
     current_password = forms.CharField(label="Current password", widget=forms.PasswordInput, required=False)
     auth_error_msg = "Please enter your current password"
 
@@ -110,7 +110,7 @@ class PasswordProfileUpdateForm(BaseProfileUpdateForm):
         return current_password
 
 
-class TOTPProfileUpdateForm(BaseProfileUpdateForm):
+class TOTPAccountSettingsForm(BaseAccountSettingsForm):
     security_code = forms.CharField(label="Badge Security Code", min_length=6, max_length=6, required=False)
     auth_error_msg = "Please enter your badge security code"
 
