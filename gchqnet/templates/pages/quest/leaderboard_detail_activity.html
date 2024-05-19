@@ -1,0 +1,10 @@
+{% extends "pages/quest/leaderboard_detail_base.html" %}
+
+{% block panel_content %}
+  <h2 class="govuk-heading-l">Recent Activity</h2>
+  {% include "components/quest/recent-activity-table.html" with events=events %}
+  {% comment %}
+    We can assume that there will always be members, as it is not possible to access this page
+    if not a member.
+  {% endcomment %}
+{% endblock %}

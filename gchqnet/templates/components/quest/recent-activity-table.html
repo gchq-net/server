@@ -1,0 +1,32 @@
+{% load humanize location_tags %}
+<table class="govuk-table govuk-table--small-text-until-tablet">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Name</th>
+      <th scope="col" class="govuk-table__header">Activity</th>
+      <th scope="col" class="govuk-table__header">Difficulty</th>
+      <th scope="col" class="govuk-table__header">Timestamp</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    {% for event in events %}
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">{{ event.player_name }}</th>
+        <td class="govuk-table__cell">
+          {% if event.type == 'basic_achievement' %}
+            Achieved {{ event.basic_achievement.display_name }}
+          {% else %}
+            {# capture #}
+            Captured a location
+          {% endif %}
+        </td>
+        <td class="govuk-table__cell">
+          <strong class="govuk-tag">
+            {{ event.difficulty|difficulty_label }}
+          </strong>
+        </td>
+        <td class="govuk-table__cell">{{ event.created_at|naturaltime }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

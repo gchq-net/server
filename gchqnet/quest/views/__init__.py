@@ -1,5 +1,6 @@
 from .leaderboard import (
     LeaderboardCreateView,
+    LeaderboardDetailActivityView,
     LeaderboardDetailSettingsView,
     LeaderboardDetailView,
     LeaderboardInviteDetailView,
@@ -14,6 +15,7 @@ __all__ = [
     "GlobalScoreboardView",
     "LeaderboardCreateView",
     "LeaderboardDetailView",
+    "LeaderboardDetailActivityView",
     "LeaderboardDetailSettingsView",
     "LeaderboardInviteDetailView",
     "LeaderboardListView",
