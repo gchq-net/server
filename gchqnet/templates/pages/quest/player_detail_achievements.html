@@ -9,6 +9,10 @@
     {% include "components/achievements/achievement-event-table.html" %}
     {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" page_obj=achievement_events %}
   {% else %}
-    <p class="govuk-body">This player has not yet been awarded any achievements.</p>
+    {% if current_user %}
+      <p class="govuk-body">You have not yet been awarded any achievements.</p>
+    {% else %}
+      <p class="govuk-body">This player has not yet been awarded any achievements.</p>
+    {% endif %}
   {% endif %}
 {% endblock %}

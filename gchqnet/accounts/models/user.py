@@ -130,3 +130,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         from gchqnet.quest.repository.scores import get_current_score_for_user
 
         return get_current_score_for_user(self)
+
+    def get_capture_count(self) -> int:
+        return self.capture_events.count()
