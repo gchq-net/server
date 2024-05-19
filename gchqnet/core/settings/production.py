@@ -11,6 +11,13 @@ DATABASES["default"] = dj_database_url.config(  # type: ignore  # noqa: F405
     conn_health_checks=True,
 )
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
+
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 

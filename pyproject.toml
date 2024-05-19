@@ -20,6 +20,9 @@ pyotp = "^2.9.0"
 uvicorn = "^0.29.0"
 dj-database-url = "^2.1.0"
 psycopg = "^3.1.19"
+gunicorn = "^22.0.0"
+redis = "^5.0.4"
+hiredis = "^2.3.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.2"
