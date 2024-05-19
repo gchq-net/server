@@ -16,9 +16,9 @@
         </tr>
       </thead>
       <tbody class="govuk-table__body">
-        {% for find in finds %}
+        {% for find, show_details in finds %}
           <tr class="govuk-table__row">
-            <td class="govuk-table__cell">{{ find.location.display_name }}</td>
+            <td class="govuk-table__cell">{% if show_details %}{{ find.location.display_name }}{% else %}???{% endif %}</td>
             <td class="govuk-table__cell"><strong class="govuk-tag">{{ find.location.difficulty | difficulty_label }}</strong></td>
             <td class="govuk-table__cell">{{ find.created_at | naturaltime }}</td>
             <td class="govuk-table__cell"><a href="{% url 'quest:location_detail' find.location.id %}" class="govuk-link">View</a></td>
@@ -26,7 +26,7 @@
         {% endfor %}
       </tbody>
     </table>
-    {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" page_obj=finds %}
+    {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
   {% else %}
     <p class="govuk-body">This player has not yet found anything.</p>
   {% endif %}

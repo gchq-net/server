@@ -2,13 +2,13 @@
 {% load location_tags static %}
 {% load humanize %}
 
-{% block title %}{{ object.display_name }}{% endblock %}
+{% block title %}{% if capture_event %}{{ object.display_name }}{% else %}???{% endif %}{% endblock %}
 
 {% block header %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
       <div class="gchqnet-page-header-actions__title">
-        <h1 class="govuk-heading-xl">{{ object.display_name }}</h1>
+        <h1 class="govuk-heading-xl">{% if capture_event %}{{ object.display_name }}{% else %}???{% endif %}</h1>
       </div>
     </div>
     <div class="govuk-grid-column-one-half">
@@ -23,8 +23,10 @@
 {% block content %}
   {% if capture_event %}
     <p class="govuk-body">You have already found this hexpansion.</p>
-  {% else %}
+  {% elif request.user.is_authenticated %}
     <p class="govuk-body">You have not found this hexpansion yet.</p>
+  {% else %}
+    <p class="govuk-body"><a href="{% url 'accounts:login' %}">Log in</a> to view more information about this hexpansion.</p>
   {% endif %}
   <div class="govuk-tabs" data-module="govuk-tabs">
     <ul class="govuk-tabs__list">
