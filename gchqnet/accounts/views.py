@@ -24,10 +24,10 @@ from gchqnet.core.mixins import BreadcrumbsMixin
 from .forms import (
     BadgeLoginChallengeForm,
     BadgeLoginUsernameForm,
-    BaseProfileUpdateForm,
+    BaseAccountSettingsForm,
     CredentialsLoginForm,
-    PasswordProfileUpdateForm,
-    TOTPProfileUpdateForm,
+    PasswordAccountSettingsForm,
+    TOTPAccountSettingsForm,
 )
 from .models import User
 
@@ -35,18 +35,18 @@ if TYPE_CHECKING:  # pragma: nocover
     from django.db.models import QuerySet
 
 
-class MyProfileView(LoginRequiredMixin, BreadcrumbsMixin, UpdateView):
-    template_name = "pages/accounts/profile.html"
+class AccountSettingsView(LoginRequiredMixin, BreadcrumbsMixin, UpdateView):
+    template_name = "pages/accounts/settings.html"
     model = User
-    form_class = PasswordProfileUpdateForm
-    success_url = reverse_lazy("accounts:profile")
-    breadcrumbs = [(None, "My Profile")]
+    form_class = PasswordAccountSettingsForm
+    success_url = reverse_lazy("accounts:settings")
+    breadcrumbs = [(None, "Settings")]
 
-    def get_form_class(self) -> type[BaseProfileUpdateForm]:
+    def get_form_class(self) -> type[BaseAccountSettingsForm]:
         if self.object.password and self.object.has_usable_password():
-            return PasswordProfileUpdateForm
+            return PasswordAccountSettingsForm
         else:
-            return TOTPProfileUpdateForm
+            return TOTPAccountSettingsForm
 
     def get_object(self, queryset: QuerySet[User] | None = None) -> User:
         assert self.request.user.is_authenticated
@@ -57,7 +57,7 @@ class MyProfileView(LoginRequiredMixin, BreadcrumbsMixin, UpdateView):
         kwargs["user"] = self.object
         return kwargs
 
-    def form_valid(self, form: BaseProfileUpdateForm) -> HttpResponse:
+    def form_valid(self, form: BaseAccountSettingsForm) -> HttpResponse:
         self.object = form.save()
 
         if form.cleaned_data.get("new_password2"):
@@ -65,7 +65,7 @@ class MyProfileView(LoginRequiredMixin, BreadcrumbsMixin, UpdateView):
             # Cycle sessions if password has changed
             update_session_auth_hash(self.request, self.object)
         else:
-            messages.success(self.request, "Updated profile successfully.")
+            messages.success(self.request, "Updated account successfully.")
 
         return redirect(self.get_success_url())
 
