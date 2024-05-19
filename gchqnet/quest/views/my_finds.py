@@ -28,8 +28,3 @@ class MyFindsView(LoginRequiredMixin, BreadcrumbsMixin, TemplateView):
             finds=finds,
             **kwargs,
         )
-
-
-class MyFindsMapView(LoginRequiredMixin, BreadcrumbsMixin, TemplateView):
-    template_name = "pages/quest/my_finds_map.html"
-    breadcrumbs = [(None, "My Finds")]

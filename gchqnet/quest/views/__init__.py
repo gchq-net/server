@@ -6,8 +6,7 @@ from .leaderboard import (
     LeaderboardListView,
 )
 from .locations import LocationDetailView
-from .my_finds import MyFindsMapView, MyFindsView
-from .players import PlayerAchievementsView, PlayerFindsView
+from .players import MyProfileMapView, PlayerAchievementsView, PlayerFindsView
 from .scoreboard import GlobalScoreboardView
 
 __all__ = [
@@ -18,8 +17,7 @@ __all__ = [
     "LeaderboardInviteDetailView",
     "LeaderboardListView",
     "LocationDetailView",
-    "MyFindsView",
-    "MyFindsMapView",
+    "MyProfileMapView",
     "PlayerFindsView",
     "PlayerAchievementsView",
 ]

@@ -18,8 +18,21 @@ urlpatterns = [
         name="leaderboard_detail_settings",
     ),
     path("locations/<uuid:pk>/", views.LocationDetailView.as_view(), name="location_detail"),
-    path("my-finds/", views.MyFindsView.as_view(), name="my_finds"),
-    path("my-finds/map/", views.MyFindsMapView.as_view(), name="my_finds_map"),
-    path("players/<str:username>/", views.PlayerFindsView.as_view(), name="player_detail"),
-    path("players/<str:username>/achievements/", views.PlayerAchievementsView.as_view(), name="player_achievements"),
+    path("profile/", views.PlayerFindsView.as_view(), name="profile", kwargs={"current_user": True}),
+    path(
+        "profile/achievements/",
+        views.PlayerAchievementsView.as_view(),
+        name="profile_achievements",
+        kwargs={"current_user": True},
+    ),
+    path("profile/map/", views.MyProfileMapView.as_view(), name="profile_map"),
+    path(
+        "players/<str:username>/", views.PlayerFindsView.as_view(), name="player_detail", kwargs={"current_user": False}
+    ),
+    path(
+        "players/<str:username>/achievements/",
+        views.PlayerAchievementsView.as_view(),
+        name="player_achievements",
+        kwargs={"current_user": False},
+    ),
 ]
