@@ -1,0 +1,15 @@
+.gchqnet-homepage {
+    &__intro-text {
+        @include govuk-media-query($from: tablet) {
+            display: none;
+        }
+    }
+}
+
+.gchqnet-homepage-aside {
+    &__container {
+        @include govuk-media-query(mobile, tablet) {
+            display: none;
+        }
+    }
+}

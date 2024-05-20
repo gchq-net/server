@@ -4,6 +4,8 @@
     }
 
     &__search-button {
-        margin: 0 0.5em;
+        @include govuk-media-query(mobile, tablet) {
+            margin-top: 0.5em;
+        }
     }
 }
