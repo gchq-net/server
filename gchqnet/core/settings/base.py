@@ -144,6 +144,8 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 20,
 }
 
+HIDE_PRIVATE_API_ENDPOINTS = True
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "GCHQ.NET API",
     "DESCRIPTION": "Great Camp Hexpansion Quest API",

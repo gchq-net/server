@@ -1,3 +1,4 @@
+from django.conf import settings
 from drf_spectacular.utils import extend_schema
 from rest_framework import exceptions
 from rest_framework.decorators import api_view, permission_classes
@@ -30,7 +31,11 @@ def profile(request: Request) -> Response:
 
 
 @extend_schema(
-    summary="Get API token", request=UserTokenRequestSerializer, responses={200: UserTokenSerializer}, tags=["Users"]
+    summary="Get API token",
+    exclude=settings.HIDE_PRIVATE_API_ENDPOINTS,
+    request=UserTokenRequestSerializer,
+    responses={200: UserTokenSerializer},
+    tags=["Users"],
 )
 @permission_classes([AllowAny])
 @api_view(["POST"])
@@ -70,6 +75,7 @@ def get_auth_token(request: Request) -> Response:
 
 @extend_schema(
     summary="Get player info for current badge",
+    exclude=settings.HIDE_PRIVATE_API_ENDPOINTS,
     request=BadgeAPIRequestSerializer,
     responses={200: UserProfileSerializer, 201: UserProfileSerializer},
     tags=["Badge Internal API"],
@@ -97,6 +103,7 @@ def badge_get_current_player(request: Request) -> Response:
 
 @extend_schema(
     summary="Get OTP for current badge",
+    exclude=settings.HIDE_PRIVATE_API_ENDPOINTS,
     request=BadgeAPIRequestSerializer,
     responses={200: BadgeOTPResponseSerializer},
     tags=["Badge Internal API"],

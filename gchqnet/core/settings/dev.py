@@ -23,6 +23,8 @@ except ImportError:
 # Template Debugging
 TEMPLATES[0]["OPTIONS"]["debug"] = True  # type: ignore[index]  # noqa: F405
 
+HIDE_PRIVATE_API_ENDPOINTS = False
+
 # Import settings from local.py if it exists.
 try:
     from .local import *  # type: ignore[import-not-found,unused-ignore]  # noqa: F403

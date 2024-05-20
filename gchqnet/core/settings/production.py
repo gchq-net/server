@@ -1,3 +1,5 @@
+import os
+
 import dj_database_url
 
 from .base import *  # noqa
@@ -17,6 +19,8 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379",
     }
 }
+
+HIDE_PRIVATE_API_ENDPOINTS = os.environ.get("GCHQNET_HIDE_PRIVATE_API_ENDPOINTS", "true").lower() == "true"
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
