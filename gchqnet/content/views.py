@@ -18,7 +18,7 @@ class AboutPage(BreadcrumbsMixin, TemplateView):
 class ContactPage(BreadcrumbsMixin, TemplateView):
     template_name = "pages/content/contact.html"
     breadcrumbs = [(None, "Contact Us")]
-    extra_context = {"dect_number": "4247", "fax_number": "4248 (TBC)"}
+    extra_context = {"dect_number": "4247", "fax_number": "2999"}
 
 
 class PlayPage(BreadcrumbsMixin, TemplateView):
