@@ -35,3 +35,25 @@ class LeaderboardWithScoresSerializer(LeaderboardSerializer):
     class Meta:
         model = Leaderboard
         fields = ["id", "display_name", "owner", "enable_invites", "scores", "created_at", "created_by", "updated_at"]
+
+
+class LocationFeaturePropertySerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField(default="GCHQ.NET Scoreboard (Easy)")
+
+
+class LocationFeatureGeometrySerializer(serializers.Serializer):
+    coordinates = serializers.ListSerializer(default=[-2.377, 52.039], child=serializers.FloatField())
+    type = serializers.CharField(default="Point")
+
+
+class LocationFeatureSerializer(serializers.Serializer):
+    type = serializers.CharField(default="Feature")
+    properties = LocationFeaturePropertySerializer()
+    geometry = LocationFeatureGeometrySerializer()
+    id = serializers.IntegerField()
+
+
+class LocationGeoJSONSerializer(serializers.Serializer):
+    type = serializers.CharField(default="FeatureCollection")
+    features = LocationFeatureSerializer(many=True)

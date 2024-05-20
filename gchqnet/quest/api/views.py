@@ -14,7 +14,12 @@ from gchqnet.accounts.models.user import UserQuerySet
 from gchqnet.quest.models import CaptureEvent, Leaderboard, LocationDifficulty
 from gchqnet.quest.repository import get_global_scoreboard
 
-from .serializers import LeaderboardSerializer, LeaderboardWithScoresSerializer, ScoreboardEntrySerializer
+from .serializers import (
+    LeaderboardSerializer,
+    LeaderboardWithScoresSerializer,
+    LocationGeoJSONSerializer,
+    ScoreboardEntrySerializer,
+)
 
 if TYPE_CHECKING:  # pragma: nocover
     from django.db.models.query import QuerySet
@@ -78,7 +83,13 @@ class PrivateScoreboardAPIViewset(viewsets.ReadOnlyModelViewSet):
         return super().list(request, *args, **kwargs)
 
 
-@extend_schema(summary="Get currently found locations as GeoJSON", tags=["Locations"])
+@extend_schema(
+    summary="Get currently found locations as GeoJSON",
+    tags=["Locations"],
+    responses={
+        200: LocationGeoJSONSerializer,
+    },
+)
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
 def my_finds_geojson(request: Request) -> Response:
@@ -116,4 +127,6 @@ def my_finds_geojson(request: Request) -> Response:
             if _has_coords(capture)
         ],
     }
-    return Response(data, content_type="application/geo+json")
+    serializer = LocationGeoJSONSerializer(data=data)
+    serializer.is_valid(raise_exception=True)
+    return Response(serializer.data, content_type="application/geo+json")
