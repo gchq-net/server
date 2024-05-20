@@ -1,0 +1,70 @@
+{% extends "layouts/base_app.html" %}
+{% load static %}
+
+{% block title %}Our Platforms{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">
+    At GCHQ.NET, we consider accessibility to be your only human right and therefore we have ensured that
+    our essential tools are available to users from all backgrounds, abilities and time periods.
+  </p>
+  <h2 class="govuk-heading-m">Electronic Access</h2>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        World Wide Web
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <a href="https://gchq.net"><code>https://gchq.net</code></a>
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Secure Shell
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <code>ssh emf@gchq.net</code>
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Telnet
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <code>telnet gchq.net</code>
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Dial-up (v.34)
+      </dt>
+      <dd class="govuk-summary-list__value">
+        Call <code>2998</code>
+      </dd>
+    </div>
+  </dl>
+  <p class="govuk-body">If you need to get in touch with us, please see <a href="{% url 'content:contact' %}">our contact details</a>.</p>
+  <h2 class="govuk-heading-m">Traditional Access</h2>
+  <p class="govuk-body">We love to support our users who live in the 1690s or are otherwise allergic to electrons, so offer a number of traditional access mechanisms.</p>
+  <h3 class="govuk-heading-s">Chaos Post</h3>
+  <p class="govuk-body">
+    A paper copy of your results may be requested by sending your account name and return address to:
+  </p>
+  <p class="govuk-body">
+    GCHQ.NET (DECT 4247) <br />
+    ECS Village <br />
+    Electromagnetic Field 2024
+  </p>
+  <p class="govuk-body">We also will reply to letters sent via <a href="https://docs.cutel.net/services/telemessage/">Cutel Telemessage</a>.</p>
+  <h3 class="govuk-heading-s">In Person</h3>
+  <p class="govuk-body">
+    Visitors to our headquarters may request a copy of their results from a volunteer. Bonus points may also be available from our HQ.
+  </p>
+  <h3 class="govuk-heading-s">Semaphore</h3>
+  <p class="govuk-body">
+    Semaphore operators should signal <code>G C H Q N E T</code>, followed by their account name.
+  </p>
+  <div class="govuk-inset-text">
+    Japanese semaphore and RFC 4824 are regrettable not supported.
+  </div>
+{% endblock %}
