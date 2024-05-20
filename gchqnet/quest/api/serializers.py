@@ -1,7 +1,9 @@
 from rest_framework import serializers
 
 from gchqnet.accounts.models import User
+from gchqnet.quest.api.fields import LocationNameField
 from gchqnet.quest.models import Leaderboard
+from gchqnet.quest.models.location import Location
 
 
 class LeaderboardLinkedUserSerializer(serializers.ModelSerializer):
@@ -57,3 +59,12 @@ class LocationFeatureSerializer(serializers.Serializer):
 class LocationGeoJSONSerializer(serializers.Serializer):
     type = serializers.CharField(default="FeatureCollection")
     features = LocationFeatureSerializer(many=True)
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    display_name = LocationNameField(source="*")
+    found_at = serializers.DateTimeField()
+
+    class Meta:
+        model = Location
+        fields = ["id", "display_name", "hint", "difficulty", "found_at"]

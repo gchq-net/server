@@ -3,21 +3,24 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 from drf_spectacular.utils import extend_schema
 from rest_framework import filters, permissions, serializers, viewsets
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from gchqnet.accounts.models.user import UserQuerySet
 from gchqnet.quest.models import CaptureEvent, Leaderboard, LocationDifficulty
+from gchqnet.quest.models.location import Location
 from gchqnet.quest.repository import get_global_scoreboard
 
 from .serializers import (
     LeaderboardSerializer,
     LeaderboardWithScoresSerializer,
     LocationGeoJSONSerializer,
+    LocationSerializer,
     ScoreboardEntrySerializer,
 )
 
@@ -80,53 +83,90 @@ class PrivateScoreboardAPIViewset(viewsets.ReadOnlyModelViewSet):
 
         Scores are returned in order of rank.
         """
+        return super().retrieve(request, *args, **kwargs)
+
+
+class LocationViewset(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = LocationSerializer
+
+    def get_queryset(self) -> QuerySet[Location]:
+        assert self.request.user.is_authenticated
+        return Location.objects.order_by("id").annotate(
+            found_at=models.Subquery(
+                CaptureEvent.objects.filter(location=models.OuterRef("id"), created_by=self.request.user).values(
+                    "created_at"
+                ),
+            ),
+        )
+
+    def get_serializer_context(self) -> dict[str, Any]:
+        assert self.request.user.is_authenticated
+        context = super().get_serializer_context()
+        context["user"] = self.request.user
+        return context
+
+    @extend_schema(summary="List locations", tags=["Locations"])
+    def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        """
+        Get a list of all locations.
+
+        If the user has found the location, include the timestamp.
+        """
         return super().list(request, *args, **kwargs)
 
+    @extend_schema(summary="Get a location", tags=["Locations"])
+    def retrieve(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        """
+        Get the details of a location.
 
-@extend_schema(
-    summary="Get currently found locations as GeoJSON",
-    tags=["Locations"],
-    responses={
-        200: LocationGeoJSONSerializer,
-    },
-)
-@api_view(["GET"])
-@permission_classes([permissions.IsAuthenticated])
-def my_finds_geojson(request: Request) -> Response:
-    assert request.user.is_authenticated
+        If the user has found the location, include the timestamp.
+        """
+        return super().retrieve(request, *args, **kwargs)
 
-    captures = request.user.capture_events.select_related("location", "location__coordinates")
+    @extend_schema(
+        summary="Get currently found locations as GeoJSON",
+        tags=["Locations"],
+        responses={
+            200: LocationGeoJSONSerializer,
+        },
+    )
+    @action(url_path="my-finds", methods=["GET"], detail=False)
+    def geojson(self, request: Request) -> Response:
+        assert request.user.is_authenticated
 
-    def _name(capture: CaptureEvent) -> str:
-        difficulty = LocationDifficulty(capture.location.difficulty).label
-        return f"{capture.location.display_name} ({difficulty})"
+        captures = request.user.capture_events.select_related("location", "location__coordinates")
 
-    def _has_coords(capture: CaptureEvent) -> bool:
-        try:
-            _ = capture.location.coordinates
-            return True
-        except ObjectDoesNotExist:
-            return False
+        def _name(capture: CaptureEvent) -> str:
+            difficulty = LocationDifficulty(capture.location.difficulty).label
+            return f"{capture.location.display_name} ({difficulty})"
 
-    data = {
-        "type": "FeatureCollection",
-        "features": [
-            {
-                "type": "Feature",
-                "properties": {
-                    "id": idx,
-                    "name": _name(capture),
-                },
-                "geometry": {
-                    "coordinates": [capture.location.coordinates.long, capture.location.coordinates.lat],
-                    "type": "Point",
-                },
-                "id": 0,
-            }
-            for idx, capture in enumerate(captures)
-            if _has_coords(capture)
-        ],
-    }
-    serializer = LocationGeoJSONSerializer(data=data)
-    serializer.is_valid(raise_exception=True)
-    return Response(serializer.data, content_type="application/geo+json")
+        def _has_coords(capture: CaptureEvent) -> bool:
+            try:
+                _ = capture.location.coordinates
+                return True
+            except ObjectDoesNotExist:
+                return False
+
+        data = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "id": idx,
+                        "name": _name(capture),
+                    },
+                    "geometry": {
+                        "coordinates": [capture.location.coordinates.long, capture.location.coordinates.lat],
+                        "type": "Point",
+                    },
+                    "id": 0,
+                }
+                for idx, capture in enumerate(captures)
+                if _has_coords(capture)
+            ],
+        }
+        serializer = LocationGeoJSONSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, content_type="application/geo+json")
