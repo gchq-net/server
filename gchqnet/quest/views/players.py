@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import DetailView
 
 from gchqnet.accounts.models import User
 from gchqnet.achievements.repository import get_achievements_for_user
@@ -111,11 +111,6 @@ class PlayerAchievementsView(BasePlayerDetailView):
             achievement_events=paginator.page(page_num),
             **kwargs,
         )
-
-
-class MyProfileMapView(LoginRequiredMixin, BreadcrumbsMixin, TemplateView):
-    template_name = "pages/quest/profile_map.html"
-    breadcrumbs = [(reverse_lazy("quest:profile"), "My Profile"), (None, "Map")]
 
 
 class MyProfileUnfoundLocationsView(LoginRequiredMixin, BreadcrumbsMixin, DetailView):

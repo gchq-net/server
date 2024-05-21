@@ -148,11 +148,11 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
 
         def _colour_for_difficulty(capture: CaptureEvent) -> str:
             lut = {
-                LocationDifficulty.EASY: "#648FFF",
-                LocationDifficulty.MEDIUM: "#785EF0",
-                LocationDifficulty.HARD: "#DC267F",
-                LocationDifficulty.INSANE: "#FE6100",
-                LocationDifficulty.IMPOSSIBLE: "#1AFF1A",
+                LocationDifficulty.EASY.value: "#648FFF",
+                LocationDifficulty.MEDIUM.value: "#785EF0",
+                LocationDifficulty.HARD.value: "#DC267F",
+                LocationDifficulty.INSANE.value: "#FE6100",
+                LocationDifficulty.IMPOSSIBLE.value: "#1AFF1A",
             }
             return lut[capture.location.difficulty]
 

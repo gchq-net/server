@@ -35,7 +35,7 @@ urlpatterns = [
         views.MyProfileUnfoundLocationsView.as_view(),
         name="profile_to_find",
     ),
-    path("profile/map/", views.MyProfileMapView.as_view(), name="profile_map"),
+    path("map/", views.MapView.as_view(), name="map"),
     path(
         "players/<str:username>/", views.PlayerFindsView.as_view(), name="player_detail", kwargs={"current_user": False}
     ),
