@@ -60,10 +60,10 @@ class Coordinates(models.Model):
 
     location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name="coordinates")
     lat = models.DecimalField(
-        "Latitude", max_digits=8, decimal_places=3, validators=[MinValueValidator(-90), MaxValueValidator(90)]
+        "Latitude", max_digits=16, decimal_places=13, validators=[MinValueValidator(-90), MaxValueValidator(90)]
     )
     long = models.DecimalField(
-        "Longitude", max_digits=8, decimal_places=3, validators=[MinValueValidator(-180), MaxValueValidator(180)]
+        "Longitude", max_digits=16, decimal_places=13, validators=[MinValueValidator(-180), MaxValueValidator(180)]
     )
 
     created_at = models.DateTimeField(auto_now_add=True)

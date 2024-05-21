@@ -45,7 +45,9 @@ class LocationFeaturePropertySerializer(serializers.Serializer):
 
 
 class LocationFeatureGeometrySerializer(serializers.Serializer):
-    coordinates = serializers.ListSerializer(default=[-2.377, 52.039], child=serializers.FloatField())
+    coordinates = serializers.ListSerializer(
+        default=[-2.383657, 52.032173], child=serializers.DecimalField(max_digits=16, decimal_places=13)
+    )
     type = serializers.CharField(default="Point")
 
 
