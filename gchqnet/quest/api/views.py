@@ -158,7 +158,10 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
                         "name": _name(capture),
                     },
                     "geometry": {
-                        "coordinates": [capture.location.coordinates.long, capture.location.coordinates.lat],
+                        "coordinates": [
+                            capture.location.coordinates.long,
+                            capture.location.coordinates.lat,
+                        ],
                         "type": "Point",
                     },
                     "id": 0,
