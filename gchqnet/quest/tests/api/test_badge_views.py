@@ -97,7 +97,7 @@ class BadgeAuthTestMixin:
 
 @pytest.mark.django_db
 class TestBadgeGetCurrentPlayerView(BadgeAuthTestMixin):
-    url = reverse_lazy("api:badge_get_current_player")
+    url = reverse_lazy("api:badge-player")
 
     def test_post__new_badge_registration(self, client: Client) -> None:
         resp = client.post(
@@ -159,7 +159,7 @@ class TestBadgeGetCurrentPlayerView(BadgeAuthTestMixin):
 
 @pytest.mark.django_db
 class TestBadgeGetCurrentOTPView(BadgeAuthTestMixin):
-    url = reverse_lazy("api:badge_get_current_otp")
+    url = reverse_lazy("api:badge-otp")
 
     def test_post__new_badge_registration(self, client: Client) -> None:
         resp = client.post(
