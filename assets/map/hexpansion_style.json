@@ -23,7 +23,7 @@
             "type": "symbol",
             "source": "hexpansions",
             "source-layer": "",
-            "minzoom": 16,
+            "minzoom": 17,
             "maxzoom": 24,
             "layout": {
                 "text-field": "{name}",
@@ -40,6 +40,30 @@
                 "text-halo-color": "rgba(244, 235, 247, 0.73)",
                 "text-halo-width": 2,
                 "text-halo-blur": 1
+            }
+        },
+        {
+            "id": "gchqnet_hq_symbol",
+            "type": "symbol",
+            "source-layer": "",
+            "source": "gchqnethq",
+            "minzoom": 15,
+            "layout": {
+                "icon-image": "gchqnethq",
+                "icon-size": 0.5,
+                "icon-allow-overlap": true
+            }
+        },
+        {
+            "id": "gchqnet_scoreboard_symbol",
+            "type": "symbol",
+            "source-layer": "",
+            "source": "gchqnetscoreboard",
+            "minzoom": 15,
+            "layout": {
+                "icon-image": "gchqnetscoreboard",
+                "icon-size": 0.5,
+                "icon-allow-overlap": true
             }
         }
     ]

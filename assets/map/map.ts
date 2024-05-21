@@ -8,7 +8,7 @@ import hexpansion_style from './hexpansion_style.json'
 async function loadIcons(map: maplibregl.Map) {
     const ratio = Math.min(Math.round(window.devicePixelRatio), 2)
 
-    const images = ['camping', 'no-access', 'water', 'tree']
+    const images = ['camping', 'no-access', 'water', 'tree', 'gchqnethq', 'gchqnetscoreboard']
 
     Promise.all(
         images
@@ -45,6 +45,7 @@ class EventMap {
             Paths: 'paths_',
             'Buried Services': 'services_',
             Water: 'site_water_',
+            GCHQ: 'gchqnethq',
             Hexpansions: 'hexpansions',
             DKs: 'dk_',
             'NOC-Physical': 'noc_',
@@ -74,6 +75,32 @@ class EventMap {
         map_style.sources.villages = {
             type: 'geojson',
             data: '/api/locations/villages/',
+        }
+        map_style.sources.gchqnethq = {
+            type: 'geojson',
+            data: {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {},
+                        "geometry": {"type": "Point", "coordinates": [-2.375416, 52.040808]}
+                    }
+                ],
+            }
+        }
+        map_style.sources.gchqnetscoreboard = {
+            type: 'geojson',
+            data: {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {},
+                        "geometry": {"type": "Point", "coordinates": [-2.3773782, 52.0422803]}
+                    }
+                ],
+            }
         }
         map_style.glyphs = '/static/fonts/{fontstack}/{range}.pbf'
         
