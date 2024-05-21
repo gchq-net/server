@@ -1,7 +1,7 @@
 {% extends "layouts/base_app.html" %}
 {% load crispy_forms_tags %}
 
-{% block title %}Login to GCHQ.NET using your badge{% endblock %}
+{% block title %}Login to GCHQ.NET{% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -13,6 +13,9 @@
       {% crispy form %}
     </div>
   </div>
+
+  <h2 class="govuk-heading-m">If you cannot login into your account</h2>
+  <p class="govuk-body"><a href="{% url 'content:contact' %}">Contact our support team</a> if you cannot connect your badge or if your account has been duplicated.</p>
 
   <h2 class="govuk-heading-m">Other ways to login</h2>
   <p class="govuk-body">If you have set a password on your account, you can <a href="{% url 'accounts:login_credentials' %}{{ query_string }}">login using your password</a>.</p>
