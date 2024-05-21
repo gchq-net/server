@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+import requests
+from django.conf import settings
+from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from drf_spectacular.utils import extend_schema
@@ -86,6 +89,9 @@ class PrivateScoreboardAPIViewset(viewsets.ReadOnlyModelViewSet):
         return super().retrieve(request, *args, **kwargs)
 
 
+VILLAGE_CACHE_KEY = "map__village__geodata"
+
+
 class LocationViewset(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = LocationSerializer
@@ -137,9 +143,18 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
 
         captures = request.user.capture_events.select_related("location", "location__coordinates")
 
-        def _name(capture: CaptureEvent) -> str:
-            difficulty = LocationDifficulty(capture.location.difficulty).label
-            return f"{capture.location.display_name} ({difficulty})"
+        def _difficulty_label(capture: CaptureEvent) -> str:
+            return LocationDifficulty(capture.location.difficulty).label
+
+        def _colour_for_difficulty(capture: CaptureEvent) -> str:
+            lut = {
+                LocationDifficulty.EASY.value: "#648FFF",
+                LocationDifficulty.MEDIUM.value: "#785EF0",
+                LocationDifficulty.HARD.value: "#DC267F",
+                LocationDifficulty.INSANE.value: "#FE6100",
+                LocationDifficulty.IMPOSSIBLE.value: "#1AFF1A",
+            }
+            return lut[capture.location.difficulty]
 
         def _has_coords(capture: CaptureEvent) -> bool:
             try:
@@ -155,7 +170,9 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
                     "type": "Feature",
                     "properties": {
                         "id": idx,
-                        "name": _name(capture),
+                        "name": capture.location.display_name,
+                        "difficulty": _difficulty_label(capture),
+                        "colour": _colour_for_difficulty(capture),
                     },
                     "geometry": {
                         "coordinates": [
@@ -173,3 +190,23 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
         serializer = LocationGeoJSONSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, content_type="application/geo+json")
+
+    @extend_schema(
+        summary="Get villages as GeoJSON",
+        tags=["Locations"],
+        exclude=settings.HIDE_PRIVATE_API_ENDPOINTS,
+        responses={
+            200: LocationGeoJSONSerializer,
+        },
+    )
+    @action(methods=["GET"], detail=False)
+    def villages(self, request: Request) -> Response:
+        assert request.user.is_authenticated
+
+        if not (village_data := cache.get(VILLAGE_CACHE_KEY)):
+            resp = requests.get("https://www.emfcamp.org/api/villages.geojson", timeout=2)
+            resp.raise_for_status()
+            village_data = resp.json()
+            cache.set(VILLAGE_CACHE_KEY, village_data, timeout=600)
+
+        return Response(village_data, content_type="application/geo+json")

@@ -1,14 +1,24 @@
 {% extends "layouts/base_app.html" %}
 {% load static %}
 
-{% block title %}My Profile: Map{% endblock %}
+{% block title %}Map{% endblock %}
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'map/map.css' %}">
     <script src="{% static 'map/map.js' %}"></script>
     <noscript>You need Javascript enabled to view this map.</noscript>
-    <p class="govuk-body">You can view hexpansions that you have found on the map below.</p>
-    <div id="map"></div>
+
+    {% if request.user.is_authenticated %}
+        <p class="govuk-body">
+            You can view hexpansions that you have found on the map below.
+        </p>
+    {% else %}
+        <p class="govuk-body">
+            Find out which hexpansions you have already found by <a href="{% url 'accounts:login' %}">logging in</a>.
+        </p>
+    {% endif %}
+
+    <div id="map" data-urlhash></div>
 {% endblock %}
 
 {% block css %}

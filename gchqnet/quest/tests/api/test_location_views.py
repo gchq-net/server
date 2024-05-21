@@ -185,7 +185,7 @@ class TestLocationGeoJSONAPI:
         assert resp.json() == {"features": [], "type": "FeatureCollection"}
 
     def test_get_found_location(self, client: Client, user: User) -> None:
-        location = LocationFactory(created_by=user, coordinates=None)
+        location = LocationFactory(created_by=user, difficulty=10, coordinates=None)
         CoordinatesFactory(lat=52, long=2, created_by=user, location=location)
         record_attempted_capture(user.badges.get(), location.hexpansion)
         client.force_login(user)
@@ -203,7 +203,12 @@ class TestLocationGeoJSONAPI:
                         "type": "Point",
                     },
                     "id": 0,
-                    "properties": {"id": 0, "name": f"{location.display_name} ({difficulty})"},
+                    "properties": {
+                        "id": 0,
+                        "name": location.display_name,
+                        "colour": "#648FFF",
+                        "difficulty": difficulty,
+                    },
                     "type": "Feature",
                 }
             ],
