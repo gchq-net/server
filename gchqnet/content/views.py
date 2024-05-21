@@ -24,3 +24,8 @@ class ContactPage(BreadcrumbsMixin, TemplateView):
 class PlayPage(BreadcrumbsMixin, TemplateView):
     template_name = "pages/content/play.html"
     breadcrumbs = [(None, "How to Play")]
+
+
+class PlatformsPage(BreadcrumbsMixin, TemplateView):
+    template_name = "pages/content/platforms.html"
+    breadcrumbs = [(None, "Our Platforms")]
