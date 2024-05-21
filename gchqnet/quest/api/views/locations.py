@@ -67,6 +67,7 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
 
     @extend_schema(
         summary="Get currently found locations as GeoJSON",
+        exclude=settings.HIDE_PRIVATE_API_ENDPOINTS,
         tags=["Locations"],
         responses={
             200: LocationGeoJSONSerializer,
