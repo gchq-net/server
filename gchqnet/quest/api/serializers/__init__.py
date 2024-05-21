@@ -1,4 +1,4 @@
-from .badge import BadgeAPIRequestSerializer, BadgeOTPResponseSerializer
+from .badge import BadgeAPIRequestSerializer, BadgeCaptureSubmissionSerializer, BadgeOTPResponseSerializer
 from .locations import LocationGeoJSONSerializer, LocationSerializer
 from .scoreboards import (
     LeaderboardLinkedUserSerializer,
@@ -9,6 +9,7 @@ from .scoreboards import (
 
 __all__ = [
     "BadgeAPIRequestSerializer",
+    "BadgeCaptureSubmissionSerializer",
     "BadgeOTPResponseSerializer",
     "LeaderboardLinkedUserSerializer",
     "LeaderboardSerializer",
