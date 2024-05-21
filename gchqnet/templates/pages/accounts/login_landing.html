@@ -6,7 +6,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">Login to Great Camp Hexpansion Quest</h1>
-      <p class="govuk-body">Once you've linked your badge to your online account, you can view all of your finds, achievements, hints and compete against your friends.</p>
+      <p class="govuk-body">After authenticating using your badge, you can view all of your finds, achievements, hints and compete against your friends.</p>
       <p class="govuk-body">You will need:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>your EMF Tildagon badge</li>
@@ -25,7 +25,7 @@
   </div>
 
   <h2 class="govuk-heading-m">If you cannot login into your account</h2>
-  <p class="govuk-body">Get help if you cannot connect your badge or if your account has been duplicated.</p>
+  <p class="govuk-body"><a href="{% url 'content:contact' %}">Contact our support team</a> if you cannot connect your badge or if your account has been duplicated.</p>
 
   <h2 class="govuk-heading-m">Other ways to login</h2>
   <p class="govuk-body">If you have set a password on your account, you can <a href="{% url 'accounts:login_credentials' %}{{ query_string }}">login using a password</a>.</p>

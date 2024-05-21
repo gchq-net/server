@@ -4,7 +4,7 @@
 {% load humanize %}
 
 {% block panel_content %}
-  <h2 class="govuk-heading-l">Achievements</h2>
+  <h2 class="govuk-heading-l">{% if current_user %}My {% endif %}Achievements</h2>
   {% if achievement_events %}
     {% include "components/achievements/achievement-event-table.html" %}
     {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" page_obj=achievement_events %}
