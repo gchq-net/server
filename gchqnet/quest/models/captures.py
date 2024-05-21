@@ -4,6 +4,7 @@ import uuid
 
 from django.core.validators import RegexValidator
 from django.db import models
+from django.core.validators import RegexValidator
 
 from .location import Location
 
