@@ -1,5 +1,6 @@
 import os
 import random
+from uuid import UUID
 
 from django.core.management.base import BaseCommand
 
@@ -57,7 +58,16 @@ class Command(BaseCommand):
             for location in sample:
                 for i in range(random.randint(1, 3)):  # noqa: S311
                     raw_event = RawCaptureEvent.objects.create(
-                        badge=badge, hexpansion=location.hexpansion, created_by=badge.user
+                        badge=badge,
+                        hexpansion=location.hexpansion,
+                        created_by=badge.user,
+                        rand=UUID(int=1234567890),
+                        hmac="a" * 64,
+                        app_rev="0.0.0",
+                        fw_rev="0.0.0",
+                        wifi_bssid="00-00-00-00-00-00",
+                        wifi_channel=7,
+                        wifi_rssi=0,
                     )
                     CaptureLog.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
                     if i == 1:
