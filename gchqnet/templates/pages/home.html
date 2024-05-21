@@ -1,18 +1,29 @@
 {% extends "layouts/base_app.html" %}
 
-{% block title %}Great Camp Hexpansion Quest{% endblock %}
+{% block title %}Global Leaderboard{% endblock %}
 
-{% block action_buttons %}
-  <a class="govuk-button gchqnet-page-header-actions__action" data-module="govuk-button" href="{% url 'quest:profile_map' %}">
-    View Map
-  </a>
+
+{% block header %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Global Leaderboard</h1>
+      <p class="govuk-body gchqnet-homepage__intro-text">
+        Welcome to GCHQ.NET: Great Camp Hexpansion Quest, a distributed interactive game for EMF 2024.
+      </p>
+      <p class="govuk-body gchqnet-homepage__intro-text">
+        Find out <a href="{% url 'content:play'}">how to play</a>
+        and <a href="#">how to access your scores, hints and leaderboards.</a>
+      </p>
+      {% include "components/quest/leaderboard-search.html" %}
+    </div>
+    <div class="govuk-grid-column-one-third">
+      {% include "components/quest/homepage-aside.html" %}
+    </div>
+  </div>
 {% endblock %}
 
 {% block content %}
-  <h2 class="govuk-heading-l">Global Leaderboard</h2>
-  {% include "components/quest/leaderboard-search.html" %}
-
-  {% include "components/quest/leaderboard-table.html" with players=page_obj %}
+  {% include "components/quest/global-leaderboard-table.html" with players=page_obj %}
   {% if page_obj %}
     {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
   {% else %}
