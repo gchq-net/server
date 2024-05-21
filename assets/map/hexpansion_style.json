@@ -5,17 +5,17 @@
             "type": "circle",
             "source": "hexpansions",
             "source-layer": "",
-            "minzoom": 1,
+            "minzoom": 15,
             "paint": {
-                "circle-color": "#1d70b8",
+                "circle-color": ["get", "colour"],
                 "circle-radius": {
                     "stops": [
-                        [16, 6],
-                        [24, 26]
+                        [16, 4],
+                        [24, 20]
                     ]
                 },
-                "circle-blur": 0.5,
-                "circle-stroke-width": 0.5
+                "circle-blur": 0.2,
+                "circle-stroke-width": 1.5
             }
         },
         {
@@ -26,7 +26,12 @@
             "minzoom": 17,
             "maxzoom": 24,
             "layout": {
-                "text-field": "{name}",
+                "text-field": [
+                    "format",
+                    ["get", "name"], { "font-scale": 1 },
+                    ["literal", "\n"], {},
+                    ["get", "difficulty"], { "font-scale": 0.8 }
+                ],
                 "text-font": ["Open Sans Regular"],
                 "text-offset": [0, -1.8],
                 "text-size": {
@@ -37,8 +42,8 @@
                 }
             },
             "paint": {
-                "text-halo-color": "rgba(244, 235, 247, 0.73)",
-                "text-halo-width": 2,
+                "text-halo-color": "#ffffff",
+                "text-halo-width": 1,
                 "text-halo-blur": 1
             }
         },

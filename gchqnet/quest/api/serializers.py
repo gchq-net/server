@@ -42,6 +42,8 @@ class LeaderboardWithScoresSerializer(LeaderboardSerializer):
 class LocationFeaturePropertySerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField(default="GCHQ.NET Scoreboard (Easy)")
+    colour = serializers.CharField()
+    difficulty = serializers.CharField()
 
 
 class LocationFeatureGeometrySerializer(serializers.Serializer):

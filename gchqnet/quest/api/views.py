@@ -143,9 +143,18 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
 
         captures = request.user.capture_events.select_related("location", "location__coordinates")
 
-        def _name(capture: CaptureEvent) -> str:
-            difficulty = LocationDifficulty(capture.location.difficulty).label
-            return f"{capture.location.display_name} ({difficulty})"
+        def _difficulty_label(capture: CaptureEvent) -> str:
+            return LocationDifficulty(capture.location.difficulty).label
+
+        def _colour_for_difficulty(capture: CaptureEvent) -> str:
+            lut = {
+                LocationDifficulty.EASY: "#648FFF",
+                LocationDifficulty.MEDIUM: "#785EF0",
+                LocationDifficulty.HARD: "#DC267F",
+                LocationDifficulty.INSANE: "#FE6100",
+                LocationDifficulty.IMPOSSIBLE: "#1AFF1A",
+            }
+            return lut[capture.location.difficulty]
 
         def _has_coords(capture: CaptureEvent) -> bool:
             try:
@@ -161,7 +170,9 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
                     "type": "Feature",
                     "properties": {
                         "id": idx,
-                        "name": _name(capture),
+                        "name": capture.location.display_name,
+                        "difficulty": _difficulty_label(capture),
+                        "colour": _colour_for_difficulty(capture),
                     },
                     "geometry": {
                         "coordinates": [

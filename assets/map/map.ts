@@ -8,7 +8,7 @@ import hexpansion_style from './hexpansion_style.json'
 async function loadIcons(map: maplibregl.Map) {
     const ratio = Math.min(Math.round(window.devicePixelRatio), 2)
 
-    const images = ['camping', 'no-access', 'water', 'tree', 'gchqnethq', 'gchqnetscoreboard']
+    const images = ['camping', 'no-access', 'water', 'tree', 'logo', 'gchqnethq', 'gchqnetscoreboard']
 
     Promise.all(
         images
