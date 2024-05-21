@@ -73,7 +73,7 @@ class EventMap {
         }
         map_style.sources.villages = {
             type: 'geojson',
-            data: '/static/villages.geojson',
+            data: '/api/locations/villages/',
         }
         map_style.glyphs = '/static/fonts/{fontstack}/{range}.pbf'
         

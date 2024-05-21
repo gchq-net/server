@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+import requests
+from django.conf import settings
+from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from drf_spectacular.utils import extend_schema
@@ -84,6 +87,9 @@ class PrivateScoreboardAPIViewset(viewsets.ReadOnlyModelViewSet):
         Scores are returned in order of rank.
         """
         return super().retrieve(request, *args, **kwargs)
+
+
+VILLAGE_CACHE_KEY = "map__village__geodata"
 
 
 class LocationViewset(viewsets.ReadOnlyModelViewSet):
@@ -173,3 +179,23 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
         serializer = LocationGeoJSONSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, content_type="application/geo+json")
+
+    @extend_schema(
+        summary="Get villages as GeoJSON",
+        tags=["Locations"],
+        exclude=settings.HIDE_PRIVATE_API_ENDPOINTS,
+        responses={
+            200: LocationGeoJSONSerializer,
+        },
+    )
+    @action(methods=["GET"], detail=False)
+    def villages(self, request: Request) -> Response:
+        assert request.user.is_authenticated
+
+        if not (village_data := cache.get(VILLAGE_CACHE_KEY)):
+            resp = requests.get("https://www.emfcamp.org/api/villages.geojson", timeout=2)
+            resp.raise_for_status()
+            village_data = resp.json()
+            cache.set(VILLAGE_CACHE_KEY, village_data, timeout=600)
+
+        return Response(village_data, content_type="application/geo+json")
