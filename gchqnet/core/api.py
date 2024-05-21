@@ -4,6 +4,7 @@ from drf_spectacular.views import SpectacularJSONAPIView, SpectacularSwaggerView
 from rest_framework import routers
 
 from gchqnet.accounts.api.views import get_auth_token, profile
+from gchqnet.hexpansion.api.views import HexpansionViewset
 from gchqnet.quest.api.views import (
     BadgeAPIViewset,
     GlobalScoreboardAPIView,
@@ -27,6 +28,7 @@ class MyAuthenticationScheme(OpenApiAuthenticationExtension):  # type: ignore[no
 
 router = routers.SimpleRouter()
 router.register("badge", BadgeAPIViewset, basename="badge")
+router.register("hexpansions", HexpansionViewset, basename="hexpansions")
 router.register("scoreboards", PrivateScoreboardAPIViewset, basename="quest_private_scoreboards")
 router.register("locations", LocationViewset, basename="locations")
 

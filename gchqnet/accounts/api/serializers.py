@@ -1,6 +1,5 @@
 from typing import Any
 
-from django.core.validators import RegexValidator
 from rest_framework import serializers
 
 from gchqnet.accounts.models import User
