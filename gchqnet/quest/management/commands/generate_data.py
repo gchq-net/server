@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 
 from gchqnet.accounts.factories import BadgeFactory
 from gchqnet.accounts.models.user import User
+from gchqnet.achievements.models import BasicAchievementEvent
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models import CaptureEvent, Location, RawCaptureEvent
@@ -35,6 +36,7 @@ class Command(BaseCommand):
             self.stdout.write("Nope")
             return
 
+        BasicAchievementEvent.objects.all().delete()
         CaptureEvent.objects.all().delete()
         CaptureLog.objects.all().delete()
         RawCaptureEvent.objects.all().delete()
