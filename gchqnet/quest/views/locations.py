@@ -42,4 +42,9 @@ class LocationDetailView(BreadcrumbsMixin, DetailView):
 
 class MapView(BreadcrumbsMixin, TemplateView):
     template_name = "pages/quest/map.html"
-    breadcrumbs = [(None, "Locations"), (None, "Map")]
+
+    def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
+        if self.request.user.is_authenticated:
+            return super().get_breadcrumbs() + [(reverse_lazy("quest:profile"), "My Profile"), (None, "Map")]
+        else:
+            return super().get_breadcrumbs() + [(None, "Locations"), (None, "Map")]

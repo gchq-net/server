@@ -84,7 +84,6 @@ class EventMap {
             Paths: 'paths_',
             'Buried Services': 'services_',
             Water: 'site_water_',
-            GCHQ: 'gchqnethq',
             Hexpansions: 'hexpansions',
             DKs: 'dk_',
             'NOC-Physical': 'noc_',

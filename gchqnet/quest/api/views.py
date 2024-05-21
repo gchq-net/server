@@ -199,10 +199,8 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
             200: LocationGeoJSONSerializer,
         },
     )
-    @action(methods=["GET"], detail=False)
+    @action(methods=["GET"], detail=False, permission_classes=[permissions.AllowAny])
     def villages(self, request: Request) -> Response:
-        assert request.user.is_authenticated
-
         if not (village_data := cache.get(VILLAGE_CACHE_KEY)):
             resp = requests.get("https://www.emfcamp.org/api/villages.geojson", timeout=2)
             resp.raise_for_status()
