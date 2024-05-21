@@ -54,7 +54,17 @@ class TestLocationListAPI:
 
     def test_get_found_location(self, client: Client, user: User) -> None:
         location = LocationFactory(created_by=user)
-        record_attempted_capture(user.badges.get(), location.hexpansion)
+        record_attempted_capture(
+            user.badges.get(),
+            location.hexpansion,
+            rand=1234567890,
+            hmac="a" * 64,
+            app_rev="0.0.0",
+            fw_rev="0.0.0",
+            wifi_bssid="00-00-00-00-00-00",
+            wifi_channel=7,
+            wifi_rssi=0,
+        )
         client.force_login(user)
 
         resp = client.get(self.url)
@@ -132,7 +142,17 @@ class TestLocationDetailAPI:
 
     def test_get_found_location(self, client: Client, user: User) -> None:
         location = LocationFactory(created_by=user)
-        record_attempted_capture(user.badges.get(), location.hexpansion)
+        record_attempted_capture(
+            user.badges.get(),
+            location.hexpansion,
+            rand=1234567890,
+            hmac="a" * 64,
+            app_rev="0.0.0",
+            fw_rev="0.0.0",
+            wifi_bssid="00-00-00-00-00-00",
+            wifi_channel=7,
+            wifi_rssi=0,
+        )
         client.force_login(user)
 
         resp = client.get(self._url(location.id))
@@ -176,7 +196,17 @@ class TestLocationGeoJSONAPI:
 
     def test_get_found_location_no_coords(self, client: Client, user: User) -> None:
         location = LocationFactory(created_by=user, coordinates=None)
-        record_attempted_capture(user.badges.get(), location.hexpansion)
+        record_attempted_capture(
+            user.badges.get(),
+            location.hexpansion,
+            rand=1234567890,
+            hmac="a" * 64,
+            app_rev="0.0.0",
+            fw_rev="0.0.0",
+            wifi_bssid="00-00-00-00-00-00",
+            wifi_channel=7,
+            wifi_rssi=0,
+        )
         client.force_login(user)
 
         resp = client.get(self.url)
@@ -187,7 +217,17 @@ class TestLocationGeoJSONAPI:
     def test_get_found_location(self, client: Client, user: User) -> None:
         location = LocationFactory(created_by=user, difficulty=10, coordinates=None)
         CoordinatesFactory(lat=52, long=2, created_by=user, location=location)
-        record_attempted_capture(user.badges.get(), location.hexpansion)
+        record_attempted_capture(
+            user.badges.get(),
+            location.hexpansion,
+            rand=1234567890,
+            hmac="a" * 64,
+            app_rev="0.0.0",
+            fw_rev="0.0.0",
+            wifi_bssid="00-00-00-00-00-00",
+            wifi_channel=7,
+            wifi_rssi=0,
+        )
         client.force_login(user)
 
         resp = client.get(self.url)

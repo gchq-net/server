@@ -16,7 +16,17 @@ def _generate_capture(user: User) -> Location:
     badge = user.badges.first()
     assert badge
 
-    record_attempted_capture(badge, hexpansion)
+    record_attempted_capture(
+        badge,
+        hexpansion,
+        rand=1234567890,
+        hmac="a" * 64,
+        app_rev="0.0.0",
+        fw_rev="0.0.0",
+        wifi_bssid="00-00-00-00-00-00",
+        wifi_channel=7,
+        wifi_rssi=0,
+    )
     return location
 
 
