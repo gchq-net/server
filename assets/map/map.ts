@@ -19,7 +19,7 @@ async function loadIcons(map: maplibregl.Map) {
     )
 }
 
-function buildMapStyle(layers: Record<string, string>): maplibregl.StyleSpecification {
+function buildMapStyle(layers: Record<string, string>, hexpansionEndpoint: string): maplibregl.StyleSpecification {
     map_style.layers = map_style.layers.concat(hexpansion_style.hexpansion_layers)
     map_style.sources.openmaptiles = {
         type: 'vector',
@@ -27,7 +27,7 @@ function buildMapStyle(layers: Record<string, string>): maplibregl.StyleSpecific
     }
     map_style.sources.hexpansions = {
         type: 'geojson',
-        data: '/api/locations/my-finds/',
+        data: hexpansionEndpoint,
         attribution: '© GCHQ.NET 2024'
     }
     map_style.sources.villages = {
@@ -99,7 +99,12 @@ class EventMap {
 
         this.layer_switcher = new LayerSwitcher(this.layers, layers_enabled)
 
-        this.style = buildMapStyle(this.layers)
+        let hexpansion_endpoint = '/api/locations/my-finds/'
+        if (this.map_el.dataset.locationGeoEndpoint) {
+            hexpansion_endpoint = this.map_el.dataset.locationGeoEndpoint
+        }
+
+        this.style = buildMapStyle(this.layers, hexpansion_endpoint)
 
         this.options = {
             container: 'map',
