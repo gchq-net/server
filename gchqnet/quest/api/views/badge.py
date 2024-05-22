@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from django.conf import settings
 from drf_spectacular.utils import extend_schema
 from rest_framework import exceptions, permissions, viewsets
@@ -8,7 +10,14 @@ from rest_framework.response import Response
 from gchqnet.accounts.api.serializers import UserProfileSerializer
 from gchqnet.accounts.repository import check_badge_credentials
 from gchqnet.accounts.totp import CustomTOTP
-from gchqnet.quest.api.serializers import BadgeAPIRequestSerializer, BadgeOTPResponseSerializer
+from gchqnet.hexpansion.models import Hexpansion
+from gchqnet.quest.api.serializers import (
+    BadgeAPIRequestSerializer,
+    BadgeCaptureSubmissionSerializer,
+    BadgeOTPResponseSerializer,
+)
+from gchqnet.quest.api.serializers.badge import BadgeCaptureFailureSerializer, BadgeCaptureSuccessSerializer
+from gchqnet.quest.repository.captures import record_attempted_capture
 
 
 class BadgeAPIViewset(viewsets.GenericViewSet):
@@ -65,3 +74,51 @@ class BadgeAPIViewset(viewsets.GenericViewSet):
         resp_serializer = BadgeOTPResponseSerializer(data={"username": result["user"].username, "otp": totp.now()})
         assert resp_serializer.is_valid()
         return Response(resp_serializer.data, status=200)
+
+    @extend_schema(
+        summary="Submit cryptographic proof of capture",
+        exclude=settings.HIDE_PRIVATE_API_ENDPOINTS,
+        request=BadgeCaptureSubmissionSerializer,
+        responses={200: BadgeCaptureSuccessSerializer, 400: BadgeCaptureFailureSerializer},
+        tags=["Badge Internal API"],
+    )
+    @action(methods=["POST"], detail=False)
+    def capture(self, request: Request) -> Response:
+        serializer = BadgeCaptureSubmissionSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        result = check_badge_credentials(
+            serializer.validated_data["mac_address"],
+            serializer.validated_data["badge_secret"],
+        )
+
+        if result["result"] == "failure":
+            raise exceptions.AuthenticationFailed()
+
+        try:
+            hex_uuid = UUID(int=serializer.validated_data["capture"]["sn"])
+        except ValueError as e:  # pragma: nocover
+            # Theoretically, we can never trigger this.
+            raise exceptions.ValidationError(detail={"detail": ["Invalid serial number for capture"]}) from e
+
+        try:
+            hexpansion = Hexpansion.objects.get(serial_number=hex_uuid)
+        except Hexpansion.DoesNotExist as e:
+            raise exceptions.ValidationError(detail={"detail": ["Unable to find that hexpansion"]}) from e
+
+        capture_result = record_attempted_capture(
+            result["badge"],
+            hexpansion,
+            rand=serializer.validated_data["capture"]["rand"],
+            hmac=serializer.validated_data["capture"]["hmac"],
+            app_rev=serializer.validated_data["app_rev"],
+            fw_rev=serializer.validated_data["fw_rev"],
+            wifi_bssid=serializer.validated_data["wifi"]["bssid"],
+            wifi_channel=serializer.validated_data["wifi"]["channel"],
+            wifi_rssi=serializer.validated_data["wifi"]["rssi"],
+        )
+
+        if capture_result["result"] == "fail":
+            return Response(capture_result, status=400)
+
+        return Response(capture_result)

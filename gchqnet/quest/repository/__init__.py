@@ -1,4 +1,4 @@
-from .captures import CaptureResult, record_attempted_capture
+from .captures import record_attempted_capture
 from .scoreboards import get_global_scoreboard, get_private_scoreboard
 from .scores import (
     annotate_current_score_for_user_queryset,
@@ -14,6 +14,5 @@ __all__ = [
     "get_private_scoreboard",
     "record_attempted_capture",
     "update_score_for_user",
-    "CaptureResult",
     "grade_for_score",
 ]

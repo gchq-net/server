@@ -4,6 +4,7 @@ from gchqnet.accounts.models.user import User
 from gchqnet.hexpansion.factories import HexpansionFactory
 from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models import CaptureEvent, CaptureLog, RawCaptureEvent
+from gchqnet.quest.models.location import LocationDifficulty
 from gchqnet.quest.repository import record_attempted_capture
 
 
@@ -15,10 +16,25 @@ class TestRecordAttemptedCapture:
         badge = user.badges.first()
 
         # Act
-        result = record_attempted_capture(badge, location.hexpansion)
+        result = record_attempted_capture(
+            badge,
+            location.hexpansion,
+            rand=1234567890,
+            hmac="a" * 64,
+            app_rev="0.0.0",
+            fw_rev="0.0.0",
+            wifi_bssid="00-00-00-00-00-00",
+            wifi_channel=7,
+            wifi_rssi=0,
+        )
 
         # Assert
-        assert result == {"result": "success", "message": "Successfully captured"}
+        assert result == {
+            "result": "success",
+            "repeat": False,
+            "location_name": location.display_name,
+            "difficulty": LocationDifficulty(location.difficulty).label,
+        }
 
         rce = RawCaptureEvent.objects.get(badge=badge, hexpansion=location.hexpansion)
         assert rce.created_by == user
@@ -35,11 +51,36 @@ class TestRecordAttemptedCapture:
         badge = user.badges.first()
 
         # Act
-        _ = record_attempted_capture(badge, location.hexpansion)
-        result = record_attempted_capture(badge, location.hexpansion)
+        _ = record_attempted_capture(
+            badge,
+            location.hexpansion,
+            rand=1234567890,
+            hmac="a" * 64,
+            app_rev="0.0.0",
+            fw_rev="0.0.0",
+            wifi_bssid="00-00-00-00-00-00",
+            wifi_channel=7,
+            wifi_rssi=0,
+        )
+        result = record_attempted_capture(
+            badge,
+            location.hexpansion,
+            rand=1234567890,
+            hmac="a" * 64,
+            app_rev="0.0.0",
+            fw_rev="0.0.0",
+            wifi_bssid="00-00-00-00-00-00",
+            wifi_channel=7,
+            wifi_rssi=0,
+        )
 
         # Assert
-        assert result == {"result": "repeat", "message": "You have captured this before."}
+        assert result == {
+            "result": "success",
+            "repeat": True,
+            "location_name": location.display_name,
+            "difficulty": LocationDifficulty(location.difficulty).label,
+        }
 
         rce_count = RawCaptureEvent.objects.filter(badge=badge, hexpansion=location.hexpansion).count()
         assert rce_count == 2
@@ -56,10 +97,20 @@ class TestRecordAttemptedCapture:
         badge = user.badges.first()
 
         # Act
-        result = record_attempted_capture(badge, hexpansion)
+        result = record_attempted_capture(
+            badge,
+            hexpansion,
+            rand=1234567890,
+            hmac="a" * 64,
+            app_rev="0.0.0",
+            fw_rev="0.0.0",
+            wifi_bssid="00-00-00-00-00-00",
+            wifi_channel=7,
+            wifi_rssi=0,
+        )
 
         # Assert
-        assert result == {"result": "error", "message": "Unable to find that hexpansion"}
+        assert result == {"result": "fail", "message": "Hexpansion not installed"}
 
         rce_count = RawCaptureEvent.objects.filter(badge=badge, hexpansion=hexpansion).count()
         assert rce_count == 1

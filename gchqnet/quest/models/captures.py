@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import uuid
 
+from django.core.validators import RegexValidator
 from django.db import models
 
 from .location import Location
@@ -12,6 +13,28 @@ class RawCaptureEvent(models.Model):
 
     badge = models.ForeignKey("accounts.Badge", on_delete=models.PROTECT, related_name="raw_capture_events")
     hexpansion = models.ForeignKey("hexpansion.Hexpansion", on_delete=models.PROTECT, related_name="raw_capture_events")
+
+    rand = models.UUIDField()
+    hmac = models.CharField(
+        max_length=64,
+        validators=[
+            RegexValidator("^[0-9a-f]{64}$", "The HMAC does not appear to be in the correct format."),
+        ],
+    )
+    app_rev = models.CharField(verbose_name="App Revision", max_length=20)
+    fw_rev = models.CharField(verbose_name="Firmware Revision", max_length=20)
+    wifi_bssid = models.CharField(
+        "WiFi BSSID",
+        max_length=17,
+        help_text="IEEE 802 format, e.g 12-34-56-78-90-AB",
+        validators=[
+            RegexValidator(
+                "^([0-9A-F]{2}[-]){5}([0-9A-F]{2})$", "The MAC address does not appear to be in the correct format."
+            )
+        ],
+    )
+    wifi_channel = models.PositiveSmallIntegerField()
+    wifi_rssi = models.IntegerField()
 
     # The created_by field here should not be relied upon for scorekeeping.
     created_at = models.DateTimeField(auto_now_add=True)
