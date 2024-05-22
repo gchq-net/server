@@ -13,7 +13,7 @@ from gchqnet.logistics.models import PlannedLocation
 class PlannedLocationCreateForm(ModelForm):
     class Meta:
         model = PlannedLocation
-        fields = ("display_name", "hint", "internal_name", "description")
+        fields = ("internal_name",)
 
     def __init__(self, *args: Any, user: User, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
