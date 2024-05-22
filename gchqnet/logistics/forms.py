@@ -30,7 +30,7 @@ class PlannedLocationCreateForm(ModelForm):
 class PlannedLocationEditForm(ModelForm):
     class Meta:
         model = PlannedLocation
-        fields = ("display_name", "hint", "internal_name", "description", "lat", "long")
+        fields = ("display_name", "hint", "internal_name", "difficulty", "description", "lat", "long")
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)

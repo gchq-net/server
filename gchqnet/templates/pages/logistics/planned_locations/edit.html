@@ -14,7 +14,14 @@
   <script src="{% static 'map/map.js' %}"></script>
   <div style="height: 400px; margin-bottom: 3em;">
     <noscript>You need Javascript enabled to view this map.</noscript>
-    <div id="map" data-marker-form="true" data-marker-lat="id_lat" data-marker-long="id_long" style="height: 400px;"></div>
+    <div
+      id="map"
+      data-marker-form="true"
+      data-marker-lat="id_lat"
+      data-marker-long="id_long"
+      data-location-geo-endpoint="{% url 'api:planned_locations-geojson' %}{% if object.id %}?exclude={{ object.id }}{% endif %}"
+      style="height: 400px;"
+    ></div>
   </div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
