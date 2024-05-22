@@ -4,6 +4,7 @@ import LayerSwitcher from '@russss/maplibregl-layer-switcher'
 import URLHash from '@russss/maplibregl-layer-switcher/urlhash'
 import map_style from './style/map_style.ts'
 import hexpansion_style from './hexpansion_style.json'
+import LocationEditor from './location_editor.ts'
 
 async function loadIcons(map: maplibregl.Map) {
     const ratio = Math.min(Math.round(window.devicePixelRatio), 2)
@@ -118,6 +119,7 @@ class EventMap {
             this.url_hash = new URLHash(this.layer_switcher)
             this.layer_switcher.urlhash = this.url_hash
             this.options = this.url_hash.init(this.options)
+            
         } else {
             if (this.map_el.dataset.zoom !== undefined)
             this.options.zoom = Number(this.map_el.dataset.zoom);
@@ -160,7 +162,9 @@ class EventMap {
         )
     
         this.map.addControl(this.layer_switcher, 'top-right')
-        this.url_hash.enable(this.map)
+        if (this.url_hash !== undefined) this.url_hash.enable(this.map)
+
+        new LocationEditor(this.map)
     }
 }
 
