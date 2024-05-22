@@ -5,7 +5,7 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'map/map.css' %}">
-    <script src="{% static 'map/map.js' %}"></script>
+    <script src="{% static 'map/map.js' %}" style="max-width: 300px;"></script>
     <noscript>You need Javascript enabled to view this map.</noscript>
 
     {% if request.user.is_authenticated %}
@@ -18,7 +18,7 @@
         </p>
     {% endif %}
 
-    <div id="map" data-urlhash></div>
+    <div id="map" data-urlhash style="min-height: 800px;"></div>
 {% endblock %}
 
 {% block css %}
