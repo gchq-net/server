@@ -12,8 +12,7 @@ from gchqnet.quest.api.serializers import BadgeAPIRequestSerializer, BadgeOTPRes
 
 
 class BadgeAPIViewset(viewsets.GenericViewSet):
-
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.AllowAny,)
 
     @extend_schema(
         summary="Get player info for current badge",
@@ -40,7 +39,6 @@ class BadgeAPIViewset(viewsets.GenericViewSet):
         )
         status = 201 if result["new_user"] else 200
         return Response(resp_serializer.data, status=status)
-
 
     @extend_schema(
         summary="Get OTP for current badge",
