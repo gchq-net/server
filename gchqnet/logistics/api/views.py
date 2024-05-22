@@ -31,6 +31,9 @@ class PlannedLocationViewset(viewsets.GenericViewSet):
 
         planned_locations = PlannedLocation.objects.all()
 
+        exclude_id = self.request.GET.get("exclude")
+        planned_locations = planned_locations.exclude(id=exclude_id)
+
         def _difficulty_label(location: PlannedLocation) -> str:
             if not location.difficulty:
                 return "Unknown"
