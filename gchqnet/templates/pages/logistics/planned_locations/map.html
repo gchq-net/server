@@ -8,17 +8,11 @@
     <script src="{% static 'map/map.js' %}" style="max-width: 300px;"></script>
     <noscript>You need Javascript enabled to view this map.</noscript>
 
-    {% if request.user.is_authenticated %}
-        <p class="govuk-body">
-            You can view hexpansions that you have found on the map below.
-        </p>
-    {% else %}
-        <p class="govuk-body">
-            Find out which hexpansions you have already found by <a href="{% url 'accounts:login' %}">logging in</a>.
-        </p>
-    {% endif %}
+    <p class="govuk-body">
+        This is a map of planned locations.
+    </p>
 
-    <div id="map" data-urlhash style="min-height: 800px;"></div>
+    <div id="map" data-urlhash data-location-geo-endpoint="{% url 'api:planned_locations-geojson' %}" style="min-height: 800px;"></div>
 {% endblock %}
 
 {% block css %}

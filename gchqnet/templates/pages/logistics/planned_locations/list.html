@@ -3,9 +3,15 @@
 {% block title %}Planned Locations{% endblock %}
 
 {% block action_buttons %}
-    <a class="govuk-button gchqnet-page-header-actions__action" data-module="govuk-button" href="{% url 'logistics:planned_create' %}">
-        Create planned location
-    </a>
+    <div class="govuk-button-group gchqnet-page-header-actions__action">
+        <a class="govuk-button" data-module="govuk-button" href="{% url 'logistics:planned_create' %}">
+            New Planned Location
+        </a>
+        <a class="govuk-button" data-module="govuk-button" href="{% url 'logistics:planned_map' %}">
+            View Map
+        </a>
+    </div>
+
 {% endblock %}
 
 {% block content %}

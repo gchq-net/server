@@ -4,6 +4,7 @@ import LayerSwitcher from '@russss/maplibregl-layer-switcher'
 import URLHash from '@russss/maplibregl-layer-switcher/urlhash'
 import map_style from './style/map_style.ts'
 import hexpansion_style from './hexpansion_style.json'
+import LocationEditor from './location_editor.ts'
 
 async function loadIcons(map: maplibregl.Map) {
     const ratio = Math.min(Math.round(window.devicePixelRatio), 2)
@@ -19,7 +20,7 @@ async function loadIcons(map: maplibregl.Map) {
     )
 }
 
-function buildMapStyle(layers: Record<string, string>): maplibregl.StyleSpecification {
+function buildMapStyle(layers: Record<string, string>, hexpansionEndpoint: string): maplibregl.StyleSpecification {
     map_style.layers = map_style.layers.concat(hexpansion_style.hexpansion_layers)
     map_style.sources.openmaptiles = {
         type: 'vector',
@@ -27,7 +28,7 @@ function buildMapStyle(layers: Record<string, string>): maplibregl.StyleSpecific
     }
     map_style.sources.hexpansions = {
         type: 'geojson',
-        data: '/api/locations/my-finds/',
+        data: hexpansionEndpoint,
         attribution: '© GCHQ.NET 2024'
     }
     map_style.sources.villages = {
@@ -99,7 +100,12 @@ class EventMap {
 
         this.layer_switcher = new LayerSwitcher(this.layers, layers_enabled)
 
-        this.style = buildMapStyle(this.layers)
+        let hexpansion_endpoint = '/api/locations/my-finds/'
+        if (this.map_el.dataset.locationGeoEndpoint) {
+            hexpansion_endpoint = this.map_el.dataset.locationGeoEndpoint
+        }
+
+        this.style = buildMapStyle(this.layers, hexpansion_endpoint)
 
         this.options = {
             container: 'map',
@@ -113,6 +119,7 @@ class EventMap {
             this.url_hash = new URLHash(this.layer_switcher)
             this.layer_switcher.urlhash = this.url_hash
             this.options = this.url_hash.init(this.options)
+            
         } else {
             if (this.map_el.dataset.zoom !== undefined)
             this.options.zoom = Number(this.map_el.dataset.zoom);
@@ -155,7 +162,9 @@ class EventMap {
         )
     
         this.map.addControl(this.layer_switcher, 'top-right')
-        this.url_hash.enable(this.map)
+        if (this.url_hash !== undefined) this.url_hash.enable(this.map)
+
+        new LocationEditor(this.map)
     }
 }
 

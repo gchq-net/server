@@ -105,6 +105,7 @@ class BadgeAPIViewset(viewsets.GenericViewSet):
             hexpansion = Hexpansion.objects.get(serial_number=hex_uuid)
         except Hexpansion.DoesNotExist as e:
             raise exceptions.ValidationError(detail={"detail": ["Unable to find that hexpansion"]}) from e
+            raise exceptions.ValidationError(detail="Unable to find that hexpansion") from e
 
         capture_result = record_attempted_capture(
             result["badge"],

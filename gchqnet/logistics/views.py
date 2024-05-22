@@ -105,3 +105,13 @@ class PlannedLocationDeleteView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, D
 
     def get_success_url(self) -> str:
         return reverse("logistics:planned_list")
+
+
+class LogisticsMapView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, TemplateView):
+    template_name = "pages/logistics/planned_locations/map.html"
+
+    breadcrumbs = [
+        (reverse_lazy("logistics:home"), "Logistics Admin"),
+        (reverse_lazy("logistics:planned_list"), "Planned Locations"),
+        (None, "Planning Map"),
+    ]

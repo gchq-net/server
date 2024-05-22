@@ -36,16 +36,16 @@ class PlannedLocation(models.Model):
     # Location
     lat = models.DecimalField(
         "Latitude",
-        max_digits=8,
-        decimal_places=3,
+        max_digits=16,
+        decimal_places=13,
         blank=True,
         null=True,
         validators=[MinValueValidator(-90), MaxValueValidator(90)],
     )
     long = models.DecimalField(
         "Longitude",
-        max_digits=8,
-        decimal_places=3,
+        max_digits=16,
+        decimal_places=13,
         blank=True,
         null=True,
         validators=[MinValueValidator(-180), MaxValueValidator(180)],

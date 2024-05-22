@@ -44,20 +44,21 @@ class Command(BaseCommand):
 
         with locations_path.open() as fh:
             for row in csv.DictReader(fh):
-                display_name = row["Display Name (required)"]
-                difficulty = row["Difficulty"]
-                internal_name = row["Internal Name"]
-                hint = row["Hint"]
-                coords_raw = row["Approx Coords"]
-                coords = coords_raw.split(",")
+                if row["Internal Name"]:
+                    display_name = row["Display Name (required)"]
+                    difficulty = row["Difficulty"]
+                    internal_name = row["Internal Name"]
+                    hint = row["Hint"]
+                    coords_raw = row["Approx Coords"]
+                    coords = coords_raw.split(",") if coords_raw else (None, None)
 
-                self.stdout.write(f"Adding {row}")
+                    self.stdout.write(f"Adding {row}")
 
-                PlannedLocation.objects.create(
-                    display_name=display_name,
-                    hint=hint,
-                    internal_name=internal_name,
-                    difficulty=LocationDifficulty[difficulty.upper()],
-                    lat=coords[0],
-                    long=coords[1],
-                )
+                    PlannedLocation.objects.create(
+                        display_name=display_name,
+                        hint=hint,
+                        internal_name=internal_name,
+                        difficulty=LocationDifficulty[difficulty.upper()],
+                        lat=coords[0],
+                        long=coords[1],
+                    )
