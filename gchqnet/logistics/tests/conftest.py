@@ -22,10 +22,12 @@ def user_2() -> User:
 
 
 @pytest.fixture
-def user_with_badge() -> User:
+def superuser() -> User:
     user = User.objects.create(
         username="user_with_badge",
         display_name="user_with_badge",
+        is_superuser=True,
+        email="foo@example.com",
     )
     user.badges.create(mac_address="01-23-45-67-89-AB")
     return user
