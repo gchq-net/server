@@ -97,21 +97,22 @@ class BadgeAPIViewset(viewsets.GenericViewSet):
 
         try:
             hex_uuid = UUID(int=serializer.validated_data["capture"]["sn"])
-        except ValueError as e:
-            raise exceptions.ValidationError(detail="Invalid serial number for capture") from e
+        except ValueError as e:  # pragma: nocover
+            # Theoretically, we can never trigger this.
+            raise exceptions.ValidationError(detail={"detail": ["Invalid serial number for capture"]}) from e
 
         try:
             hexpansion = Hexpansion.objects.get(serial_number=hex_uuid)
         except Hexpansion.DoesNotExist as e:
-            raise exceptions.ValidationError(detail="Unable to find that hexpansion") from e
+            raise exceptions.ValidationError(detail={"detail": ["Unable to find that hexpansion"]}) from e
 
         capture_result = record_attempted_capture(
             result["badge"],
             hexpansion,
             rand=serializer.validated_data["capture"]["rand"],
             hmac=serializer.validated_data["capture"]["hmac"],
-            app_rev=serializer.validated_data["app-rev"],
-            fw_rev=serializer.validated_data["fw-rev"],
+            app_rev=serializer.validated_data["app_rev"],
+            fw_rev=serializer.validated_data["fw_rev"],
             wifi_bssid=serializer.validated_data["wifi"]["bssid"],
             wifi_channel=serializer.validated_data["wifi"]["channel"],
             wifi_rssi=serializer.validated_data["wifi"]["rssi"],

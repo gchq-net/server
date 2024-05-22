@@ -52,8 +52,8 @@ class BadgeCaptureWiFiStatsSerializer(serializers.Serializer):
 
 class BadgeCaptureSubmissionSerializer(BadgeAPIRequestSerializer):
     capture = BadgeCaptureProofSerializer()
-    app_rev = serializers.CharField(source="app-rev", max_length=20)
-    fw_rev = serializers.CharField(source="fw-rev", max_length=20)
+    app_rev = serializers.CharField(max_length=20)
+    fw_rev = serializers.CharField(max_length=20)
     wifi = BadgeCaptureWiFiStatsSerializer()
 
 
