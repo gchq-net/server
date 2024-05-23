@@ -97,7 +97,7 @@ class PlayerAchievementsView(BasePlayerDetailView):
         return super().dispatch(request, *args, current_user=current_user, **kwargs)
 
     def get_achievements(self) -> models.QuerySet:
-        return get_achievements_for_user(self.object)
+        return get_achievements_for_user(self.object, viewer=self.request.user)
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         try:

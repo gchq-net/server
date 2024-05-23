@@ -4,6 +4,7 @@ from typing import Literal, TypedDict
 from uuid import UUID
 
 from gchqnet.accounts.models.badge import Badge
+from gchqnet.achievements.repository import award_first_capture
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.models.captures import CaptureEvent, CaptureLog, RawCaptureEvent
 from gchqnet.quest.models.location import Location, LocationDifficulty
@@ -73,6 +74,7 @@ def record_attempted_capture(
     # Mark as captured.
     ce = CaptureEvent.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
     ScoreRecord.objects.create(capture_event=ce, user=badge.user, score=location.difficulty)
+    award_first_capture(location, badge.user)
     update_score_for_user(badge.user)
     return CaptureSuccess(
         result="success",

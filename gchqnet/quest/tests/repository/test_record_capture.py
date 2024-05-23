@@ -91,6 +91,40 @@ class TestRecordAttemptedCapture:
         event_count = CaptureEvent.objects.filter(created_by=user, location=location).count()
         assert event_count == 1
 
+    def test_first_capture(self, user: User, user_2: User) -> None:
+        # Arrange
+        location = LocationFactory(created_by=user)
+        badge = user.badges.first()
+        badge_2 = user_2.badges.first()
+
+        # Act
+        _ = record_attempted_capture(
+            badge,
+            location.hexpansion,
+            rand=1234567890,
+            hmac="a" * 64,
+            app_rev="0.0.0",
+            fw_rev="0.0.0",
+            wifi_bssid="00-00-00-00-00-00",
+            wifi_channel=7,
+            wifi_rssi=0,
+        )
+        _ = record_attempted_capture(
+            badge_2,
+            location.hexpansion,
+            rand=1234567890,
+            hmac="a" * 64,
+            app_rev="0.0.0",
+            fw_rev="0.0.0",
+            wifi_bssid="00-00-00-00-00-00",
+            wifi_channel=7,
+            wifi_rssi=0,
+        )
+
+        # Assert
+        assert location.first_capture_event.user == user
+        assert location.first_capture_event.score_record.score == location.difficulty
+
     def test_unlinked_hexpansion(self, user: User) -> None:
         # Arrange
         hexpansion = HexpansionFactory(created_by=user)

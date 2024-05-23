@@ -1,18 +1,17 @@
 import os
 import random
-from uuid import UUID
 
 from django.core.management.base import BaseCommand
 
 from gchqnet.accounts.factories import BadgeFactory
 from gchqnet.accounts.models.user import User
-from gchqnet.achievements.models import BasicAchievementEvent
+from gchqnet.achievements.models import BasicAchievementEvent, FirstToCaptureAchievementEvent
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models import CaptureEvent, Location, RawCaptureEvent
 from gchqnet.quest.models.captures import CaptureLog
-from gchqnet.quest.models.scores import ScoreRecord
 from gchqnet.quest.repository import update_score_for_user
+from gchqnet.quest.repository.captures import record_attempted_capture
 
 
 class Command(BaseCommand):
@@ -37,6 +36,7 @@ class Command(BaseCommand):
             self.stdout.write("Nope")
             return
 
+        FirstToCaptureAchievementEvent.objects.all().delete()
         BasicAchievementEvent.objects.all().delete()
         CaptureEvent.objects.all().delete()
         CaptureLog.objects.all().delete()
@@ -56,12 +56,11 @@ class Command(BaseCommand):
         for badge in badges:
             sample = random.sample(locations, k=random.randint(0, len(locations)))  # noqa: S311
             for location in sample:
-                for i in range(random.randint(1, 3)):  # noqa: S311
-                    raw_event = RawCaptureEvent.objects.create(
-                        badge=badge,
-                        hexpansion=location.hexpansion,
-                        created_by=badge.user,
-                        rand=UUID(int=1234567890),
+                for _ in range(random.randint(1, 3)):  # noqa: S311
+                    record_attempted_capture(
+                        badge,
+                        location.hexpansion,
+                        rand=1234567890,
                         hmac="a" * 64,
                         app_rev="0.0.0",
                         fw_rev="0.0.0",
@@ -69,14 +68,6 @@ class Command(BaseCommand):
                         wifi_channel=7,
                         wifi_rssi=0,
                     )
-                    CaptureLog.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
-                    if i == 1:
-                        capture_event = CaptureEvent.objects.create(
-                            raw_capture_event=raw_event, location=location, created_by=badge.user
-                        )
-                        ScoreRecord.objects.create(
-                            capture_event=capture_event, user=badge.user, score=location.difficulty
-                        )
 
             update_score_for_user(badge.user)
 

@@ -23,13 +23,9 @@
       </dt>
       <dd class="govuk-summary-list__value">
         {% if badge.is_enabled %}
-          <strong class="govuk-tag govuk-tag--green">
-            Active
-          </strong>
+          {% include "components/govuk/tag.html" with content="Active" colour="green" %}
         {% else %}
-          <strong class="govuk-tag govuk-tag--grey">
-            Inactive
-          </strong>
+          {% include "components/govuk/tag.html" with content="Inactive" colour="grey" %}
         {% endif %}
       </dd>
     </div>
