@@ -6,6 +6,7 @@ app_name = "quest"
 
 urlpatterns = [
     path("", views.GlobalScoreboardView.as_view(), name="home"),
+    path("recent-activity/", views.GlobalRecentActivityView.as_view(), name="recent_activity"),
     path("leaderboards/", views.LeaderboardListView.as_view(), name="leaderboard_list"),
     path("leaderboards/create/", views.LeaderboardCreateView.as_view(), name="leaderboard_create"),
     path(
@@ -31,6 +32,12 @@ urlpatterns = [
         kwargs={"current_user": True},
     ),
     path(
+        "profile/recent-activity/",
+        views.PlayerRecentActivityView.as_view(),
+        name="profile_activity",
+        kwargs={"current_user": True},
+    ),
+    path(
         "profile/to-find/",
         views.MyProfileUnfoundLocationsView.as_view(),
         name="profile_to_find",
@@ -43,6 +50,12 @@ urlpatterns = [
         "players/<str:username>/achievements/",
         views.PlayerAchievementsView.as_view(),
         name="player_achievements",
+        kwargs={"current_user": False},
+    ),
+    path(
+        "players/<str:username>/recent-activity/",
+        views.PlayerRecentActivityView.as_view(),
+        name="player_activity",
         kwargs={"current_user": False},
     ),
 ]

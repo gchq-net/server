@@ -2,7 +2,7 @@
 <table class="govuk-table govuk-table--small-text-until-tablet">
   <thead class="govuk-table__head">
     <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header">Name</th>
+      {% if not hide_name_col %}<th scope="col" class="govuk-table__header">Name</th>{% endif %}
       <th scope="col" class="govuk-table__header">Activity</th>
       <th scope="col" class="govuk-table__header">Difficulty</th>
       <th scope="col" class="govuk-table__header">Timestamp</th>
@@ -11,13 +11,19 @@
   <tbody class="govuk-table__body">
     {% for event in events %}
       <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header">{{ event.player_name }}</th>
+        {% if not hide_name_col %}
+          <th scope="row" class="govuk-table__header">
+            <a class="govuk-link" href="{% url 'quest:player_detail' event.player_username %}">
+              {{ event.player_name }}
+            </a>
+          </th>
+        {% endif %}
         <td class="govuk-table__cell">
           {% if event.type == 'basic_achievement' %}
             Achieved {{ event.basic_achievement.display_name }}
           {% else %}
             {# capture #}
-            Captured a location
+            Captured <a class="govuk-link" href="{% url 'quest:location_detail' event.location_id %}">{% if event.location_id in user_found_locations %}{{ event.location }}{% else %}???{% endif %}</a>
           {% endif %}
         </td>
         <td class="govuk-table__cell">

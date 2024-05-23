@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from uuid import UUID
 
 from django.db import models
 from django.db.models.functions import DenseRank
 
-from gchqnet.accounts.models import User
+from gchqnet.accounts.models import User, UserQuerySet
+from gchqnet.achievements.models import BasicAchievementEvent
+from gchqnet.quest.models.captures import CaptureEvent
 
 from .scores import annotate_current_score_for_user_queryset
 
 if TYPE_CHECKING:  # pragma: nocover
+    from django.contrib.auth.models import AnonymousUser
     from django.db.models import QuerySet
 
     from gchqnet.accounts.models import User, UserQuerySet
@@ -47,3 +51,45 @@ def get_private_scoreboard(leaderboard: Leaderboard) -> UserQuerySet:
     qs = leaderboard.members.all()
     qs = _annotate_scoreboard_query(qs)
     return qs
+
+
+def get_recent_events_for_users(
+    users: QuerySet[User], *, current_user: User | AnonymousUser, max_num: int = 20
+) -> tuple[QuerySet, set[UUID]]:
+    ce_qs = (
+        CaptureEvent.objects.select_related("location")
+        .filter(
+            created_by__in=users,
+        )
+        .annotate(
+            player_username=models.F("created_by__username"),
+            player_name=models.F("created_by__display_name"),
+            difficulty=models.F("location__difficulty"),
+            type=models.Value("capture"),
+        )[:max_num]
+    )
+
+    bae_qs = BasicAchievementEvent.objects.filter(
+        user__in=users,
+    ).annotate(
+        player_username=models.F("user__username"),
+        player_name=models.F("user__display_name"),
+        difficulty=models.F("basic_achievement__difficulty"),
+        type=models.Value("basic_achievement"),
+    )[:max_num]
+
+    both = list(ce_qs) + list(bae_qs)
+
+    if current_user.is_authenticated:
+        user_found_locations = set(
+            CaptureEvent.objects.filter(
+                location_id__in=[ce.location_id for ce in ce_qs],
+                created_by=current_user,
+            ).values_list("location_id", flat=True)
+        )
+    else:
+        user_found_locations = set()
+
+    events = sorted(both, key=lambda x: x.created_at, reverse=True)[:max_num]
+
+    return events, user_found_locations  # type: ignore[return-value]

@@ -1,0 +1,7 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}Recent Activity{% endblock %}
+
+{% block content %}
+    {% include "components/quest/recent-activity-table.html" with events=events %}
+{% endblock %}

@@ -1,12 +1,17 @@
-from typing import Any
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
-from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, TemplateView
 
-from gchqnet.accounts.models import UserQuerySet
 from gchqnet.achievements.repository import award_builtin_basic_achievement
 from gchqnet.core.mixins import BreadcrumbsMixin
-from gchqnet.quest.repository import get_global_scoreboard
+from gchqnet.quest.repository import get_global_scoreboard, get_recent_events_for_users
+
+if TYPE_CHECKING:
+    from gchqnet.accounts.models import UserQuerySet
 
 
 class GlobalScoreboardView(BreadcrumbsMixin, ListView):
@@ -31,5 +36,23 @@ class GlobalScoreboardView(BreadcrumbsMixin, ListView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         return super().get_context_data(
             search_query=self.request.GET.get("search", ""),
+            **kwargs,
+        )
+
+
+class GlobalRecentActivityView(BreadcrumbsMixin, TemplateView):
+    template_name = "pages/quest/recent_activity.html"
+    breadcrumbs = [(reverse_lazy("quest:home"), "Global Leaderboard"), (None, "Recent Activity")]
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        from gchqnet.accounts.models import User
+
+        player_qs = User.objects.all()
+
+        events, user_found_locations = get_recent_events_for_users(player_qs, current_user=self.request.user)
+
+        return super().get_context_data(
+            events=events,
+            user_found_locations=user_found_locations,
             **kwargs,
         )
