@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models.functions import DenseRank
 
 from gchqnet.accounts.models import User, UserQuerySet
-from gchqnet.achievements.models import BasicAchievementEvent
+from gchqnet.achievements.models import BasicAchievementEvent, FirstToCaptureAchievementEvent
 from gchqnet.quest.models.captures import CaptureEvent
 
 from .scores import annotate_current_score_for_user_queryset
@@ -78,12 +78,21 @@ def get_recent_events_for_users(
         type=models.Value("basic_achievement"),
     )[:max_num]
 
-    both = list(ce_qs) + list(bae_qs)
+    fcae_qs = FirstToCaptureAchievementEvent.objects.filter(
+        user__in=users,
+    ).annotate(
+        player_username=models.F("user__username"),
+        player_name=models.F("user__display_name"),
+        difficulty=models.F("location__difficulty"),
+        type=models.Value("first_capture"),
+    )[:max_num]
+
+    both = list(ce_qs) + list(bae_qs) + list(fcae_qs)
 
     if current_user.is_authenticated:
         user_found_locations = set(
             CaptureEvent.objects.filter(
-                location_id__in=[ce.location_id for ce in ce_qs],
+                location_id__in=[ce.location_id for ce in ce_qs] + [fcae.location_id for fcae in fcae_qs],
                 created_by=current_user,
             ).values_list("location_id", flat=True)
         )

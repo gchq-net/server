@@ -8,6 +8,7 @@ from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models import Location
 from gchqnet.quest.models.leaderboard import Leaderboard
 from gchqnet.quest.repository import get_global_scoreboard, get_private_scoreboard, record_attempted_capture
+from gchqnet.quest.repository.scores import update_score_for_user
 
 
 def _generate_capture(user: User) -> Location:
@@ -27,6 +28,8 @@ def _generate_capture(user: User) -> Location:
         wifi_channel=7,
         wifi_rssi=0,
     )
+    location.first_capture_event.delete()
+    update_score_for_user(user)
     return location
 
 
