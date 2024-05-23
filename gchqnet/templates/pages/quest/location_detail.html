@@ -63,7 +63,7 @@
             Difficulty
           </dt>
           <dd class="govuk-summary-list__value">
-            {{ object.difficulty|difficulty_label }}
+            {% difficulty_tag object.difficulty %}
           </dd>
         </div>
       </dl>

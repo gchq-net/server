@@ -11,7 +11,7 @@
     {% for achievement_event in achievement_events %}
       <tr class="govuk-table__row">
         <td class="govuk-table__cell">{{ achievement_event.display_name }}</td>
-        <td class="govuk-table__cell"><strong class="govuk-tag">{{ achievement_event.difficulty | difficulty_label }}</strong></td>
+        <td class="govuk-table__cell">{% difficulty_tag achievement_event.difficulty %}</td>
         <td class="govuk-table__cell">{{ achievement_event.created_at | naturaltime }}</td>
       </tr>
     {% endfor %}

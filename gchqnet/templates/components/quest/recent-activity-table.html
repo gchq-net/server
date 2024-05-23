@@ -30,9 +30,7 @@
           {% endif %}
         </td>
         <td class="govuk-table__cell">
-          <strong class="govuk-tag">
-            {{ event.difficulty|difficulty_label }}
-          </strong>
+          {% difficulty_tag event.difficulty %}
         </td>
         <td class="govuk-table__cell">{{ event.created_at|naturaltime }}</td>
       </tr>

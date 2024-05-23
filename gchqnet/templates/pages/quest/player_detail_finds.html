@@ -19,7 +19,7 @@
         {% for find, show_details in finds %}
           <tr class="govuk-table__row">
             <td class="govuk-table__cell">{% if show_details %}{{ find.location.display_name }}{% else %}???{% endif %}</td>
-            <td class="govuk-table__cell"><strong class="govuk-tag">{{ find.location.difficulty | difficulty_label }}</strong></td>
+            <td class="govuk-table__cell">{% difficulty_tag find.location.difficulty %}</td>
             <td class="govuk-table__cell">{{ find.created_at | naturaltime }}</td>
             <td class="govuk-table__cell"><a href="{% url 'quest:location_detail' find.location.id %}" class="govuk-link">View</a></td>
           </tr>
