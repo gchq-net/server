@@ -14,6 +14,7 @@ from gchqnet.achievements.repository import get_achievements_for_user
 from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.quest.models.captures import CaptureEvent
 from gchqnet.quest.models.location import Location
+from gchqnet.quest.repository.scoreboards import get_recent_events_for_users
 
 
 class BasePlayerDetailView(BreadcrumbsMixin, AccessMixin, DetailView):
@@ -109,6 +110,27 @@ class PlayerAchievementsView(BasePlayerDetailView):
         return super().get_context_data(
             active_tab="achievements",
             achievement_events=paginator.page(page_num),
+            **kwargs,
+        )
+
+
+class PlayerRecentActivityView(BasePlayerDetailView):
+    template_name = "pages/quest/player_detail_activity.html"
+
+    def dispatch(self, request: HttpRequest, *args: Any, current_user: bool, **kwargs: Any) -> HttpResponse:
+        if not current_user and self.get_object() == request.user:
+            return redirect("quest:profile_activity")
+        return super().dispatch(request, *args, current_user=current_user, **kwargs)
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        events, user_found_locations = get_recent_events_for_users(
+            User.objects.filter(id=self.object.id), current_user=self.request.user
+        )
+
+        return super().get_context_data(
+            active_tab="activity",
+            events=events,
+            user_found_locations=user_found_locations,
             **kwargs,
         )
 

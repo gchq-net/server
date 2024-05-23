@@ -7,7 +7,7 @@ from .leaderboard import (
     LeaderboardListView,
 )
 from .locations import LocationDetailView, MapView
-from .players import MyProfileUnfoundLocationsView, PlayerAchievementsView, PlayerFindsView
+from .players import MyProfileUnfoundLocationsView, PlayerAchievementsView, PlayerFindsView, PlayerRecentActivityView
 from .scoreboard import GlobalRecentActivityView, GlobalScoreboardView
 
 __all__ = [
@@ -24,4 +24,5 @@ __all__ = [
     "MyProfileUnfoundLocationsView",
     "PlayerFindsView",
     "PlayerAchievementsView",
+    "PlayerRecentActivityView",
 ]
