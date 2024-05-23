@@ -8,9 +8,10 @@ from .leaderboard import (
 )
 from .locations import LocationDetailView, MapView
 from .players import MyProfileUnfoundLocationsView, PlayerAchievementsView, PlayerFindsView
-from .scoreboard import GlobalScoreboardView
+from .scoreboard import GlobalRecentActivityView, GlobalScoreboardView
 
 __all__ = [
+    "GlobalRecentActivityView",
     "GlobalScoreboardView",
     "LeaderboardCreateView",
     "LeaderboardDetailView",
