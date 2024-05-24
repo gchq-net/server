@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+import sentry_sdk
+
 env = os.environ.copy()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -160,3 +162,18 @@ DJANGO_NOTIFICATIONS_CONFIG = {
     "PAGINATE_BY": 10,
     "USE_JSONFIELD": True,
 }
+
+if sentry_dsn := os.environ.get('SENTRY_DSN'):
+    sentry_environment = os.environ.get('SENTRY_ENVIRONMENT', 'development')
+    # Sentry
+    sentry_sdk.init(
+        dsn=sentry_dsn,
+        environment=sentry_environment,
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+    )
