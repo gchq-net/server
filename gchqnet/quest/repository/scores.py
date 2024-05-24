@@ -42,15 +42,33 @@ def update_score_for_user(user: User) -> int:
 
 
 def grade_for_score(score: int) -> str:
-    grades = {
-        0: "Just observing",
-        1: "Warming up",
-        50: "Hexpansion collector",
-        100: "Running around site",
-        400: "Missing talks",
-        800: "Badge destroyer",
-    }
-    for score_threshold, description in reversed(grades.items()):
+    grades = [
+        (6800, "Sequoia"),
+        (6400, "Redwood"),
+        (6000, "Oak Tree"),
+        (5600, "Pine Tree"),
+        (5200, "Maple Tree"),
+        (4800, "Palm Tree"),
+        (4400, "Bamboo"),
+        (4000, "Lilac"),
+        (3600, "Shrub"),
+        (3200, "Hibiscus"),
+        (2800, "Rosebush"),
+        (2400, "Peony"),
+        (2000, "Sunflower"),
+        (1600, "Lavender"),
+        (1200, "Tulip"),
+        (1000, "Daisy"),
+        (800, "Thyme"),
+        (500, "Herb"),
+        (250, "Fern"),
+        (100, "Grass"),
+        (50, "Clover"),
+        (1, "Moss"),
+        (0, "Algae"),
+    ]
+
+    for score_threshold, description in grades:
         if score >= score_threshold:
             return description
-    return grades[0]
+    return grades[0][1]
