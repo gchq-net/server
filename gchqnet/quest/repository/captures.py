@@ -3,6 +3,9 @@ from __future__ import annotations
 from typing import Literal, TypedDict
 from uuid import UUID
 
+from django.urls import reverse
+from notifications.signals import notify
+
 from gchqnet.accounts.models.badge import Badge
 from gchqnet.achievements.repository import award_first_capture
 from gchqnet.hexpansion.models import Hexpansion
@@ -74,6 +77,14 @@ def record_attempted_capture(
     # Mark as captured.
     ce = CaptureEvent.objects.create(raw_capture_event=raw_event, location=location, created_by=badge.user)
     ScoreRecord.objects.create(capture_event=ce, user=badge.user, score=location.difficulty)
+    notify.send(
+        badge.user,
+        recipient=badge.user,
+        verb="captured",
+        target=location,
+        description=f"You have gained {location.difficulty} points.",
+        actions=[{"href": reverse("quest:location_detail", args=[location.id]), "title": "View"}],
+    )
     award_first_capture(location, badge.user)
     update_score_for_user(badge.user)
     return CaptureSuccess(

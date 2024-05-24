@@ -13,7 +13,7 @@
       <tr class="govuk-table__row">
         {% if not hide_name_col %}
           <th scope="row" class="govuk-table__header">
-            <a class="govuk-link" href="{% url 'quest:player_detail' event.player_username %}">
+            <a class="govuk-link govuk-link--muted govuk-link--no-underline" href="{% url 'quest:player_detail' event.player_username %}">
               {{ event.player_name }}
             </a>
           </th>

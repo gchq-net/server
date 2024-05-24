@@ -1,0 +1,29 @@
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+        {{ notice.timesince }} ago
+    </dt>
+    <dd class="govuk-summary-list__value">
+        {{ notice.actor.display_name }}
+        {{ notice.verb }}
+        {% if notice.target %}
+            {{ notice.target }}
+        {% endif %}
+        {% if notice.description %}
+            <p class="govuk-body">{{ notice.description|linebreaksbr }}</p>
+        {% endif %}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+        <ul class="govuk-summary-list__actions-list">
+            {% if notice.unread %}
+                <li class="govuk-summary-list__actions-list-item">
+                    <a class="govuk-link" href="{% url 'notifications:mark_as_read' notice.slug %}">Mark read</a>
+                </li>
+            {% endif %}
+            {% for action in notice.data.actions %}
+                <li class="govuk-summary-list__actions-list-item">
+                    <a class="govuk-link" href="{{ action.href }}">{{ action.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </dd>
+</div>

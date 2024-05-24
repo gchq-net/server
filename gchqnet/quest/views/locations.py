@@ -32,7 +32,7 @@ class LocationDetailView(BreadcrumbsMixin, DetailView):
         return super().get_breadcrumbs() + crumbs
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        recent_captures = self.object.capture_events.select_related("created_by").order_by("created_at")[:10]
+        recent_captures = self.object.capture_events.select_related("created_by").order_by("-created_at")[:10]
         return super().get_context_data(
             capture_event=self.get_capture_event(),
             recent_captures=recent_captures,

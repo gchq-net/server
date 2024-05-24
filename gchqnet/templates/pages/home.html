@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "components/quest/global-leaderboard-table.html" with players=page_obj %}
+  {% include "components/quest/leaderboard-table.html" with players=page_obj %}
   {% if page_obj %}
     {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
   {% else %}

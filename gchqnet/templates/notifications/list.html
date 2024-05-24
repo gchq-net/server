@@ -1,0 +1,76 @@
+{% extends "layouts/base_app.html" %}
+{% load static notifications_tags %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block breadcrumbs %}
+  <div class="govuk-breadcrumbs">
+    <ol class="govuk-breadcrumbs__list">
+      <li class="govuk-breadcrumbs__list-item">
+        <a class="govuk-breadcrumbs__link" href="{% url 'quest:home' %}">GCHQ.NET</a>
+      </li>
+      <li class="govuk-breadcrumbs__list-item">
+        <a class="govuk-breadcrumbs__link" href="{% url 'quest:profile' %}">My Profile</a>
+      </li>
+      <li class="govuk-breadcrumbs__list-item">
+        Notifications
+      </li>
+    </ol>
+  </div>
+{% endblock %}
+
+{% block action_buttons %}
+  <div class="govuk-button-group gchqnet-page-header-actions__action">
+    <a class="govuk-button govuk-button--secondary" data-module="govuk-button" href="{% url 'notifications:mark_all_as_read' %}">
+      Mark all read
+    </a>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-tabs">
+    {% with view=request.resolver_match.view_name %}
+      <h2 class="govuk-tabs__title">
+        Notifications
+      </h2>
+      <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item{% if view == 'notifications:unread' %} govuk-tabs__list-item--selected{% endif %}">
+          <a class="govuk-tabs__tab" href="{% url 'notifications:unread' %}">
+            Unread ({% notifications_unread %})
+          </a>
+        </li>
+        <li class="govuk-tabs__list-item{% if view == 'notifications:all' %} govuk-tabs__list-item--selected{% endif %}">
+          <a class="govuk-tabs__tab" href="{% url 'notifications:all' %}">
+            All
+          </a>
+        </li>
+      </ul>
+      <div class="govuk-tabs__panel" id="past-day">
+        <h2 class="govuk-heading-l">
+          {% if view == 'notifications:unread' %}
+            Unread
+          {% else %}
+            All
+          {% endif %}
+          Notifications
+        </h2>
+        <dl class="govuk-summary-list">
+          {% for notice in notifications %}
+            {% include 'notifications/notice.html' %}
+          {% endfor %}
+        </dl>
+        {% if page_obj %}
+          {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
+        {% else %}
+          <p class="govuk-body">
+            {% if view == 'notifications:unread' %}
+              You have no unread notifications.
+            {% else %}
+              You have not received any notifications.
+            {% endif %}
+          </p>
+        {% endif %}
+      </div>
+    {% endwith %}
+  </div>
+{% endblock %}
