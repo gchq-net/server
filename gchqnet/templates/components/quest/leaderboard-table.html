@@ -1,9 +1,11 @@
+{% load humanize scores %}
 <table class="govuk-table govuk-table--small-text-until-tablet">
   <thead class="govuk-table__head">
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header">#</th>
       <th scope="col" class="govuk-table__header">Name</th>
-      <th scope="col" class="govuk-table__header">No. Found</th>
+      <th scope="col" class="govuk-table__header gchqnet-leaderboard-table__desktop-col">Grade</th>
+      <th scope="col" class="govuk-table__header gchqnet-leaderboard-table__desktop-col">No. Found</th>
       <th scope="col" class="govuk-table__header">Score</th>
       <th scope="col" class="govuk-table__header"></th>
     </tr>
@@ -11,9 +13,14 @@
   <tbody class="govuk-table__body">
     {% for player in players %}
       <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header">{{ player.rank }}</th>
-        <td class="govuk-table__cell">{{ player.display_name }}</td>
-        <td class="govuk-table__cell">{{ player.capture_count }}</td>
+        <th scope="row" class="govuk-table__header">{{ player.rank|ordinal }}</th>
+        <td class="govuk-table__cell">
+          <a class="govuk-link govuk-link--muted govuk-link--no-underline" href="{% url 'quest:player_detail' player %}">
+            {{ player.display_name }}
+          </a>
+        </td>
+        <td class="govuk-table__cell gchqnet-leaderboard-table__desktop-col"><strong class="govuk-tag">{{ player.current_score|score_grade }}</strong></td>
+        <td class="govuk-table__cell gchqnet-leaderboard-table__desktop-col">{{ player.capture_count }}</td>
         <td class="govuk-table__cell">{{ player.current_score }}</td>
         <td class="govuk-table__cell"><a class="govuk-link" href="{% url 'quest:player_detail' player %}">View</a></td>
       </tr>

@@ -1,0 +1,7 @@
+.gchqnet-leaderboard-table {
+    &__desktop-col {
+        @include govuk-media-query($until: tablet) {
+            display: none;
+        }
+    }
+}
