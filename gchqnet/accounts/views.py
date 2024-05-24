@@ -19,6 +19,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, TemplateView, UpdateView
 
 from gchqnet.accounts.mixins import LoginPageMixin
+from gchqnet.achievements.repository import award_builtin_basic_achievement
 from gchqnet.core.mixins import BreadcrumbsMixin
 
 from .forms import (
@@ -62,11 +63,16 @@ class AccountSettingsView(LoginRequiredMixin, BreadcrumbsMixin, UpdateView):
 
         if form.cleaned_data.get("new_password2"):
             messages.success(self.request, "Your password has been changed.")
+            # Award Crypt Keeper
+            award_builtin_basic_achievement("a3db72f7-6f7a-4f27-8996-ae1006df4b0d", self.object)
+
             # Cycle sessions if password has changed
             update_session_auth_hash(self.request, self.object)
         else:
             messages.success(self.request, "Updated account successfully.")
 
+            # Award Identity Upgrade
+            award_builtin_basic_achievement("a5927f71-f60a-4d7b-9abe-7427bf617dac", self.object)
         return redirect(self.get_success_url())
 
     def get_context_data(self, **kwargs: Any) -> dict[Any, Any]:
@@ -134,6 +140,8 @@ class BadgeLoginChallengePromptView(LoginPageMixin, RedirectURLMixin, Breadcrumb
             messages.info(self.request, "Please login with a password for security purposes.")
             return redirect("accounts:login_credentials")
         else:
+            # Award beyond the badge
+            award_builtin_basic_achievement("145047b2-697b-4ce9-9f2d-b3ef03c2e507", form.user)
             auth_login(self.request, form.user)
             return super().form_valid(form)
 

@@ -16,6 +16,24 @@ BUILTIN_BASIC_ACHIEVEMENTS = {
         "Part of a small community <3",
         BasicAchievementAwardType.INTERNAL,
     ),
+    "a5927f71-f60a-4d7b-9abe-7427bf617dac": (
+        # Updated display name
+        AchievementDifficulty.EASY,
+        "Identity Upgrade",
+        BasicAchievementAwardType.INTERNAL,
+    ),
+    "a3db72f7-6f7a-4f27-8996-ae1006df4b0d": (
+        # Updated password
+        AchievementDifficulty.EASY,
+        "Crypt Keeper",
+        BasicAchievementAwardType.INTERNAL,
+    ),
+    "145047b2-697b-4ce9-9f2d-b3ef03c2e507": (
+        # Logged in with OTP
+        AchievementDifficulty.EASY,
+        "Beyond the badge",
+        BasicAchievementAwardType.INTERNAL,
+    ),
     ## Triggered in Charlie's thing
     "8dbb038c-6545-4b34-9df9-d6cad379ff53": (
         # Logged in via SSH
