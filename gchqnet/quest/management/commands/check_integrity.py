@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from sentry_sdk.crons import monitor
 
 from gchqnet.accounts.models.user import User
 from gchqnet.achievements.models import BasicAchievementEvent, FirstToCaptureAchievementEvent
@@ -9,6 +10,7 @@ from gchqnet.quest.repository import update_score_for_user
 class Command(BaseCommand):
     help = "Check data integrity"  # noqa: A003
 
+    @monitor(monitor_slug='check-integrity')
     def handle(
         self,
         *,
