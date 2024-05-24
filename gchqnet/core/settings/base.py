@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "django.contrib.admin",
     "django.contrib.auth",
+    "notifications",  # Needs to be after any app that generates notificaiotns
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -151,4 +152,11 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Great Camp Hexpansion Quest API",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+}
+
+
+DJANGO_NOTIFICATIONS_CONFIG = {
+    "SOFT_DELETE": True,
+    "PAGINATE_BY": 10,
+    "USE_JSONFIELD": True,
 }

@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING, Literal
 from uuid import UUID
 
 from django.db import models
+from django.urls import reverse
+from notifications.signals import notify
 
 from gchqnet.accounts.models.user import User
 from gchqnet.quest.models.location import Location
@@ -41,7 +43,14 @@ def award_builtin_basic_achievement(
             user=user,
             score=achievement.difficulty,
         )
-        update_score_for_user(user)
+        current_score = update_score_for_user(user)
+        notify.send(
+            user,
+            recipient=user,
+            verb="achieved",
+            target=achievement,
+            description=f"You have gained {achievement.difficulty} points and now have a score of {current_score}.",
+        )
         return "success"
     else:
         return "already_obtained"
@@ -57,6 +66,14 @@ def award_first_capture(location: Location, user: User, *, update_score: bool = 
             first_capture_event=obj,
             user=user,
             score=location.difficulty,
+        )
+        notify.send(
+            user,
+            recipient=user,
+            verb="was the first to capture",
+            target=obj.location,
+            description="You have received a first capture bonus.",
+            actions=[{"href": reverse("quest:location_detail", args=[location.id]), "title": "View"}],
         )
         if update_score:
             update_score_for_user(user)

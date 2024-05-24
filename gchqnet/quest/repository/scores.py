@@ -32,12 +32,13 @@ def _calculate_current_score_for_user(user: User) -> int:
     return res.get("score__sum") or 0
 
 
-def update_score_for_user(user: User) -> None:
-    UserScore.objects.update_or_create(
+def update_score_for_user(user: User) -> int:
+    obj, _ = UserScore.objects.update_or_create(
         user=user,
         defaults={"current_score": _calculate_current_score_for_user(user)},
         create_defaults={"current_score": _calculate_current_score_for_user(user)},
     )
+    return obj.current_score
 
 
 def grade_for_score(score: int) -> str:

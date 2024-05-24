@@ -6,7 +6,9 @@
   {% include "components/govuk/header.html" %}
   <div class="govuk-width-container">
     {% include "components/govuk/phase-banner.html" %}
-    {% include "components/govuk/breadcrumbs.html" %}
+    {% block breadcrumbs %}
+      {% include "components/govuk/breadcrumbs.html" %}
+    {% endblock %}
     <main class="govuk-main-wrapper govuk-main-class" id="main-content">
       {% block header %}
         <div class="gchqnet-page-header-actions">

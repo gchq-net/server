@@ -16,6 +16,7 @@ djangorestframework = "^3.15.1"
 drf-spectacular = "^0.27.2"
 pyotp = "^2.9.0"
 requests = "^2.32.1"
+django-notifications-hq = "^1.8.3"
 
 [tool.poetry.group.prod.dependencies]
 uvicorn = "^0.29.0"
@@ -90,7 +91,7 @@ disallow_untyped_decorators = true
 check_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = ["crispy_forms.*", "crispy_forms_gds.*", "debug_toolbar.*", "factory.*", "queryish.*"]
+module = ["crispy_forms.*", "crispy_forms_gds.*", "debug_toolbar.*", "factory.*", "notifications.*"]
 ignore_missing_imports = true
 
 

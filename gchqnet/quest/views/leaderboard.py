@@ -10,6 +10,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
+from notifications.signals import notify
 
 from gchqnet.accounts.models import User
 from gchqnet.achievements.repository import award_builtin_basic_achievement
@@ -198,6 +199,20 @@ class LeaderboardInviteDetailView(LoginRequiredMixin, BreadcrumbsMixin, FormView
             leaderboard.save()
             # Award created or joined a leaderboard
             award_builtin_basic_achievement("193d8853-8000-4261-bdf0-80b73f88e970", self.request.user)
+
+            # Notify owner
+            notify.send(
+                self.request.user,
+                recipient=leaderboard.owner,
+                verb="joined your leaderboard",
+                target=leaderboard,
+                description="Other players can join your leaderboard using your invite link.",
+                actions=[
+                    {"href": reverse("quest:player_detail", args=[self.request.user.username]), "title": "View player"},
+                    {"href": reverse("quest:leaderboard_detail", args=[leaderboard.id]), "title": "View leaderboard"},
+                ],
+            )
+
             return redirect("quest:leaderboard_detail", leaderboard.id)
         else:
             messages.info(request, "Invitation declined.")
