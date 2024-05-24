@@ -14,9 +14,9 @@ class TestAchievementsBasicListView(LogisticsAccessTestMixin):
 class TestAchievementsBasicDetailView(LogisticsAccessTestMixin):
     @property
     def url(self) -> str:  # type: ignore[override]
-        obj, _ = BasicAchievement.objects.get_or_create(
-            display_name="foo",
+        external_achievement, _ = BasicAchievement.objects.get_or_create(
+            display_name="bees",
             difficulty=10,
             award_type="external",
         )
-        return reverse("achievements:basic_achievements_detail", args=[obj.id])
+        return reverse("achievements:basic_achievements_detail", args=[external_achievement.id])

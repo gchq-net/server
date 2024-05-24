@@ -5,6 +5,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path("", include("gchqnet.accounts.urls", namespace="accounts")),
+    path("", include("gchqnet.achievements.urls", namespace="achievements")),
     path("", include("gchqnet.content.urls", namespace="content")),
     path("", include("gchqnet.quest.urls", namespace="quest")),
     path("admin/", admin.site.urls),

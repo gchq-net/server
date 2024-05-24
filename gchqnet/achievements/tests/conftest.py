@@ -1,6 +1,7 @@
 import pytest
 
 from gchqnet.accounts.models import User
+from gchqnet.achievements.models import BasicAchievement
 
 
 @pytest.fixture
@@ -31,3 +32,21 @@ def superuser() -> User:
     )
     user.badges.create(mac_address="01-23-45-67-89-AB")
     return user
+
+
+@pytest.fixture
+def internal_achievement() -> BasicAchievement:
+    return BasicAchievement.objects.create(
+        display_name="foo",
+        difficulty=10,
+        award_type="internal",
+    )
+
+
+@pytest.fixture
+def external_achievement() -> BasicAchievement:
+    return BasicAchievement.objects.create(
+        display_name="bar",
+        difficulty=10,
+        award_type="external",
+    )
