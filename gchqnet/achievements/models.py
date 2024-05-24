@@ -11,6 +11,12 @@ class AchievementDifficulty(models.IntegerChoices):
     IMPOSSIBLE = 50
 
 
+class BasicAchievementAwardType(models.TextChoices):
+    INTERNAL = "internal"  # i.e within this codebase
+    EXTERNAL = "external"  # i.e by another GCHQ.NET system
+    MANUAL = "manual"  # i.e within the web interface by an admin
+
+
 class BasicAchievement(models.Model):
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
@@ -18,6 +24,7 @@ class BasicAchievement(models.Model):
         "Display name", help_text="This name is shown to players who have the achievement.", max_length=30, unique=True
     )
     difficulty = models.IntegerField(choices=AchievementDifficulty)
+    award_type = models.CharField(max_length=8, choices=BasicAchievementAwardType)
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="+", null=True)
