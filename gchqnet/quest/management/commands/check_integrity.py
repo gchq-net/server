@@ -10,7 +10,7 @@ from gchqnet.quest.repository import update_score_for_user
 class Command(BaseCommand):
     help = "Check data integrity"  # noqa: A003
 
-    @monitor(monitor_slug='check-integrity')
+    @monitor(monitor_slug="check-integrity")
     def handle(
         self,
         *,

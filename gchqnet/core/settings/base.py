@@ -62,6 +62,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "gchqnet.core.context_processors.settings_context",
             ],
         },
     },
@@ -163,9 +164,11 @@ DJANGO_NOTIFICATIONS_CONFIG = {
     "USE_JSONFIELD": True,
 }
 
-if sentry_dsn := os.environ.get('SENTRY_DSN'):
-    sentry_environment = os.environ.get('SENTRY_ENVIRONMENT', 'development')
-    # Sentry
+# Sentry
+SENTRY_SESSION_REPLAY_URI = os.environ.get("SENTRY_SESSION_REPLAY_URI")
+
+if sentry_dsn := os.environ.get("SENTRY_DSN"):
+    sentry_environment = os.environ.get("SENTRY_ENVIRONMENT", "development")
     sentry_sdk.init(
         dsn=sentry_dsn,
         environment=sentry_environment,
@@ -176,4 +179,6 @@ if sentry_dsn := os.environ.get('SENTRY_DSN'):
         # of sampled transactions.
         # We recommend adjusting this value in production.
         profiles_sample_rate=1.0,
+        # We aren't collecting PII.
+        send_default_pii=True,
     )

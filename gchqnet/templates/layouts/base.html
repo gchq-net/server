@@ -28,6 +28,9 @@
         {% block js %}
             <script src="{% static 'main.js' %}"></script>
         {% endblock %}
+        {% if SENTRY_SESSION_REPLAY_URI %}
+            <script src="{{ SENTRY_SESSION_REPLAY_URI }}" crossorigin="anonymous"></script>
+        {% endif %}
     </body>
 
 </html>
