@@ -1,0 +1,63 @@
+{% extends "layouts/base_app.html" %}
+{% load location_tags %}
+
+{% block title %}{{ object.display_name }}{% endblock %}
+
+{% block content %}
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Display Name
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ object.display_name }}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Database ID
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ object.id }}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Difficulty
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {% difficulty_tag object.difficulty %}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Award Type
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {% include "components/govuk/tag.html" with content=object.award_type %}
+      </dd>
+    </div>
+  </dl>
+
+  {% if object.award_type == 'external' %}
+    <h2 class="govuk-heading-m">External Token</h2>
+    {% include "components/govuk/warning-text.html" with warning_text="Do not share this under any circumstances. It cannot be revoked." %}
+    <p class="govuk-body">The token required to award this achievement from an external system is:</p>
+    <div class="govuk-form-group">
+      <input class="govuk-input govuk-!-width-three-quarters" id="achievement-token" name="achievement-token" type="text" value="{{ achievement_token }}" readonly>
+      <button class="govuk-button" id="copy-achievement-token-button">
+        Copy to clipboard
+      </button>
+    </div>
+    <script>
+      var copyTokenButton = document.querySelector('#copy-achievement-token-button');
+
+      copyTokenButton.addEventListener('click', function(event) {
+        var copyTokenInput = document.querySelector('#achievement-token');
+        copyTokenInput.select();
+        copyTokenInput.setSelectionRange(0, 99999); // For mobile devices
+        navigator.clipboard.writeText(copyTokenInput.value);
+      });
+    </script>
+  {% endif %}
+{% endblock %}

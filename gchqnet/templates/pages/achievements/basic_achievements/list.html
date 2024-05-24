@@ -1,0 +1,14 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}Basic Achievements{% endblock %}
+
+{% block content %}
+    <p class="govuk-body">Apparently you can achieve these things..</p>
+    {% include "components/achievements/achievement-search.html" %}
+    {% include "components/achievements/basic-achievements-table.html" with achievements=page_obj %}
+    {% if page_obj %}
+        {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
+    {% else %}
+        <p class="govuk-body">There are no achievements. Run the migrations pls.</p>
+    {% endif %}
+{% endblock %}
