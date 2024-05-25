@@ -77,3 +77,25 @@ class FirstToCaptureAchievementEvent(ExportModelOperationsMixin("first_capture_a
 
     def __str__(self) -> str:
         return f"{self.user} was first to capture {self.location}"
+
+
+class LocationGroup(ExportModelOperationsMixin("location_group"), models.Model):  # type: ignore[misc]
+    id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
+
+    display_name = models.CharField(
+        "Display name",
+        max_length=30,
+        unique=True,
+    )
+    difficulty = models.IntegerField(choices=AchievementDifficulty)
+    locations = models.ManyToManyField("quest.Location", related_name="groups")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="+")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ("display_name",)
+
+    def __str__(self) -> str:
+        return self.display_name
