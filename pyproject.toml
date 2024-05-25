@@ -19,9 +19,9 @@ requests = "^2.32.1"
 django-notifications-hq = "^1.8.3"
 setuptools = "^70.0.0"
 sentry-sdk = {extras = ["django"], version = "^2.3.1"}
+django-prometheus = "^2.3.1"
 
 [tool.poetry.group.prod.dependencies]
-uvicorn = "^0.29.0"
 dj-database-url = "^2.1.0"
 psycopg = "^3.1.19"
 gunicorn = "^22.0.0"

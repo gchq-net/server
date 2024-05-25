@@ -8,6 +8,7 @@ urlpatterns = [
     path("", include("gchqnet.achievements.urls", namespace="achievements")),
     path("", include("gchqnet.content.urls", namespace="content")),
     path("", include("gchqnet.quest.urls", namespace="quest")),
+    path("", include('django_prometheus.urls')),
     path("admin/", admin.site.urls),
     path("api/", include("gchqnet.core.api", namespace="api")),
     path("logistics/", include("gchqnet.logistics.urls", namespace="logistics")),
