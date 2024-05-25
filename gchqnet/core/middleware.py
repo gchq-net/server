@@ -12,6 +12,7 @@ class PublicAccessMiddleware:
     EXCLUDED_PATHS: set[tuple[str | None, str]] = {
         ("content", "holding"),
         (None, "logout"),
+        (None, "prometheus-django-metrics"),
     }
 
     def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:  # noqa: F821
