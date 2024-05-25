@@ -12,6 +12,9 @@
         <link rel="mask-icon" href="/static/img/safari-pinned-tab.svg?v=2024" color="#1d70b8">
         <link rel="shortcut icon" href="/static/img/favicon.ico?v=2024">
         <link rel="me" href="https://chaos.social/@GCHQNET" />
+        {% if PLAUSIBLE_DOMAIN %}
+            <script defer data-domain="{{ PLAUSIBLE_DOMAIN }}" src="https://plausible.io/js/script.js"></script>
+        {% endif %}
         <meta name="msapplication-TileColor" content="#2b5797">
         <meta name="msapplication-config" content="/static/img/browserconfig.xml?v=2024">
         <meta name="theme-color" content="#ffffff">

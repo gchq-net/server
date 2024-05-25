@@ -28,3 +28,4 @@ CSRF_COOKIE_SECURE = True
 USE_X_FORWARDED_HOST = True
 
 PUBLIC_MODE = os.environ.get("PUBLIC_MODE", "false") == "true"
+PLAUSIBLE_DOMAIN = os.environ.get("PLAUSIBLE_DOMAIN")
