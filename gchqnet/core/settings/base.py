@@ -38,6 +38,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "health_check",
+    "health_check.db",
+    "health_check.cache",
+    "health_check.contrib.migrations",
 ]
 
 MIDDLEWARE = [
