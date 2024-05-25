@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from django.core.signing import Signer
-from django.db.models.base import Model as Model
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 
