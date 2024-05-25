@@ -1,7 +1,7 @@
 import pytest
 
 from gchqnet.accounts.models import User
-from gchqnet.achievements.models import BasicAchievement
+from gchqnet.achievements.models import BasicAchievement, LocationGroup
 
 
 @pytest.fixture
@@ -49,4 +49,13 @@ def external_achievement() -> BasicAchievement:
         display_name="bar",
         difficulty=10,
         award_type="external",
+    )
+
+
+@pytest.fixture
+def location_group(user: User) -> LocationGroup:
+    return LocationGroup.objects.create(
+        display_name="group 1",
+        difficulty=10,
+        created_by=user,
     )

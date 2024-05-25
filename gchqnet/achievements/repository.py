@@ -120,7 +120,7 @@ def get_achievements_for_user(user: User, viewer: User | AnonymousUser) -> model
 def has_user_captured_group(user: User, location_group: LocationGroup) -> bool:
     location_ids_for_group = location_group.locations.values("id")
     of_which_found = user.capture_events.filter(location__in=location_ids_for_group).count()
-    return of_which_found == location_ids_for_group.count()
+    return bool(location_ids_for_group.count()) and (of_which_found == location_ids_for_group.count())
 
 
 def handle_location_capture_for_groups(user: User, location: Location, *, update_score: bool = False) -> None:
