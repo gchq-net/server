@@ -26,7 +26,13 @@ class BadgeOTPResponseSerializer(serializers.Serializer):
 
 class BadgeCaptureProofSerializer(serializers.Serializer):
     sn = serializers.IntegerField(min_value=0, max_value=2**72, label="Serial Number")
-    rand = serializers.IntegerField(min_value=0, max_value=2**128, label="Cryptographic Nonce")
+    rand = serializers.CharField(
+        label="Cryptographic Nonce",
+        help_text="formatted as hexdigest",
+        max_length=64,
+        min_length=64,
+        validators=[RegexValidator("^[0-9a-f]{64}$", "The nonce does not appear to be in the correct format.")],
+    )
     hmac = serializers.CharField(
         label="SHA256 HMAC",
         help_text="formatted as hexdigest",

@@ -253,7 +253,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": "a" * 64,
                 "capture": {
                     "sn": 1234567890,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -293,7 +293,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": "a" * 64,
                 "capture": {
                     "sn": 1234567890,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -317,7 +317,7 @@ class TestBadgeCaptureSubmissionView:
                 "mac_address": "AA-AA-AA-AA-AA-AA",
                 "capture": {
                     "sn": 1234567890,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -338,7 +338,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": "a",
                 "capture": {
                     "sn": 1234567890,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -362,7 +362,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": "a" * 65,
                 "capture": {
                     "sn": 1234567890,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -388,7 +388,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": "e" * 64,
                 "capture": {
                     "sn": 1234567890,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -410,7 +410,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": "a" * 64,
                 "capture": {
                     "sn": location.hexpansion.serial_number.int,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -439,7 +439,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": badge.secret,
                 "capture": {
                     "sn": location.hexpansion.serial_number.int,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -471,7 +471,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": "a" * 64,
                 "capture": {
                     "sn": location.hexpansion.serial_number.int,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -503,7 +503,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": badge.secret,
                 "capture": {
                     "sn": location.hexpansion.serial_number.int,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -521,7 +521,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": badge.secret,
                 "capture": {
                     "sn": location.hexpansion.serial_number.int,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",
@@ -549,7 +549,7 @@ class TestBadgeCaptureSubmissionView:
                 "badge_secret": badge.secret,
                 "capture": {
                     "sn": 123,
-                    "rand": 1234567890,
+                    "rand": "a" * 64,
                     "hmac": "b" * 64,
                 },
                 "app_rev": "0",

@@ -1,3 +1,4 @@
+import binascii
 from uuid import UUID
 
 from django.conf import settings
@@ -109,7 +110,7 @@ class BadgeAPIViewset(viewsets.GenericViewSet):
         capture_result = record_attempted_capture(
             result["badge"],
             hexpansion,
-            rand=serializer.validated_data["capture"]["rand"],
+            rand=binascii.unhexlify(serializer.validated_data["capture"]["rand"]),
             hmac=serializer.validated_data["capture"]["hmac"],
             app_rev=serializer.validated_data["app_rev"],
             fw_rev=serializer.validated_data["fw_rev"],

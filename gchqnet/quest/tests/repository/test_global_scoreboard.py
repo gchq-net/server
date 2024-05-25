@@ -20,7 +20,7 @@ def _generate_capture(user: User) -> Location:
     record_attempted_capture(
         badge,
         hexpansion,
-        rand=1234567890,
+        rand=b"1234567890",
         hmac="a" * 64,
         app_rev="0.0.0",
         fw_rev="0.0.0",
