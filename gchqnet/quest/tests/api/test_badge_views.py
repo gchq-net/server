@@ -244,7 +244,6 @@ class TestBadgeCaptureSubmissionView:
             "capture": ["This field is required."],
             "app_rev": ["This field is required."],
             "fw_rev": ["This field is required."],
-            "wifi": ["This field is required."],
         }
 
     def test_post__no_mac_address(self, client: Client) -> None:
@@ -256,11 +255,6 @@ class TestBadgeCaptureSubmissionView:
                     "sn": 1234567890,
                     "rand": 1234567890,
                     "hmac": "b" * 64,
-                },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",
@@ -280,11 +274,6 @@ class TestBadgeCaptureSubmissionView:
                 "mac_address": "AA-AA-AA-AA-AA-AA",
                 "badge_secret": "a" * 64,
                 "capture": 12,
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
-                },
                 "app_rev": "0",
                 "fw_rev": "bees",
             },
@@ -296,27 +285,6 @@ class TestBadgeCaptureSubmissionView:
             "capture": {"non_field_errors": ["Invalid data. Expected a dictionary, but " "got int."]}
         }
 
-    def test_post__wifi_not_dict(self, client: Client) -> None:
-        resp = client.post(
-            self.url,
-            data={
-                "mac_address": "AA-AA-AA-AA-AA-AA",
-                "badge_secret": "a" * 64,
-                "capture": {
-                    "sn": 1234567890,
-                    "rand": 1234567890,
-                    "hmac": "b" * 64,
-                },
-                "wifi": 23456,
-                "app_rev": "0",
-                "fw_rev": "bees",
-            },
-            content_type="application/json",
-        )
-
-        assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert resp.json() == {"wifi": {"non_field_errors": ["Invalid data. Expected a dictionary, but " "got int."]}}
-
     def test_post__bad_mac_address(self, client: Client) -> None:
         resp = client.post(
             self.url,
@@ -327,11 +295,6 @@ class TestBadgeCaptureSubmissionView:
                     "sn": 1234567890,
                     "rand": 1234567890,
                     "hmac": "b" * 64,
-                },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",
@@ -357,11 +320,6 @@ class TestBadgeCaptureSubmissionView:
                     "rand": 1234567890,
                     "hmac": "b" * 64,
                 },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
-                },
                 "app_rev": "0",
                 "fw_rev": "bees",
             },
@@ -382,11 +340,6 @@ class TestBadgeCaptureSubmissionView:
                     "sn": 1234567890,
                     "rand": 1234567890,
                     "hmac": "b" * 64,
-                },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",
@@ -411,11 +364,6 @@ class TestBadgeCaptureSubmissionView:
                     "sn": 1234567890,
                     "rand": 1234567890,
                     "hmac": "b" * 64,
-                },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",
@@ -443,11 +391,6 @@ class TestBadgeCaptureSubmissionView:
                     "rand": 1234567890,
                     "hmac": "b" * 64,
                 },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
-                },
                 "app_rev": "0",
                 "fw_rev": "bees",
             },
@@ -469,11 +412,6 @@ class TestBadgeCaptureSubmissionView:
                     "sn": location.hexpansion.serial_number.int,
                     "rand": 1234567890,
                     "hmac": "b" * 64,
-                },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",
@@ -503,11 +441,6 @@ class TestBadgeCaptureSubmissionView:
                     "sn": location.hexpansion.serial_number.int,
                     "rand": 1234567890,
                     "hmac": "b" * 64,
-                },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",
@@ -541,11 +474,6 @@ class TestBadgeCaptureSubmissionView:
                     "rand": 1234567890,
                     "hmac": "b" * 64,
                 },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
-                },
                 "app_rev": "0",
                 "fw_rev": "bees",
             },
@@ -578,11 +506,6 @@ class TestBadgeCaptureSubmissionView:
                     "rand": 1234567890,
                     "hmac": "b" * 64,
                 },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
-                },
                 "app_rev": "0",
                 "fw_rev": "bees",
             },
@@ -600,11 +523,6 @@ class TestBadgeCaptureSubmissionView:
                     "sn": location.hexpansion.serial_number.int,
                     "rand": 1234567890,
                     "hmac": "b" * 64,
-                },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",
@@ -633,11 +551,6 @@ class TestBadgeCaptureSubmissionView:
                     "sn": 123,
                     "rand": 1234567890,
                     "hmac": "b" * 64,
-                },
-                "wifi": {
-                    "bssid": "BB-BB-BB-BB-BB-BB",
-                    "channel": 7,
-                    "rssi": -10,
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",

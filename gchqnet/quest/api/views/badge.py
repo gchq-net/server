@@ -113,9 +113,6 @@ class BadgeAPIViewset(viewsets.GenericViewSet):
             hmac=serializer.validated_data["capture"]["hmac"],
             app_rev=serializer.validated_data["app_rev"],
             fw_rev=serializer.validated_data["fw_rev"],
-            wifi_bssid=serializer.validated_data["wifi"]["bssid"],
-            wifi_channel=serializer.validated_data["wifi"]["channel"],
-            wifi_rssi=serializer.validated_data["wifi"]["rssi"],
         )
 
         if capture_result["result"] == "fail":

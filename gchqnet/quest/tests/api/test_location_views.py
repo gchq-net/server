@@ -61,9 +61,6 @@ class TestLocationListAPI:
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
-            wifi_bssid="00-00-00-00-00-00",
-            wifi_channel=7,
-            wifi_rssi=0,
         )
         client.force_login(user)
 
@@ -149,9 +146,6 @@ class TestLocationDetailAPI:
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
-            wifi_bssid="00-00-00-00-00-00",
-            wifi_channel=7,
-            wifi_rssi=0,
         )
         client.force_login(user)
 
@@ -203,9 +197,6 @@ class TestLocationGeoJSONAPI:
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
-            wifi_bssid="00-00-00-00-00-00",
-            wifi_channel=7,
-            wifi_rssi=0,
         )
         client.force_login(user)
 
@@ -224,9 +215,6 @@ class TestLocationGeoJSONAPI:
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
-            wifi_bssid="00-00-00-00-00-00",
-            wifi_channel=7,
-            wifi_rssi=0,
         )
         client.force_login(user)
 

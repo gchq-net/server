@@ -24,18 +24,6 @@ class RawCaptureEvent(ExportModelOperationsMixin("raw_capture_event"), models.Mo
     )
     app_rev = models.CharField(verbose_name="App Revision", max_length=20)
     fw_rev = models.CharField(verbose_name="Firmware Revision", max_length=20)
-    wifi_bssid = models.CharField(
-        "WiFi BSSID",
-        max_length=17,
-        help_text="IEEE 802 format, e.g 12-34-56-78-90-AB",
-        validators=[
-            RegexValidator(
-                "^([0-9A-F]{2}[-]){5}([0-9A-F]{2})$", "The MAC address does not appear to be in the correct format."
-            )
-        ],
-    )
-    wifi_channel = models.PositiveSmallIntegerField()
-    wifi_rssi = models.IntegerField()
 
     # The created_by field here should not be relied upon for scorekeeping.
     created_at = models.DateTimeField(auto_now_add=True)
