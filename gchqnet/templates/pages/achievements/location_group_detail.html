@@ -2,33 +2,31 @@
 {% load location_tags static %}
 {% load humanize %}
 
-{% block title %}{% if capture_event %}{{ object.display_name }}{% else %}???{% endif %}{% endblock %}
+{% block title %}{{ object.display_name }}{% endblock %}
 
 {% block header %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
       <div class="gchqnet-page-header-actions__title">
-        <h1 class="govuk-heading-xl">{% if capture_event %}{{ object.display_name }}{% else %}???{% endif %}</h1>
+        <h1 class="govuk-heading-xl">{{ object.display_name }}</h1>
       </div>
     </div>
     <div class="govuk-grid-column-one-half">
       <link rel="stylesheet" href="{% static 'map/map.css' %}">
       <script src="{% static 'map/map.js' %}"></script>
       <noscript>You need Javascript enabled to view this map.</noscript>
-      {% if capture_event and object.coordinates %}
-        <div id="map" data-zoom="18" data-lat="{{ object.coordinates.lat }}" data-long="{{ object.coordinates.long }}" style="min-height: 300px;"></div>
-      {% else %}
-        <div id="map" data-zoom="14" data-lat="52.04161" data-long="-2.37749" style="min-height: 300px;"></div>
-      {% endif %}
+      <div id="map" data-zoom="15" data-lat="52.04161" data-long="-2.37749" data-location-geo-endpoint="/api/locations/my-finds/?group={{ object.id }}" style="min-height: 300px;"></div>
     </div>
   </div>
 {% endblock %}
 
 {% block content %}
-  {% if capture_event %}
-    <p class="govuk-body">You have already found this hexpansion.</p>
-  {% elif request.user.is_authenticated %}
-    <p class="govuk-body">You have not found this hexpansion yet.</p>
+  {% if request.user.is_authenticated %}
+    {% if user_found_all %}
+      <p class="govuk-body">You have found all locations in this group.</p>
+    {% else %}
+      <p class="govuk-body">You found everything in this group and gained {{ object.difficulty }} bonus points.</p>
+    {% endif %}
   {% else %}
     <p class="govuk-body"><a href="{% url 'accounts:login' %}">Log in</a> to view more information about this hexpansion.</p>
   {% endif %}
@@ -37,6 +35,11 @@
       <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
         <a class="govuk-tabs__tab" href="#info">
           Information
+        </a>
+      </li>
+      <li class="govuk-tabs__list-item">
+        <a class="govuk-tabs__tab" href="#locations">
+          Locations
         </a>
       </li>
       <li class="govuk-tabs__list-item">
@@ -53,7 +56,7 @@
             Name
           </dt>
           <dd class="govuk-summary-list__value">
-            {% if capture_event %}{{ object.display_name }}{% else %}???{% endif %}
+            {{ object.display_name }}
           </dd>
         </div>
       </dl>
@@ -70,43 +73,36 @@
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
-            Hint
+            Location Count
           </dt>
           <dd class="govuk-summary-list__value">
-            {{ object.hint }}
+            {{ location_count }}
           </dd>
         </div>
       </dl>
-      {% if object.groups.all %}
-        <dl class="govuk-summary-list">
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Groups
-            </dt>
-            <dd class="govuk-summary-list__value">
-              <ul class="govuk-summary-list__actions-list">
-                {% for group in object.groups.all %}
-                  <li class="govuk-summary-list__actions-list-item">
-                    <a class="govuk-link" href="{% url 'achievements:location_group_detail' group.id %}">{{ group.display_name}}</a>
-                  </li>
-                {% endfor %}
-              </ul>
-            </dd>
-          </div>
-        </dl>
-      {% endif %}
-      {% if capture_event %}
-        <dl class="govuk-summary-list">
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Found at
-            </dt>
-            <dd class="govuk-summary-list__value">
-              {{ capture_event.created_at }}
-            </dd>
-          </div>
-        </dl>
-      {% endif %}
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="locations">
+      <h2 class="govuk-heading-l">Locations</h2>
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Name</th>
+            <th scope="col" class="govuk-table__header">Difficulty</th>
+            <th scope="col" class="govuk-table__header">Found</th>
+            <th scope="col" class="govuk-table__header"></th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for location in locations %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">{% if location.id in user_found_locations %}{{ location.display_name }}{% else %}???{% endif %}</td>
+              <td class="govuk-table__cell">{% difficulty_tag location.difficulty %}</td>
+              <td class="govuk-table__cell">{% if location.id in user_found_locations %}Yes{% else %}No{% endif %}</td>
+              <td class="govuk-table__cell"><a class="govuk-link" href="{% url 'quest:location_detail' location.id %}">View</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="activity">
       <h2 class="govuk-heading-l">Recent Activity</h2>
