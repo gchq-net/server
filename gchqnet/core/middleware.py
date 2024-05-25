@@ -13,6 +13,7 @@ class PublicAccessMiddleware:
         ("content", "holding"),
         (None, "logout"),
         (None, "prometheus-django-metrics"),
+        ("health_check", "health_check_home"),
     }
 
     def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:  # noqa: F821
