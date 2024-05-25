@@ -36,9 +36,6 @@ def record_attempted_capture(
     hmac: str,
     app_rev: str,
     fw_rev: str,
-    wifi_bssid: str,
-    wifi_channel: int,
-    wifi_rssi: int,
 ) -> CaptureSuccess | CaptureFailure:
     # Firstly, record it regardless.
     raw_event = RawCaptureEvent.objects.create(
@@ -49,9 +46,6 @@ def record_attempted_capture(
         hmac=hmac,
         app_rev=app_rev,
         fw_rev=fw_rev,
-        wifi_bssid=wifi_bssid,
-        wifi_channel=wifi_channel,
-        wifi_rssi=wifi_rssi,
     )
 
     try:

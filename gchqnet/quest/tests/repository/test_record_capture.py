@@ -23,9 +23,6 @@ class TestRecordAttemptedCapture:
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
-            wifi_bssid="00-00-00-00-00-00",
-            wifi_channel=7,
-            wifi_rssi=0,
         )
 
         # Assert
@@ -58,9 +55,6 @@ class TestRecordAttemptedCapture:
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
-            wifi_bssid="00-00-00-00-00-00",
-            wifi_channel=7,
-            wifi_rssi=0,
         )
         result = record_attempted_capture(
             badge,
@@ -69,9 +63,6 @@ class TestRecordAttemptedCapture:
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
-            wifi_bssid="00-00-00-00-00-00",
-            wifi_channel=7,
-            wifi_rssi=0,
         )
 
         # Assert
@@ -105,9 +96,6 @@ class TestRecordAttemptedCapture:
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
-            wifi_bssid="00-00-00-00-00-00",
-            wifi_channel=7,
-            wifi_rssi=0,
         )
         _ = record_attempted_capture(
             badge_2,
@@ -116,9 +104,6 @@ class TestRecordAttemptedCapture:
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
-            wifi_bssid="00-00-00-00-00-00",
-            wifi_channel=7,
-            wifi_rssi=0,
         )
 
         # Assert
@@ -138,9 +123,6 @@ class TestRecordAttemptedCapture:
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
-            wifi_bssid="00-00-00-00-00-00",
-            wifi_channel=7,
-            wifi_rssi=0,
         )
 
         # Assert

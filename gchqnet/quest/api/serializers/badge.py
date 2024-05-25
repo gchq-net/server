@@ -36,25 +36,10 @@ class BadgeCaptureProofSerializer(serializers.Serializer):
     )
 
 
-class BadgeCaptureWiFiStatsSerializer(serializers.Serializer):
-    bssid = serializers.CharField(
-        max_length=17,
-        min_length=17,
-        validators=[
-            RegexValidator(
-                "^([0-9A-F]{2}[-]){5}([0-9A-F]{2})$", "The BSSID does not appear to be in the correct format."
-            )
-        ],
-    )
-    channel = serializers.IntegerField(min_value=1, max_value=200)
-    rssi = serializers.IntegerField(min_value=-200, max_value=200)
-
-
 class BadgeCaptureSubmissionSerializer(BadgeAPIRequestSerializer):
     capture = BadgeCaptureProofSerializer()
     app_rev = serializers.CharField(max_length=20)
     fw_rev = serializers.CharField(max_length=20)
-    wifi = BadgeCaptureWiFiStatsSerializer()
 
 
 class BadgeCaptureSuccessSerializer(serializers.Serializer):

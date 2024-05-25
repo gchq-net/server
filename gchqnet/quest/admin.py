@@ -74,7 +74,7 @@ class RawCaptureEventAdmin(ViewOnlyMixin, admin.ModelAdmin):
         (None, {"fields": ("badge", "hexpansion")}),
         (
             "Submission Data",
-            {"fields": ("rand", "hmac", "app_rev", "fw_rev", "wifi_bssid", "wifi_channel", "wifi_rssi")},
+            {"fields": ("rand", "hmac", "app_rev", "fw_rev")},
         ),
         ("Capture Event", {"fields": ("capture_event", "capture_log")}),
         ("Database Info", {"classes": ["collapse"], "fields": ("id", "created_at", "created_by", "updated_at")}),
