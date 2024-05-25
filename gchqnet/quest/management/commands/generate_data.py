@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 
 from gchqnet.accounts.factories import BadgeFactory
 from gchqnet.accounts.models.user import User
-from gchqnet.achievements.models import BasicAchievementEvent, FirstToCaptureAchievementEvent
+from gchqnet.achievements.models import BasicAchievementEvent, FirstToCaptureAchievementEvent, LocationGroup
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models import CaptureEvent, Location, RawCaptureEvent
@@ -68,5 +68,12 @@ class Command(BaseCommand):
                     )
 
             update_score_for_user(badge.user)
+
+        for i in range(10):
+            sample = random.sample(list(Location.objects.all()), k=random.randint(3, 8))  # noqa: S311
+            group = LocationGroup.objects.create(
+                display_name=f"Group {i}", difficulty=15, created_by=User.objects.filter(is_superuser=True).first()
+            )
+            group.locations.set(sample)
 
         self.stdout.write("Generated fake data")

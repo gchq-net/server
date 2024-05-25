@@ -13,6 +13,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from gchqnet.achievements.models import LocationGroup
 from gchqnet.quest.api.serializers import (
     LocationGeoJSONSerializer,
     LocationSerializer,
@@ -78,6 +79,13 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
         assert request.user.is_authenticated
 
         captures = request.user.capture_events.select_related("location", "location__coordinates")
+
+        if group_query := request.GET.get("group"):
+            try:
+                group = LocationGroup.objects.get(id=group_query)
+                captures = captures.filter(location__groups=group)
+            except LocationGroup.DoesNotExist:
+                raise
 
         def _difficulty_label(capture: CaptureEvent) -> str:
             return LocationDifficulty(capture.location.difficulty).label

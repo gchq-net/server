@@ -1,5 +1,6 @@
 from typing import Any
 
+from django.db.models.query import QuerySet
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, TemplateView
 
@@ -11,6 +12,9 @@ from gchqnet.quest.models.location import Location
 class LocationDetailView(BreadcrumbsMixin, DetailView):
     model = Location
     template_name = "pages/quest/location_detail.html"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().prefetch_related("groups")
 
     def get_capture_event(self) -> CaptureEvent | None:
         if self.request.user.is_authenticated:

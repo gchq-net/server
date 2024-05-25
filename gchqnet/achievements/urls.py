@@ -11,4 +11,5 @@ urlpatterns = [
         views.BasicAchievementDetailView.as_view(),
         name="basic_achievements_detail",
     ),
+    path("locations/groups/<uuid:pk>/", views.LocationGroupDetailView.as_view(), name="location_group_detail"),
 ]
