@@ -2,11 +2,12 @@ import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 
 from gchqnet.quest.models.location import LocationDifficulty
 
 
-class PlannedLocation(models.Model):
+class PlannedLocation(ExportModelOperationsMixin("planned_location"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
     display_name = models.CharField(
         "Display name",

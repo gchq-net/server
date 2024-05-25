@@ -4,6 +4,7 @@ import uuid
 from typing import TYPE_CHECKING
 
 from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 
 from gchqnet.quest.repository import get_private_scoreboard
 
@@ -11,7 +12,7 @@ if TYPE_CHECKING:  # pragma: nocover
     from gchqnet.accounts.models import User
 
 
-class Leaderboard(models.Model):
+class Leaderboard(ExportModelOperationsMixin("leaderboard"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
     display_name = models.CharField(

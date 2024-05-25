@@ -1,9 +1,10 @@
 import uuid
 
 from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 
 
-class Hexpansion(models.Model):
+class Hexpansion(ExportModelOperationsMixin("hexpansion"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
     human_identifier = models.CharField(

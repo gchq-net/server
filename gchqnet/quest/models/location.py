@@ -4,6 +4,7 @@ import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 
 
 class LocationDifficulty(models.IntegerChoices):
@@ -14,7 +15,7 @@ class LocationDifficulty(models.IntegerChoices):
     IMPOSSIBLE = 50
 
 
-class Location(models.Model):
+class Location(ExportModelOperationsMixin("location"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
     display_name = models.CharField(
         "Display name",
@@ -55,7 +56,7 @@ class Location(models.Model):
         return self.internal_name or self.display_name
 
 
-class Coordinates(models.Model):
+class Coordinates(ExportModelOperationsMixin("coordinates"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
     location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name="coordinates")
