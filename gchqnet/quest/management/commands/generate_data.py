@@ -1,5 +1,6 @@
 import os
 import random
+import sys
 
 from django.core.management.base import BaseCommand
 
@@ -60,7 +61,7 @@ class Command(BaseCommand):
                     record_attempted_capture(
                         badge,
                         location.hexpansion,
-                        rand=1234567890,
+                        rand=int.to_bytes(1234567890, 32, sys.byteorder),
                         hmac="a" * 64,
                         app_rev="0.0.0",
                         fw_rev="0.0.0",

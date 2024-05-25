@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import Literal, TypedDict
-from uuid import UUID
 
 from django.urls import reverse
 from notifications.signals import notify
@@ -32,7 +31,7 @@ def record_attempted_capture(
     badge: Badge,
     hexpansion: Hexpansion,
     *,
-    rand: int,
+    rand: bytes,
     hmac: str,
     app_rev: str,
     fw_rev: str,
@@ -42,7 +41,7 @@ def record_attempted_capture(
         badge=badge,
         hexpansion=hexpansion,
         created_by=badge.user,
-        rand=UUID(int=rand),
+        rand=rand,
         hmac=hmac,
         app_rev=app_rev,
         fw_rev=fw_rev,

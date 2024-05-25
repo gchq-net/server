@@ -15,7 +15,7 @@ class RawCaptureEvent(ExportModelOperationsMixin("raw_capture_event"), models.Mo
     badge = models.ForeignKey("accounts.Badge", on_delete=models.PROTECT, related_name="raw_capture_events")
     hexpansion = models.ForeignKey("hexpansion.Hexpansion", on_delete=models.PROTECT, related_name="raw_capture_events")
 
-    rand = models.UUIDField()
+    rand = models.BinaryField(max_length=32)
     hmac = models.CharField(
         max_length=64,
         validators=[

@@ -57,7 +57,7 @@ class TestLocationListAPI:
         record_attempted_capture(
             user.badges.get(),
             location.hexpansion,
-            rand=1234567890,
+            rand=b"1234567890",
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
@@ -142,7 +142,7 @@ class TestLocationDetailAPI:
         record_attempted_capture(
             user.badges.get(),
             location.hexpansion,
-            rand=1234567890,
+            rand=b"1234567890",
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
@@ -193,7 +193,7 @@ class TestLocationGeoJSONAPI:
         record_attempted_capture(
             user.badges.get(),
             location.hexpansion,
-            rand=1234567890,
+            rand=b"1234567890",
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
@@ -211,7 +211,7 @@ class TestLocationGeoJSONAPI:
         record_attempted_capture(
             user.badges.get(),
             location.hexpansion,
-            rand=1234567890,
+            rand=b"1234567890",
             hmac="a" * 64,
             app_rev="0.0.0",
             fw_rev="0.0.0",
