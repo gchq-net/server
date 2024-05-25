@@ -87,6 +87,7 @@ def get_recent_events_for_users(
         type=models.Value("first_capture"),
     )[:max_num]
 
+    # TODO: Add the location group achievement events
     both = list(ce_qs) + list(bae_qs) + list(fcae_qs)
 
     if current_user.is_authenticated:

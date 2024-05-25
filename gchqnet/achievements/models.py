@@ -99,3 +99,29 @@ class LocationGroup(ExportModelOperationsMixin("location_group"), models.Model):
 
     def __str__(self) -> str:
         return self.display_name
+
+
+class LocationGroupAchievementEvent(ExportModelOperationsMixin("location_group_achievement_event"), models.Model):  # type: ignore[misc]
+    id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
+
+    location_group = models.ForeignKey(
+        "achievements.LocationGroup",
+        on_delete=models.CASCADE,
+        related_name="events",
+    )
+    user = models.ForeignKey(
+        "accounts.User", on_delete=models.PROTECT, related_name="location_group_achievement_events"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="+")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ("created_at",)
+        constraints = [
+            models.UniqueConstraint(fields=["location_group", "user"], name="one_event_per_user_per_location_group"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.user} completed group {self.display_name}"

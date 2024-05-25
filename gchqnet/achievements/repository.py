@@ -12,7 +12,7 @@ from gchqnet.quest.models.location import Location
 from gchqnet.quest.models.scores import ScoreRecord
 from gchqnet.quest.repository.scores import update_score_for_user
 
-from .models import BasicAchievement, FirstToCaptureAchievementEvent
+from .models import BasicAchievement, FirstToCaptureAchievementEvent, LocationGroup, LocationGroupAchievementEvent
 
 if TYPE_CHECKING:
     from django.contrib.auth.models import AnonymousUser
@@ -91,6 +91,7 @@ def get_achievements_for_user(user: User, viewer: User | AnonymousUser) -> model
         .values("display_name", "difficulty", "created_at")
     )
 
+    # First Captures
     first_captures = user.first_capture_events.select_related("location")
     first_captures = first_captures.annotate(difficulty=models.F("location__difficulty"))
     if viewer == user:
@@ -102,4 +103,47 @@ def get_achievements_for_user(user: User, viewer: User | AnonymousUser) -> model
 
     first_captures = first_captures.order_by().values("display_name", "difficulty", "created_at")  # type: ignore[misc]
 
-    return bae.union(first_captures).order_by("-created_at")
+    # Location Groups
+    lgae = (
+        user.location_group_achievement_events.select_related("location_group")
+        .annotate(
+            display_name=models.F("location_group__display_name"),
+            difficulty=models.F("location_group__difficulty"),
+        )
+        .order_by()
+        .values("display_name", "difficulty", "created_at")
+    )
+
+    return bae.union(first_captures, lgae).order_by("-created_at")
+
+
+def has_user_captured_group(user: User, location_group: LocationGroup) -> bool:
+    location_ids_for_group = location_group.locations.values("id")
+    of_which_found = user.capture_events.filter(location__in=location_ids_for_group).count()
+    return bool(location_ids_for_group.count()) and (of_which_found == location_ids_for_group.count())
+
+
+def handle_location_capture_for_groups(user: User, location: Location, *, update_score: bool = False) -> None:
+    for group in location.groups.all():
+        if has_user_captured_group(user, group):
+            obj, created = LocationGroupAchievementEvent.objects.get_or_create(
+                location_group=group,
+                user=user,
+                defaults={"created_by": user},
+            )
+            if created:
+                ScoreRecord.objects.create(
+                    location_group_achievement_event=obj,
+                    user=user,
+                    score=group.difficulty,
+                )
+                notify.send(
+                    user,
+                    recipient=user,
+                    verb="captured all locations in",
+                    target=group,
+                    description="You have received a group capture bonus.",
+                    actions=[{"href": reverse("achievements:location_group_detail", args=[group.id]), "title": "View"}],
+                )
+    if update_score:
+        update_score_for_user(user)

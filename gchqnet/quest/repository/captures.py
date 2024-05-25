@@ -6,7 +6,7 @@ from django.urls import reverse
 from notifications.signals import notify
 
 from gchqnet.accounts.models.badge import Badge
-from gchqnet.achievements.repository import award_first_capture
+from gchqnet.achievements.repository import award_first_capture, handle_location_capture_for_groups
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.models.captures import CaptureEvent, CaptureLog, RawCaptureEvent
 from gchqnet.quest.models.location import Location, LocationDifficulty
@@ -79,6 +79,7 @@ def record_attempted_capture(
         actions=[{"href": reverse("quest:location_detail", args=[location.id]), "title": "View"}],
     )
     award_first_capture(location, badge.user)
+    handle_location_capture_for_groups(badge.user, location, update_score=False)
     update_score_for_user(badge.user)
     return CaptureSuccess(
         result="success",
