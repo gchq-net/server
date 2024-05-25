@@ -13,7 +13,7 @@
         <link rel="shortcut icon" href="/static/img/favicon.ico?v=2024">
         <link rel="me" href="https://chaos.social/@GCHQNET" />
         {% if PLAUSIBLE_DOMAIN %}
-            <script defer data-domain="{{ PLAUSIBLE_DOMAIN }}" src="https://plausible.io/js/script.js"></script>
+            <script defer data-domain="{{ PLAUSIBLE_DOMAIN }}" event-loggedin="{% if request.user.is_authenticated %}true{% else %}false{% endif %}" src="https://plausible.io/js/script.pageview-props.js"></script>
         {% endif %}
         <meta name="msapplication-TileColor" content="#2b5797">
         <meta name="msapplication-config" content="/static/img/browserconfig.xml?v=2024">
