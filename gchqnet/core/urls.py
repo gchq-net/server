@@ -11,6 +11,7 @@ urlpatterns = [
     path("", include("django_prometheus.urls")),
     path("admin/", admin.site.urls),
     path("api/", include("gchqnet.core.api", namespace="api")),
+    path("ht/", include("health_check.urls")),
     path("logistics/", include("gchqnet.logistics.urls", namespace="logistics")),
     path("notifications/", include(notifications.urls, namespace="notifications")),
 ]
