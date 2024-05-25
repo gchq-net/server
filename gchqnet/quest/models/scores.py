@@ -1,9 +1,10 @@
 import uuid
 
 from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 
 
-class ScoreRecord(models.Model):
+class ScoreRecord(ExportModelOperationsMixin("score_record"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
     capture_event = models.OneToOneField(
@@ -32,7 +33,7 @@ class ScoreRecord(models.Model):
         return "Score Record"
 
 
-class UserScore(models.Model):
+class UserScore(ExportModelOperationsMixin("user_score"), models.Model):  # type: ignore[misc]
     """The current score of the user, dynamically updated."""
 
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)

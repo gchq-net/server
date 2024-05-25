@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 
 
 class AchievementDifficulty(models.IntegerChoices):
@@ -17,7 +18,7 @@ class BasicAchievementAwardType(models.TextChoices):
     MANUAL = "manual"  # i.e within the web interface by an admin
 
 
-class BasicAchievement(models.Model):
+class BasicAchievement(ExportModelOperationsMixin("basic_achievement"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
     display_name = models.CharField(
@@ -37,7 +38,7 @@ class BasicAchievement(models.Model):
         return self.display_name
 
 
-class BasicAchievementEvent(models.Model):
+class BasicAchievementEvent(ExportModelOperationsMixin("basic_achievement_event"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
     basic_achievement = models.ForeignKey(BasicAchievement, on_delete=models.PROTECT, related_name="events")
@@ -57,7 +58,7 @@ class BasicAchievementEvent(models.Model):
         return f"{self.user} achieved {self.basic_achievement}"
 
 
-class FirstToCaptureAchievementEvent(models.Model):
+class FirstToCaptureAchievementEvent(ExportModelOperationsMixin("first_capture_achievement"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
     location = models.OneToOneField(

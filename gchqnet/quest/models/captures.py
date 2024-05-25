@@ -4,11 +4,12 @@ import uuid
 
 from django.core.validators import RegexValidator
 from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 
 from .location import Location
 
 
-class RawCaptureEvent(models.Model):
+class RawCaptureEvent(ExportModelOperationsMixin("raw_capture_event"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
     badge = models.ForeignKey("accounts.Badge", on_delete=models.PROTECT, related_name="raw_capture_events")
@@ -45,7 +46,7 @@ class RawCaptureEvent(models.Model):
         return f"Raw capture of {self.hexpansion} by {self.badge} at {self.created_at}"
 
 
-class CaptureLog(models.Model):
+class CaptureLog(ExportModelOperationsMixin("capture_log"), models.Model):  # type: ignore[misc]
     """
     A log of a RawCaptureEvent being mapped to a real location.
 
@@ -71,7 +72,7 @@ class CaptureLog(models.Model):
         return f"{self.raw_capture_event.badge.user} attempted capture of {self.location} at {self.created_at}"
 
 
-class CaptureEvent(models.Model):
+class CaptureEvent(ExportModelOperationsMixin("capture_event"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
 
     raw_capture_event = models.OneToOneField(RawCaptureEvent, on_delete=models.PROTECT, related_name="capture_event")

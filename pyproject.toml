@@ -93,7 +93,14 @@ disallow_untyped_decorators = true
 check_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = ["crispy_forms.*", "crispy_forms_gds.*", "debug_toolbar.*", "factory.*", "notifications.*"]
+module = [
+    "crispy_forms.*",
+    "crispy_forms_gds.*",
+    "debug_toolbar.*",
+    "django_prometheus.*",
+    "factory.*",
+    "notifications.*"
+]
 ignore_missing_imports = true
 
 

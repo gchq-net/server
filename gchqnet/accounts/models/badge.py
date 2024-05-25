@@ -4,9 +4,10 @@ import uuid
 
 from django.core.validators import RegexValidator
 from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 
 
-class Badge(models.Model):
+class Badge(ExportModelOperationsMixin("badge"), models.Model):  # type: ignore[misc]
     id = models.UUIDField("Database ID", primary_key=True, default=uuid.uuid4, editable=False)
     mac_address = models.CharField(
         "MAC Address",

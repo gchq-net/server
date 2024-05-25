@@ -10,6 +10,7 @@ from django.db import models
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django_prometheus.models import ExportModelOperationsMixin
 from django_stubs_ext import WithAnnotations
 
 from gchqnet.accounts.tokens import generate_api_token
@@ -52,7 +53,7 @@ class UserManager(_UserManager.from_queryset(UserQuerySet)):  # type: ignore[mis
     pass
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(ExportModelOperationsMixin("user"), AbstractBaseUser, PermissionsMixin):  # type: ignore[misc]
     username_validator = UnicodeUsernameValidator()
 
     username = models.CharField(

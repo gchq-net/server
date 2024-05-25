@@ -100,6 +100,6 @@ def get_achievements_for_user(user: User, viewer: User | AnonymousUser) -> model
     else:
         first_captures = first_captures.annotate(display_name=models.Value("First to capture a location"))
 
-    first_captures = first_captures.order_by().values("display_name", "difficulty", "created_at")  # type: ignore[assignment]
+    first_captures = first_captures.order_by().values("display_name", "difficulty", "created_at")  # type: ignore[misc]
 
     return bae.union(first_captures).order_by("-created_at")

@@ -7,7 +7,7 @@ from gchqnet.quest.models.location import Location
 @extend_schema_field(str)
 class LocationNameField(serializers.Field):
     def to_representation(self, value: Location) -> str:
-        if value.found_at is not None:  # type: ignore[attr-defined]
+        if value.found_at is not None:
             return value.display_name
         else:
             return "???"
