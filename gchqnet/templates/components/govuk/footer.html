@@ -3,34 +3,36 @@
   <div class="govuk-width-container">
     <div class="govuk-footer__meta">
       <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
-        <h2 class="govuk-visually-hidden">Support links</h2>
-        <ul class="govuk-footer__inline-list">
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="{% url 'content:about' %}">
-              About
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="{% url 'content:platforms' %}">
-              Platforms
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="{% url 'api:docs' %}">
-              API
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="{% url 'content:contact' %}">
-              Contact
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="#">
-              Terms and conditions
-            </a>
-          </li>
-        </ul>
+        {% if PUBLIC_MODE or request.user.is_authenticated %}
+          <h2 class="govuk-visually-hidden">Support links</h2>
+          <ul class="govuk-footer__inline-list">
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="{% url 'content:about' %}">
+                About
+              </a>
+            </li>
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="{% url 'content:platforms' %}">
+                Platforms
+              </a>
+            </li>
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="{% url 'api:docs' %}">
+                API
+              </a>
+            </li>
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="{% url 'content:contact' %}">
+                Contact
+              </a>
+            </li>
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="#">
+                Terms and conditions
+              </a>
+            </li>
+          </ul>
+        {% endif %}
         <p class="govuk-body-xs">
           <em>GCHQ.NET</em>&nbsp;is not associated with the UK Government or any entity associated with the UK Government.
         </p>

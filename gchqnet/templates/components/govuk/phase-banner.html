@@ -23,12 +23,14 @@
                     </a>
                 </span>
             {% else %}
-                <span class="gchqnet-phase-banner__service-info">This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.</span>
-                <span class="gchqnet-phase-banner__login-status">
-                    <a class="govuk-link" href="{% url 'accounts:login' %}">
-                        Login
-                    </a>
-                </span>
+                <span class="gchqnet-phase-banner__service-info">This is a new service – your <a class="govuk-link" href="https://youtu.be/dQw4w9WgXcQ">feedback</a> will help us to improve it.</span>
+                {% if PUBLIC_MODE %}
+                    <span class="gchqnet-phase-banner__login-status">
+                        <a class="govuk-link" href="{% url 'accounts:login' %}">
+                            Login
+                        </a>
+                    </span>
+                {% endif %}
             {% endif %}
         </span>
     </p>

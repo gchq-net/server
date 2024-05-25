@@ -7,54 +7,56 @@
                 <span class="gchqnet-header__logotext">GCHQ.NET</span>
             </a>
         </div>
-        <div class="govuk-header__content">
-            <a href="{% url 'quest:home' %}" class="govuk-header__link govuk-header__service-name">
-                Great Camp Hexpansion Quest
-            </a>
-            <nav aria-label="Menu" class="govuk-header__navigation">
-                <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" hidden>
-                    Menu
-                </button>
-                {% with view=request.resolver_match.view_name %}
-                    <ul id="navigation" class="govuk-header__navigation-list">
-                        <li class="govuk-header__navigation-item {% if view == "quest:home" %}govuk-header__navigation-item--active{% endif %}">
-                            <a class="govuk-header__link" href="{% url 'quest:home' %}">
-                                Live Scores
-                            </a>
-                        </li>
-                        <li class="govuk-header__navigation-item {% if view == "content:play" %}govuk-header__navigation-item--active{% endif %}">
-                            <a class="govuk-header__link" href="{% url 'content:play' %}">
-                                How to Play
-                            </a>
-                        </li>
-                        <li class="govuk-header__navigation-item {% if view == "quest:profile" %}govuk-header__navigation-item--active{% endif %}">
-                            <a class="govuk-header__link" href="{% url 'quest:profile' %}">
-                                My Profile
-                            </a>
-                        </li>
-                        <li class="govuk-header__navigation-item {% if view == "quest:leaderboard_list" %}govuk-header__navigation-item--active{% endif %}">
-                            <a class="govuk-header__link" href="{% url 'quest:leaderboard_list' %}">
-                                My Leaderboards
-                            </a>
-                        </li>
-                        {% if request.user.is_authenticated %}
-                            <li class="govuk-header__navigation-item">
-                                <a class="govuk-header__link" href="{% url 'accounts:settings' %}">
-                                    Settings
+        {% if PUBLIC_MODE or request.user.is_authenticated %}
+            <div class="govuk-header__content">
+                <a href="{% url 'quest:home' %}" class="govuk-header__link govuk-header__service-name">
+                    Great Camp Hexpansion Quest
+                </a>
+                <nav aria-label="Menu" class="govuk-header__navigation">
+                    <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" hidden>
+                        Menu
+                    </button>
+                    {% with view=request.resolver_match.view_name %}
+                        <ul id="navigation" class="govuk-header__navigation-list">
+                            <li class="govuk-header__navigation-item {% if view == "quest:home" %}govuk-header__navigation-item--active{% endif %}">
+                                <a class="govuk-header__link" href="{% url 'quest:home' %}">
+                                    Live Scores
                                 </a>
                             </li>
-                        {% endif %}
-                        {% if request.user.is_superuser %}
-                            <li class="govuk-header__navigation-item {% if view == 'logistics:home' %}govuk-header__navigation-item--active{% endif %}">
-                                <a class="govuk-header__link" href="{% url 'logistics:home' %}">
-                                    Admin
+                            <li class="govuk-header__navigation-item {% if view == "content:play" %}govuk-header__navigation-item--active{% endif %}">
+                                <a class="govuk-header__link" href="{% url 'content:play' %}">
+                                    How to Play
                                 </a>
                             </li>
-                        {% endif %}
-                    </ul>
-                {% endwith %}
-            </nav>
-        </div>
+                            <li class="govuk-header__navigation-item {% if view == "quest:profile" %}govuk-header__navigation-item--active{% endif %}">
+                                <a class="govuk-header__link" href="{% url 'quest:profile' %}">
+                                    My Profile
+                                </a>
+                            </li>
+                            <li class="govuk-header__navigation-item {% if view == "quest:leaderboard_list" %}govuk-header__navigation-item--active{% endif %}">
+                                <a class="govuk-header__link" href="{% url 'quest:leaderboard_list' %}">
+                                    My Leaderboards
+                                </a>
+                            </li>
+                            {% if request.user.is_authenticated %}
+                                <li class="govuk-header__navigation-item">
+                                    <a class="govuk-header__link" href="{% url 'accounts:settings' %}">
+                                        Settings
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if request.user.is_superuser %}
+                                <li class="govuk-header__navigation-item {% if view == 'logistics:home' %}govuk-header__navigation-item--active{% endif %}">
+                                    <a class="govuk-header__link" href="{% url 'logistics:home' %}">
+                                        Admin
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endwith %}
+                </nav>
+            </div>
+        {% endif %}
     </div>
 </header>
 

@@ -1,0 +1,13 @@
+{% extends "layouts/base_app.html" %}
+{% load static %}
+
+{% block title %}Great Camp Hexpansion Quest{% endblock %}
+
+{% block content %}
+  {% include "components/govuk/notification-banner.html" with title="EMF 2024" heading="We're not ready yet" description="We're still setting up the game and the site isn't ready yet. <br/>Please come back later." %}
+  <p class="govuk-body">The Great Camp Hexpansion Quest (GCHQ.NET) is a distributed interactive game for attendees of <a href="https://emfcamp.org">Electromagnetic Field 2024</a>.</p>
+  <p class="govuk-body">In the meantime, why not follow us on Mastodon for updates, hints and tricks about this year's game: <a href="https://chaos.social/@GCHQNET/">@GCHQNET@chaos.social</a></p>
+  <p class="govuk-body">
+    If you are running an installation, village or activity and would like to be involved with our project please contact us: <code>emf at gchq dot net</code>
+  </p>
+{% endblock %}
