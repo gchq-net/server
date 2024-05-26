@@ -28,7 +28,6 @@ def badge_response_calculation(
     slot: int = 0x00,
 ) -> bytes:
     """verifies a response from a badge"""
-
     # generate diversified key used on the badge
     marker_key = generate_diversified_key(atsha_serial, master_key, 0x00)
 

@@ -9,7 +9,7 @@ from notifications.signals import notify
 
 from gchqnet.accounts.models.badge import Badge
 from gchqnet.achievements.repository import award_first_capture, handle_location_capture_for_groups
-from gchqnet.hexpansion.crypto import badge_response_calculation, generate_diversified_key
+from gchqnet.hexpansion.crypto import badge_response_calculation
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.models.captures import CaptureEvent, CaptureLog, RawCaptureEvent
 from gchqnet.quest.models.location import Location, LocationDifficulty
@@ -56,12 +56,12 @@ def record_attempted_capture(
     except Location.DoesNotExist:
         return CaptureFailure(result="fail", message="Hexpansion not installed")
 
-    key_for_hexpansion = generate_diversified_key(
-        hexpansion.serial_number.int.to_bytes(32, "little"), settings.HEXPANSION_ROOT_KEY, 0
-    )
-
     expected_response_bytes = badge_response_calculation(
-        hexpansion.serial_number.int.to_bytes(32, "little"), rand, badge.mac_address, key_for_hexpansion, slot=0
+        hexpansion.serial_number.int.to_bytes(9, "little"),
+        rand,
+        badge.mac_address,
+        settings.HEXPANSION_ROOT_KEY,
+        slot=0,
     )
     expected_response_hex = "".join(f"{x:02x}" for x in expected_response_bytes)
 
