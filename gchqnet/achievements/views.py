@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import BadRequest, PermissionDenied
+from django.core.exceptions import PermissionDenied
 from django.core.signing import Signer
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -120,9 +120,12 @@ class BasicAchievementClaimView(LoginRequiredMixin, View):
                 self.request,
                 f"You've found {achievement.display_name}, and have gained {achievement.difficulty} points!",
             )
-            return redirect("quest:profile_achievements")
         else:
-            raise BadRequest("Achievement already claimed")
+            messages.info(
+                self.request,
+                f"You've already found {achievement.display_name}, no more points this time",
+            )
+        return redirect("quest:profile_achievements")
 
 
 class LocationGroupDetailView(BreadcrumbsMixin, DetailView):
