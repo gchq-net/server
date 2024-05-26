@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.utils.crypto import get_random_string
 from django_prometheus.models import ExportModelOperationsMixin
 
 
@@ -16,6 +17,11 @@ class BasicAchievementAwardType(models.TextChoices):
     INTERNAL = "internal"  # i.e within this codebase
     EXTERNAL = "external"  # i.e by another GCHQ.NET system
     MANUAL = "manual"  # i.e within the web interface by an admin
+    CLAIM = "claim"  # i.e claim with a hidden flag
+
+
+def generate_claim_code() -> str:
+    return get_random_string(20)
 
 
 class BasicAchievement(ExportModelOperationsMixin("basic_achievement"), models.Model):  # type: ignore[misc]
@@ -26,6 +32,7 @@ class BasicAchievement(ExportModelOperationsMixin("basic_achievement"), models.M
     )
     difficulty = models.IntegerField(choices=AchievementDifficulty)
     award_type = models.CharField(max_length=8, choices=BasicAchievementAwardType)
+    claim_code = models.CharField(max_length=50, default=generate_claim_code, unique=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="+", null=True)

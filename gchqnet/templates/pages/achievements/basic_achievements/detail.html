@@ -37,6 +37,16 @@
         {% include "components/govuk/tag.html" with content=object.award_type %}
       </dd>
     </div>
+    {% if object.award_type == 'claim' %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Claim URL
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ claim_url }}
+        </dd>
+      </div>
+    {% endif %}
   </dl>
 
   {% if object.award_type == 'external' %}
