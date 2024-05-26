@@ -2,12 +2,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import BadRequest, PermissionDenied
 from django.core.signing import Signer
-from django.http import Http404, HttpResponse
-from django.shortcuts import redirect
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, DetailView, ListView
 
 from gchqnet.core.mixins import BreadcrumbsMixin
@@ -100,25 +102,24 @@ class BasicAchievementCreateView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, 
         return reverse("achievements:basic_achievements_detail", args=[self.object.id])
 
 
-class BasicAchievementClaimView(LoginRequiredMixin, DetailView):
-    model = BasicAchievement
-    slug_field = "claim_code"
-    slug_url_kwarg = "claim_code"
-
-    def render_to_response(self, context: dict[str, Any], **response_kwargs: Any) -> HttpResponse:
+class BasicAchievementClaimView(LoginRequiredMixin, View):
+    def get(self, context: dict[str, Any], claim_code: str, **response_kwargs: Any) -> HttpResponse:
         assert self.request.user.is_authenticated
 
-        achievement = self.object
+        achievement = get_object_or_404(
+            BasicAchievement.objects.filter(award_type=BasicAchievementAwardType.CLAIM), claim_code=claim_code
+        )
 
         if self.request.user.is_superuser:
             raise PermissionDenied()
 
-        if achievement.award_type != BasicAchievementAwardType.CLAIM:
-            raise Http404()
-
         result = award_builtin_basic_achievement(achievement.id, self.request.user)
 
         if result == "success":
+            messages.info(
+                self.request,
+                f"You've found {achievement.display_name}, and have gained {achievement.difficulty} points!",
+            )
             return redirect("quest:profile_achievements")
         else:
             raise BadRequest("Achievement already claimed")
