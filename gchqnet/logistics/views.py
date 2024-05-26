@@ -44,6 +44,16 @@ class LocationsListView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, ListView)
         )
 
 
+class LocationMapView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, TemplateView):
+    template_name = "pages/logistics/locations/map.html"
+
+    breadcrumbs = [
+        (reverse_lazy("logistics:home"), "Logistics Admin"),
+        (reverse_lazy("logistics:locations_list"), "Locations"),
+        (None, "Locations Map"),
+    ]
+
+
 class PlannedLocationsListView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, ListView):
     template_name = "pages/logistics/planned_locations/list.html"
     paginate_by = 15

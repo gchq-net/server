@@ -43,6 +43,11 @@ class TestLogisticsLocationsListView(LogisticsAccessTestMixin):
 
 
 @pytest.mark.django_db
+class TestLogisticsLocationsMapView(LogisticsAccessTestMixin):
+    url = reverse("logistics:locations_map")
+
+
+@pytest.mark.django_db
 class TestLogisticsPlannedListView(LogisticsAccessTestMixin):
     url = reverse("logistics:planned_list")
 
@@ -66,3 +71,8 @@ class TestLogisticsPlannedDeleteView(LogisticsAccessTestMixin):
     def url(self) -> str:  # type: ignore[override]
         pl, _ = PlannedLocation.objects.get_or_create(internal_name="foo")
         return reverse("logistics:planned_delete", args=[pl.id])
+
+
+@pytest.mark.django_db
+class TestLogisticsPlannedMapView(LogisticsAccessTestMixin):
+    url = reverse("logistics:planned_map")
