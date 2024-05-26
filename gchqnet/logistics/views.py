@@ -107,7 +107,7 @@ class PlannedLocationDeleteView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, D
         return reverse("logistics:planned_list")
 
 
-class LogisticsMapView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, TemplateView):
+class PlannedLocationMapView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, TemplateView):
     template_name = "pages/logistics/planned_locations/map.html"
 
     breadcrumbs = [
