@@ -11,6 +11,7 @@ from django.urls import resolve
 class PublicAccessMiddleware:
     EXCLUDED_PATHS: set[tuple[str | None, str]] = {
         ("content", "holding"),
+        ("content", "play"),
         (None, "logout"),
         (None, "prometheus-django-metrics"),
         ("health_check", "health_check_home"),
