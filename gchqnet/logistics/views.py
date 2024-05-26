@@ -9,6 +9,7 @@ from django.views.generic import CreateView, DeleteView, ListView, TemplateView,
 from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.logistics.forms import PlannedLocationCreateForm, PlannedLocationDeleteForm, PlannedLocationEditForm
 from gchqnet.logistics.models import PlannedLocation
+from gchqnet.quest.models.location import Location
 
 from .mixins import AllowedLogisticsAccessMixin
 
@@ -16,6 +17,31 @@ from .mixins import AllowedLogisticsAccessMixin
 class LogisticsHomeView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, TemplateView):
     template_name = "pages/logistics/home.html"
     breadcrumbs = [(None, "Logistics Admin")]
+
+
+class LocationsListView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, ListView):
+    template_name = "pages/logistics/locations/list.html"
+    paginate_by = 15
+    breadcrumbs = [(reverse_lazy("logistics:home"), "Logistics Admin"), (None, "Locations")]
+
+    def get_search_query(self) -> str:
+        query = self.request.GET.get("search", "")
+        return query.strip()
+
+    def get_queryset(self) -> models.QuerySet[Location]:
+        query = self.get_search_query()
+        return Location.objects.filter(
+            models.Q(display_name__icontains=query)
+            | models.Q(internal_name__icontains=query)
+            | models.Q(hint__icontains=query)
+            | models.Q(description__icontains=query)
+        )
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        return super().get_context_data(
+            search_query=self.get_search_query(),
+            **kwargs,
+        )
 
 
 class PlannedLocationsListView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, ListView):

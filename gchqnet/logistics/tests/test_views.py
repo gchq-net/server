@@ -38,6 +38,11 @@ class TestLogisticsHomeView(LogisticsAccessTestMixin):
 
 
 @pytest.mark.django_db
+class TestLogisticsLocationsListView(LogisticsAccessTestMixin):
+    url = reverse("logistics:locations_list")
+
+
+@pytest.mark.django_db
 class TestLogisticsPlannedListView(LogisticsAccessTestMixin):
     url = reverse("logistics:planned_list")
 

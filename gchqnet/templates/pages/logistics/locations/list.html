@@ -1,0 +1,25 @@
+{% extends "layouts/base_app.html" %}
+
+{% block title %}Locations{% endblock %}
+
+{% block action_buttons %}
+    <div class="govuk-button-group gchqnet-page-header-actions__action">
+        <a class="govuk-button" data-module="govuk-button" href="#">
+            New Location
+        </a>
+        <a class="govuk-button" data-module="govuk-button" href="#">
+            View Map
+        </a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <p class="govuk-body">The following locations are live. Do not share.</p>
+    {% include "components/logistics/location-search.html" %}
+    {% include "components/logistics/locations-table.html" with locations=page_obj %}
+    {% if page_obj %}
+        {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
+    {% else %}
+        <p class="govuk-body">No results, sorry.</p>
+    {% endif %}
+{% endblock %}
