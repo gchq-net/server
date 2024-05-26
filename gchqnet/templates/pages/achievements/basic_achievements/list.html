@@ -2,6 +2,14 @@
 
 {% block title %}Basic Achievements{% endblock %}
 
+{% block action_buttons %}
+    <div class="govuk-button-group gchqnet-page-header-actions__action">
+        <a class="govuk-button" data-module="govuk-button" href="{% url 'achievements:basic_achievements_create' %}">
+            New Basic Achievement
+        </a>
+    </div>
+{% endblock %}
+
 {% block content %}
     <p class="govuk-body">Apparently you can achieve these things..</p>
     {% include "components/achievements/achievement-search.html" %}

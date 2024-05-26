@@ -2,15 +2,21 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import BadRequest, PermissionDenied
 from django.core.signing import Signer
-from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView
+from django.http import Http404, HttpResponse
+from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView
 
 from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.logistics.mixins import AllowedLogisticsAccessMixin
 from gchqnet.quest.models.captures import CaptureEvent
 
+from .forms import BasicAchievementCreateForm
 from .models import BasicAchievement, BasicAchievementAwardType, LocationGroup
+from .repository import award_builtin_basic_achievement
 
 if TYPE_CHECKING:
     from django.db import models
@@ -61,7 +67,61 @@ class BasicAchievementDetailView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, 
             }  # sequence number in case we need to revoke
             achievement_token = signer.sign_object(obj)
             return super().get_context_data(achievement_token=achievement_token, **kwargs)
+
+        if self.object.award_type == BasicAchievementAwardType.CLAIM:
+            claim_url = self.request.build_absolute_uri(
+                reverse("achievements:basic_achievement_claim", args=[self.object.claim_code])
+            )
+            return super().get_context_data(
+                claim_url=claim_url,
+                **kwargs,
+            )
+
         return super().get_context_data(**kwargs)
+
+
+class BasicAchievementCreateView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, CreateView):
+    template_name = "pages/achievements/basic_achievements/create.html"
+    breadcrumbs = [
+        (reverse_lazy("logistics:home"), "Logistics Admin"),
+        (reverse_lazy("achievements:basic_achievements_list"), "Basic Achievements"),
+        (None, "Create basic achievement"),
+    ]
+    model = BasicAchievement
+    form_class = BasicAchievementCreateForm
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_success_url(self) -> str:
+        assert self.object
+        return reverse("achievements:basic_achievements_detail", args=[self.object.id])
+
+
+class BasicAchivementClaimView(LoginRequiredMixin, DetailView):
+    model = BasicAchievement
+    slug_field = "claim_code"
+    slug_url_kwarg = "claim_code"
+
+    def render_to_response(self, context: dict[str, Any], **response_kwargs: Any) -> HttpResponse:
+        assert self.request.user.is_authenticated
+
+        achievement = self.object
+
+        if self.request.user.is_superuser:
+            raise PermissionDenied()
+
+        if achievement.award_type != BasicAchievementAwardType.CLAIM:
+            raise Http404()
+
+        result = award_builtin_basic_achievement(achievement.id, self.request.user)
+
+        if result == "success":
+            return redirect("quest:profile_achievements")
+        else:
+            raise BadRequest("Achievement already claimed")
 
 
 class LocationGroupDetailView(BreadcrumbsMixin, DetailView):
