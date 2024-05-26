@@ -1,12 +1,14 @@
 from http import HTTPStatus
 
 import pytest
+from django.conf import settings
 from django.test import Client
 from django.urls import reverse_lazy
 
 from gchqnet.accounts.models.badge import Badge
 from gchqnet.accounts.models.user import User
 from gchqnet.accounts.totp import CustomTOTP
+from gchqnet.hexpansion.crypto import badge_response_calculation, generate_diversified_key
 from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models.location import LocationDifficulty
 
@@ -228,6 +230,19 @@ class TestBadgeGetCurrentOTPView(BadgeAuthTestMixin):
 class TestBadgeCaptureSubmissionView:
     url = reverse_lazy("api:badge-capture")
 
+    def _hmac_for_hexpansion(self, badge_mac: str, hexpansion_sn: int, rand: bytes) -> str:
+        key_for_hexpansion = generate_diversified_key(
+            hexpansion_sn.to_bytes(32, "little"), settings.HEXPANSION_ROOT_KEY, 0
+        )
+
+        hmac_bytes = badge_response_calculation(
+            hexpansion_sn.to_bytes(32, "little"),
+            rand,
+            badge_mac,
+            key_for_hexpansion,
+        )
+        return "".join(f"{x:02x}" for x in hmac_bytes)
+
     def test_get(self, client: Client) -> None:
         resp = client.get(self.url)
 
@@ -411,7 +426,11 @@ class TestBadgeCaptureSubmissionView:
                 "capture": {
                     "sn": location.hexpansion.serial_number.int,
                     "rand": "a" * 64,
-                    "hmac": "b" * 64,
+                    "hmac": self._hmac_for_hexpansion(
+                        "AA-AA-AA-AA-AA-AA",
+                        location.hexpansion.serial_number.int,
+                        b"\xaa" * 32,
+                    ),
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",
@@ -440,7 +459,11 @@ class TestBadgeCaptureSubmissionView:
                 "capture": {
                     "sn": location.hexpansion.serial_number.int,
                     "rand": "a" * 64,
-                    "hmac": "b" * 64,
+                    "hmac": self._hmac_for_hexpansion(
+                        badge.mac_address,
+                        location.hexpansion.serial_number.int,
+                        b"\xaa" * 32,
+                    ),
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",
@@ -472,7 +495,11 @@ class TestBadgeCaptureSubmissionView:
                 "capture": {
                     "sn": location.hexpansion.serial_number.int,
                     "rand": "a" * 64,
-                    "hmac": "b" * 64,
+                    "hmac": self._hmac_for_hexpansion(
+                        badge.mac_address,
+                        location.hexpansion.serial_number.int,
+                        b"\xaa" * 32,
+                    ),
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",
@@ -492,7 +519,7 @@ class TestBadgeCaptureSubmissionView:
         badge.refresh_from_db()
         assert badge.secret == "a" * 64
 
-    def test_post__repeat(self, client: Client, user: User, user_2: User) -> None:
+    def test_post__existing_badge__bad_hmac(self, client: Client, user: User, user_2: User) -> None:
         location = LocationFactory(created_by=user_2)
         badge = user.badges.get()
 
@@ -512,6 +539,34 @@ class TestBadgeCaptureSubmissionView:
             content_type="application/json",
         )
 
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
+
+        assert resp.json() == {"result": "fail", "message": "Invalid HMAC - Contact Support"}
+
+    def test_post__repeat(self, client: Client, user: User, user_2: User) -> None:
+        location = LocationFactory(created_by=user_2)
+        badge = user.badges.get()
+
+        resp = client.post(
+            self.url,
+            data={
+                "mac_address": badge.mac_address,
+                "badge_secret": badge.secret,
+                "capture": {
+                    "sn": location.hexpansion.serial_number.int,
+                    "rand": "a" * 64,
+                    "hmac": self._hmac_for_hexpansion(
+                        badge.mac_address,
+                        location.hexpansion.serial_number.int,
+                        b"\xaa" * 32,
+                    ),
+                },
+                "app_rev": "0",
+                "fw_rev": "bees",
+            },
+            content_type="application/json",
+        )
+
         assert resp.status_code == HTTPStatus.OK
 
         resp = client.post(
@@ -522,7 +577,11 @@ class TestBadgeCaptureSubmissionView:
                 "capture": {
                     "sn": location.hexpansion.serial_number.int,
                     "rand": "a" * 64,
-                    "hmac": "b" * 64,
+                    "hmac": self._hmac_for_hexpansion(
+                        badge.mac_address,
+                        location.hexpansion.serial_number.int,
+                        b"\xaa" * 32,
+                    ),
                 },
                 "app_rev": "0",
                 "fw_rev": "bees",

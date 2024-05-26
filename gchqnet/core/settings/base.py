@@ -11,6 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 if "SECRET_KEY" in env:
     SECRET_KEY = env["SECRET_KEY"]
 
+if "HEXPANSION_ROOT_KEY" in env:
+    HEXPANSION_ROOT_KEY = bytearray.fromhex(env["HEXPANSION_ROOT_KEY"])
+
 if "ALLOWED_HOSTS" in env:
     ALLOWED_HOSTS = env["ALLOWED_HOSTS"].split(",")
 

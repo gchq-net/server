@@ -2,11 +2,14 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict
 
+from django.conf import settings
 from django.urls import reverse
+from django.utils.crypto import constant_time_compare
 from notifications.signals import notify
 
 from gchqnet.accounts.models.badge import Badge
 from gchqnet.achievements.repository import award_first_capture, handle_location_capture_for_groups
+from gchqnet.hexpansion.crypto import badge_response_calculation, generate_diversified_key
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.models.captures import CaptureEvent, CaptureLog, RawCaptureEvent
 from gchqnet.quest.models.location import Location, LocationDifficulty
@@ -35,6 +38,7 @@ def record_attempted_capture(
     hmac: str,
     app_rev: str,
     fw_rev: str,
+    validate_hmac: bool = False,
 ) -> CaptureSuccess | CaptureFailure:
     # Firstly, record it regardless.
     raw_event = RawCaptureEvent.objects.create(
@@ -51,6 +55,18 @@ def record_attempted_capture(
         location: Location = hexpansion.location
     except Location.DoesNotExist:
         return CaptureFailure(result="fail", message="Hexpansion not installed")
+
+    key_for_hexpansion = generate_diversified_key(
+        hexpansion.serial_number.int.to_bytes(32, "little"), settings.HEXPANSION_ROOT_KEY, 0
+    )
+
+    expected_response_bytes = badge_response_calculation(
+        hexpansion.serial_number.int.to_bytes(32, "little"), rand, badge.mac_address, key_for_hexpansion, slot=0
+    )
+    expected_response_hex = "".join(f"{x:02x}" for x in expected_response_bytes)
+
+    if validate_hmac and not constant_time_compare(expected_response_hex, hmac):
+        return CaptureFailure(result="fail", message="Invalid HMAC - Contact Support")
 
     # Log that a capture attempt of a location was made.
     CaptureLog.objects.create(
