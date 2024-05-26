@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from gchqnet.accounts.models.badge import Badge
 from gchqnet.accounts.models.user import User
 from gchqnet.accounts.totp import CustomTOTP
-from gchqnet.hexpansion.crypto import badge_response_calculation, generate_diversified_key
+from gchqnet.hexpansion.crypto import badge_response_calculation
 from gchqnet.quest.factories import LocationFactory
 from gchqnet.quest.models.location import LocationDifficulty
 
@@ -231,15 +231,11 @@ class TestBadgeCaptureSubmissionView:
     url = reverse_lazy("api:badge-capture")
 
     def _hmac_for_hexpansion(self, badge_mac: str, hexpansion_sn: int, rand: bytes) -> str:
-        key_for_hexpansion = generate_diversified_key(
-            hexpansion_sn.to_bytes(32, "little"), settings.HEXPANSION_ROOT_KEY, 0
-        )
-
         hmac_bytes = badge_response_calculation(
-            hexpansion_sn.to_bytes(32, "little"),
+            hexpansion_sn.to_bytes(9, "little"),
             rand,
             badge_mac,
-            key_for_hexpansion,
+            settings.HEXPANSION_ROOT_KEY,
         )
         return "".join(f"{x:02x}" for x in hmac_bytes)
 
