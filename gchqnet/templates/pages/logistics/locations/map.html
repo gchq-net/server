@@ -1,7 +1,7 @@
 {% extends "layouts/base_app.html" %}
 {% load static %}
 
-{% block title %}Planning Map{% endblock %}
+{% block title %}Locations Map{% endblock %}
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'map/map.css' %}">
@@ -9,10 +9,10 @@
     <noscript>You need Javascript enabled to view this map.</noscript>
 
     <p class="govuk-body">
-        This is a map of planned locations.
+        This is a map of all locations. Watch out for shoulder-surfers!
     </p>
 
-    <div id="map" data-urlhash data-location-geo-endpoint="{% url 'api:planned_locations-geojson' %}" style="min-height: 800px;"></div>
+    <div id="map" data-urlhash data-location-geo-endpoint="{% url 'api:locations_all-geojson' %}" style="min-height: 800px;"></div>
 {% endblock %}
 
 {% block css %}
