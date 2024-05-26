@@ -19,12 +19,6 @@ def add_claim_code(apps: StateApps, schema_editor: BaseDatabaseSchemaEditor) -> 
         achievement.save(update_fields=["claim_code"])
 
 
-def remove_claim_code(apps: StateApps, schema_editor: BaseDatabaseSchemaEditor) -> None:
-    # don't need to do anything here
-    # reverting the AddField will remove it
-    pass
-
-
 class Migration(migrations.Migration):
     dependencies = [
         ("achievements", "0005_location_group_events"),
@@ -38,7 +32,7 @@ class Migration(migrations.Migration):
         ),
         migrations.RunPython(
             add_claim_code,
-            remove_claim_code,
+            migrations.RunPython.noop,
             elidable=True,
         ),
         migrations.AlterField(
