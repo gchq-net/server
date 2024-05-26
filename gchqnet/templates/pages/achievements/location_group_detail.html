@@ -23,9 +23,9 @@
 {% block content %}
   {% if request.user.is_authenticated %}
     {% if user_found_all %}
-      <p class="govuk-body">You have found all locations in this group.</p>
-    {% else %}
       <p class="govuk-body">You found everything in this group and gained {{ object.difficulty }} bonus points.</p>
+    {% else %}
+      <p class="govuk-body">You have not found all locations in this group.</p>
     {% endif %}
   {% else %}
     <p class="govuk-body"><a href="{% url 'accounts:login' %}">Log in</a> to view more information about this group.</p>
