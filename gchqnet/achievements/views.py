@@ -85,7 +85,7 @@ class BasicAchievementCreateView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, 
     breadcrumbs = [
         (reverse_lazy("logistics:home"), "Logistics Admin"),
         (reverse_lazy("achievements:basic_achievements_list"), "Basic Achievements"),
-        (None, "Create basic achievement"),
+        (None, "Create Basic Achievement"),
     ]
     model = BasicAchievement
     form_class = BasicAchievementCreateForm
