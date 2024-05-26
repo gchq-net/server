@@ -17,5 +17,5 @@ urlpatterns = [
         name="basic_achievements_detail",
     ),
     path("locations/groups/<uuid:pk>/", views.LocationGroupDetailView.as_view(), name="location_group_detail"),
-    path("claim/<str:claim_code>/", views.BasicAchivementClaimView.as_view(), name="basic_achievement_claim"),
+    path("claim/<str:claim_code>/", views.BasicAchievementClaimView.as_view(), name="basic_achievement_claim"),
 ]

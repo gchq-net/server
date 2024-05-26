@@ -100,7 +100,7 @@ class BasicAchievementCreateView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, 
         return reverse("achievements:basic_achievements_detail", args=[self.object.id])
 
 
-class BasicAchivementClaimView(LoginRequiredMixin, DetailView):
+class BasicAchievementClaimView(LoginRequiredMixin, DetailView):
     model = BasicAchievement
     slug_field = "claim_code"
     slug_url_kwarg = "claim_code"
