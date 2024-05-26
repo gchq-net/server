@@ -4,10 +4,79 @@
 {% block title %}How to Play{% endblock %}
 
 {% block content %}
-  <p class="govuk-body">The Great Camp Hexpansion Quest (GCHQ.NET) is a distributed interactive game for attendees of <a href="https://emfcamp.org">Electromagnetic Field 2024</a>.</p>
-  <p class="govuk-body">We've hidden nearly 100 hexpansions around site, waiting to be connected to your badge. When you connect a hexpansion to your badge you collect points for that location.</p>
-  <p class="govuk-body">From points you get a position on our leaderboard - now you can play against everyone else at EMF! If you want to <strike>compete</strike> play along with your friends, you can set up a private leaderboard for yourselves.</p>
-  <p class="govuk-body">TODO ACHIEVEMENTS</p>
-  <p class="govuk-body">TODO PHOTOS</p>
-
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body">We've hidden nearly 100 hexpansions around <a href="https://emfcamp.org">Electromagnetic Field 2024</a>, waiting to be connected to your badge. When you connect a hexpansion to your badge you collect points for that location and bonuses and achievements along the way.</p>
+      <p class="govuk-body">From points you get a position on our leaderboard - now you can play against everyone else at EMF! If you want to <strike>compete</strike> play along with your friends, you can set up a <a href="{% url 'quest:leaderboard_list' %}">private leaderboard</a> for yourselves.</p>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <div class="gchqnet-play__image_container">
+        <figure>
+          <img class="gchqnet-play__image" src="{% static 'img/play/signage.svg' %}" alt="GCHQ.NET signage"/>
+          <figcaption class="govuk-body gchqnet-play__image_caption">Examples of our collection points</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h2 class="govuk-heading-m">How do I capture a Hexpansion?</h2>
+      <div class="gchqnet-play__image_container">
+        <figure>
+          <img class="gchqnet-play__image" src="{% static 'img/play/hexpansion.png' %}" alt="GCHQ.NET Marker Hexpansion"/>
+          <figcaption class="govuk-body gchqnet-play__image_caption">A GCHQ.NET Quest Marker Hexpansion</figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body">
+        Insert the hexpansion into your Tildagon badge, with the TOP label upwards. The GCHQ.NET capture app will automatically load from the Hexpansion and display a <strong>Safe to Eject</strong> message.
+      </p>
+      <p class="govuk-body">
+        Once captured, your badge will store the capture evidence. You will need to <strong>download the GCHQ.NET App from the Badge Store</strong> for your captures to be submitted to the leaderboard.
+      </p>
+      <p class="govuk-body">
+        You do not need a WiFi connection to capture a Hexpansion, but you do need Internet to upload it to the leaderboard.
+      </p>
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h2 class="govuk-heading-m">How do I find them?</h2>
+      <p class="govuk-body">
+        We've hidden hexpansions all over the site, some obvious, some in really obscure locations. If you want to be at the top of the leaderboard, you will need to search high and low!
+      </p>
+      <p class="govuk-body">
+        Some hexpansions are grouped together, such as the ones hidden in Null Sector. You will get a bonus if you capture all hexpansions in a group.
+      </p>
+      <p class="govuk-body">A bonus is also awarded to the first player to capture each Hexpansion.</p>
+      <p class="govuk-body">There are hints, clues and bonus points available to players that log into the GCHQ.NET website.</p>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <div class="gchqnet-play__image_container">
+        <figure>
+          <img class="gchqnet-play__image" src="{% static 'img/play/map.png' %}" alt="GCHQ.NET Map of EMF site"/>
+          <figcaption class="govuk-body gchqnet-play__image_caption">Use the GCHQ.NET Map to find more Hexpansions</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h2 class="govuk-heading-m">What does the website do?</h2>
+      <div class="gchqnet-play__image_container">
+        <figure>
+          <img class="gchqnet-play__image" src="{% static 'img/play/leaderboard.png' %}" alt="GCHQ.NET website with a private leaderboard"/>
+          <figcaption class="govuk-body gchqnet-play__image_caption">Get competitive on your village leaderboard!</figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body">
+        You can log into the GCHQ.NET website without signing up, simply enter the security code shown in the GCHQ.NET Badge App.
+      </p>
+      <p class="govuk-body">Find hints and easter eggs, view your finds and compete again your friends using <a href="{% url 'quest:leaderboard_list' %}">private leaderboards</a>.</p>
+      <p class="govuk-body">For those of us who don't like the web, you can also access GCHQ.NET over SSH, telnet, dial-up, telephone and post. See <a href="{% url 'content:platforms' %}">our platforms</a> for details.</p>
+    </div>
+  </div>
 {% endblock %}
