@@ -3,7 +3,7 @@ import hashlib
 
 def generate_diversified_key(
     chip_serial_number: bytes,
-    root_key: bytearray | list[int],
+    root_key: bytes | bytearray | list[int],
     target_slot: int,
 ) -> bytes:
     """Generates the diversified key for a given device"""
@@ -23,8 +23,8 @@ def generate_diversified_key(
 def badge_response_calculation(
     atsha_serial: bytes,
     atsha_random: bytes,
-    badge_mac: bytearray | list[int],
-    master_key: bytearray | list[int],
+    badge_mac: str,
+    master_key: bytes | bytearray | list[int],
     slot: int = 0x00,
 ) -> bytes:
     """verifies a response from a badge"""
@@ -32,10 +32,7 @@ def badge_response_calculation(
     # generate diversified key used on the badge
     marker_key = generate_diversified_key(atsha_serial, master_key, 0x00)
 
-    formatted_mac = bytearray(
-        f"{badge_mac[0]:02X}-{badge_mac[1]:02X}-{badge_mac[2]:02X}-{badge_mac[3]:02X}-{badge_mac[4]:02X}-{badge_mac[5]:02X}",
-        "ascii",
-    )
+    formatted_mac = bytearray(badge_mac, "ascii")
 
     challenge = list(formatted_mac) + [0x00] * 3
 

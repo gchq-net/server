@@ -1,5 +1,3 @@
-from django.utils.crypto import constant_time_compare
-
 from gchqnet.hexpansion.crypto import badge_response_calculation, generate_diversified_key
 
 
@@ -14,7 +12,7 @@ def test_generate_diversified_key() -> None:
 
 def test_badge_response_calculation__good() -> None:
     # check against a set of data provided by a real badge
-    badge_mac = [0xDC, 0x54, 0x75, 0xD8, 0x6E, 0x88]
+    badge_mac = "DC-54-75-D8-6E-88"
 
     serial = b"\x01#]\xc2Q-\xb7a\xee"
     random = b"N\xab\x86\xb4\xfc\xe89`\\\xb5\xe0\x9f\xb8H`\xdbN_\xe3g\x81\x86\xff\x17\xfc\x88\xb0.\xea\xf4#\xcb"
@@ -26,12 +24,12 @@ def test_badge_response_calculation__good() -> None:
 
     expected = badge_response_calculation(serial, random, badge_mac, key_0)
 
-    assert constant_time_compare(response, expected)
+    assert response == expected
 
 
 def test_badge_response_calculation__bad() -> None:
     # check against a set of data provided by a real badge
-    badge_mac = [0xDC, 0x54, 0x75, 0xD8, 0x6E, 0x88]
+    badge_mac = "DC-54-75-D8-6E-88"
 
     serial = b"\x01#]\xc2Q-\xb7a\xee"
     random = b"N\xab\x86\xb4\xfc\xe89`\\\xb5\xe0\x9f\xb8H`\xdbN_\xe3g\x81\x86\xff\x17\xfc\x88\xb0.\xea\xf4#\xcb"
@@ -41,4 +39,4 @@ def test_badge_response_calculation__bad() -> None:
 
     expected = badge_response_calculation(serial, random, badge_mac, key_0)
 
-    assert not constant_time_compare(response, expected)
+    assert response != expected
