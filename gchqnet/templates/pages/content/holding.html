@@ -4,7 +4,19 @@
 {% block title %}Great Camp Hexpansion Quest{% endblock %}
 
 {% block content %}
-  {% include "components/govuk/notification-banner.html" with title="EMF 2024" heading="We're not ready yet" description="We're still setting up the game and the site isn't ready yet. <br/>Please come back later." %}
+  <div class="govuk-notification-banner govuk-notification-banner--info" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+    <div class="govuk-notification-banner__header">
+      <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+        EMF 2024
+      </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+      <h3 class="govuk-notification-banner__heading">
+        We're not ready yet.
+      </h3>
+      <p class="govuk-body">We're still setting up the game and the site isn't ready yet, but you can already <a href="{% url 'content:play' %}">find out how to play</a>.</p>
+    </div>
+  </div>
   <p class="govuk-body">The Great Camp Hexpansion Quest (GCHQ.NET) is a distributed interactive game for attendees of <a href="https://emfcamp.org">Electromagnetic Field 2024</a>.</p>
   <p class="govuk-body">In the meantime, why not follow us on Mastodon for updates, hints and tricks about this year's game: <a href="https://chaos.social/@GCHQNET/">@GCHQNET@chaos.social</a></p>
   <p class="govuk-body">
