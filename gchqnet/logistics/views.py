@@ -2,14 +2,21 @@ from typing import Any
 
 from django.contrib import messages
 from django.db import models
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, FormView, ListView, TemplateView, UpdateView
+from django.views.generic.detail import SingleObjectMixin
 
 from gchqnet.core.mixins import BreadcrumbsMixin
-from gchqnet.logistics.forms import PlannedLocationCreateForm, PlannedLocationDeleteForm, PlannedLocationEditForm
+from gchqnet.logistics.forms import (
+    PlannedLocationCreateForm,
+    PlannedLocationDeleteForm,
+    PlannedLocationDeployForm,
+    PlannedLocationEditForm,
+)
 from gchqnet.logistics.models import PlannedLocation
-from gchqnet.quest.models.location import Location
+from gchqnet.quest.models.location import Coordinates, Location
 
 from .mixins import AllowedLogisticsAccessMixin
 
@@ -117,6 +124,73 @@ class PlannedLocationEditView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, Upd
 
     def get_success_url(self) -> str:
         return reverse("logistics:planned_edit", args=[self.object.id])
+
+
+class PlannedLocationDeployView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, SingleObjectMixin, FormView):
+    template_name = "pages/logistics/planned_locations/deploy.html"
+    model = PlannedLocation
+    form_class = PlannedLocationDeployForm
+    breadcrumbs = [
+        (reverse_lazy("logistics:home"), "Logistics Admin"),
+        (reverse_lazy("logistics:planned_list"), "Planned Locations"),
+    ]
+
+    def get_initial(self) -> dict[str, Any]:
+        planned = self.get_object()
+        return {
+            "lat": planned.lat,
+            "long": planned.long,
+        }
+
+    def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
+        planned = self.get_object()
+        return super().get_breadcrumbs() + [(None, planned.internal_name), (None, "Deploy")]
+
+    def form_valid(self, form: PlannedLocationDeployForm) -> HttpResponse:
+        assert self.request.user.is_authenticated
+
+        location = Location()
+        location.display_name = self.object.display_name
+        location.internal_name = self.object.internal_name
+        location.hint = self.object.hint
+        location.description = self.object.description
+        location.difficulty = self.object.difficulty
+        location.hexpansion = form.cleaned_data["hexpansion"]
+        location.created_by = self.request.user
+        location.save()
+
+        Coordinates.objects.create(
+            location=location,
+            lat=form.cleaned_data["lat"],
+            long=form.cleaned_data["long"],
+            created_by=self.request.user,
+        )
+        self.object.delete()
+        messages.success(self.request, f"Successfully deployed {location.display_name}")
+        return redirect("logistics:planned_list")
+
+    def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        self.object = self.get_object()
+        if not self.object.is_ready_to_deploy():
+            messages.warning(request, "Please fill out all details before deploying.")
+            return redirect("logistics:planned_edit", self.object.id)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        """
+        Handle POST requests: instantiate a form instance with the passed
+        POST variables and then check if it's valid.
+        """
+        self.object = self.get_object()
+        if not self.object.is_ready_to_deploy():
+            messages.warning(request, "Please fill out all details before deploying.")
+            return redirect("logistics:planned_edit", self.object.id)
+
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 
 class PlannedLocationDeleteView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, DeleteView):  # type: ignore[misc]

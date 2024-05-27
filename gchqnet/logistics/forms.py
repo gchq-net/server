@@ -4,9 +4,12 @@ from crispy_forms_gds.helper import FormHelper
 from crispy_forms_gds.layout import (
     Submit,
 )
+from django import forms
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms import Form, ModelForm
 
 from gchqnet.accounts.models.user import User
+from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.logistics.models import PlannedLocation
 
 
@@ -36,6 +39,30 @@ class PlannedLocationEditForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.add_input(Submit("submit", "Save"))
+
+
+class PlannedLocationDeployForm(forms.Form):
+    checked_location = forms.BooleanField(label="I have checked the location on the map above.")
+    hexpansion = forms.ModelChoiceField(Hexpansion.objects.filter(location__isnull=True))
+    lat = forms.DecimalField(
+        label="Latitude",
+        max_digits=16,
+        decimal_places=13,
+        validators=[MinValueValidator(-90), MaxValueValidator(90)],
+        widget=forms.HiddenInput(),
+    )
+    long = forms.DecimalField(
+        label="Longitude",
+        max_digits=16,
+        decimal_places=13,
+        validators=[MinValueValidator(-180), MaxValueValidator(180)],
+        widget=forms.HiddenInput(),
+    )
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit("submit", "Deploy"))
 
 
 class PlannedLocationDeleteForm(Form):
