@@ -61,3 +61,6 @@ class PlannedLocation(ExportModelOperationsMixin("planned_location"), models.Mod
 
     def __str__(self) -> str:
         return self.internal_name
+
+    def is_ready_to_deploy(self) -> bool:
+        return bool(self.display_name and self.difficulty and self.description and self.lat and self.long)

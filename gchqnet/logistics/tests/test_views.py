@@ -74,5 +74,21 @@ class TestLogisticsPlannedDeleteView(LogisticsAccessTestMixin):
 
 
 @pytest.mark.django_db
+class TestLogisticsPlannedDeployView(LogisticsAccessTestMixin):
+    @property
+    def url(self) -> str:  # type: ignore[override]
+        pl, _ = PlannedLocation.objects.get_or_create(
+            display_name="bar",
+            hint="baz",
+            internal_name="foo",
+            description="test",
+            difficulty=10,
+            lat=1,
+            long=1,
+        )
+        return reverse("logistics:planned_deploy", args=[pl.id])
+
+
+@pytest.mark.django_db
 class TestLogisticsPlannedMapView(LogisticsAccessTestMixin):
     url = reverse("logistics:planned_map")

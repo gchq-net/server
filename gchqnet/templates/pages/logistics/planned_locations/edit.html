@@ -4,9 +4,16 @@
 {% block title %}{{ object }}{% endblock %}
 
 {% block action_buttons %}
-  <a class="govuk-button govuk-button--warning gchqnet-page-header-actions__action" data-module="govuk-button" href="{% url 'logistics:planned_delete' object.id %}">
-    Delete
-  </a>
+  <div class="govuk-button-group gchqnet-page-header-actions__action">
+    {% if object.is_ready_to_deploy %}
+      <a class="govuk-button" data-module="govuk-button" href="{% url 'logistics:planned_deploy' object.id %}">
+        Deploy
+      </a>
+    {% endif %}
+    <a class="govuk-button govuk-button--warning gchqnet-page-header-actions__action" data-module="govuk-button" href="{% url 'logistics:planned_delete' object.id %}">
+      Delete
+    </a>
+  </div>
 {% endblock %}
 
 {% block content %}
