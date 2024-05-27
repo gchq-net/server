@@ -30,6 +30,7 @@ class BasicAchievement(ExportModelOperationsMixin("basic_achievement"), models.M
     display_name = models.CharField(
         "Display name", help_text="This name is shown to players who have the achievement.", max_length=30, unique=True
     )
+    description = models.CharField(max_length=250, blank=True)
     difficulty = models.IntegerField(choices=AchievementDifficulty)
     award_type = models.CharField(max_length=8, choices=BasicAchievementAwardType)
     claim_code = models.CharField(max_length=50, default=generate_claim_code, unique=True)

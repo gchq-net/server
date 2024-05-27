@@ -13,7 +13,7 @@ from gchqnet.achievements.models import BasicAchievement, BasicAchievementAwardT
 class BasicAchievementCreateForm(forms.ModelForm):
     class Meta:
         model = BasicAchievement
-        fields = ("display_name", "difficulty", "award_type")
+        fields = ("display_name", "description", "difficulty", "award_type")
 
     def __init__(self, *args: Any, user: User, **kwargs: Any) -> None:
         self.user = user

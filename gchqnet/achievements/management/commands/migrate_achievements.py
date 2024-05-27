@@ -19,12 +19,13 @@ class Command(BaseCommand):
         skip_checks: bool,
     ) -> None:
         for aid, builtin_achievement in BUILTIN_BASIC_ACHIEVEMENTS.items():
-            difficulty, display_name, award_type = builtin_achievement
+            difficulty, display_name, description, award_type = builtin_achievement
             BasicAchievement.objects.update_or_create(
                 id=aid,
                 defaults={
                     "display_name": display_name,
                     "difficulty": difficulty,
+                    "description": description,
                     "award_type": award_type,
                 },
             )
