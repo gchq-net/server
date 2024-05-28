@@ -43,6 +43,7 @@ class PlannedLocationEditForm(ModelForm):
 
 class PlannedLocationDeployForm(forms.Form):
     checked_location = forms.BooleanField(label="I have checked the location on the map above.")
+    image = forms.ImageField(label="Please take a photo")
     hexpansion = forms.ModelChoiceField(Hexpansion.objects.filter(location__isnull=True))
     lat = forms.DecimalField(
         label="Latitude",

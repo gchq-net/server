@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import uuid
+from typing import Any
+from uuid import uuid4
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils.deconstruct import deconstructible
 from django_prometheus.models import ExportModelOperationsMixin
 
 
@@ -13,6 +16,15 @@ class LocationDifficulty(models.IntegerChoices):
     HARD = 20
     INSANE = 30
     IMPOSSIBLE = 50
+
+
+@deconstructible
+class UploadToPathAndRename:
+    def __call__(self, instance: Any, filename: str) -> str:
+        ext = filename.split(".")[-1]
+        filename = f"{uuid4().hex}.{ext}"
+        # return the whole path to the file
+        return f"location_img/{filename}"
 
 
 class Location(ExportModelOperationsMixin("location"), models.Model):  # type: ignore[misc]
@@ -41,6 +53,7 @@ class Location(ExportModelOperationsMixin("location"), models.Model):  # type: i
     )
     description = models.TextField(help_text="Further description of the location of the installation.", blank=True)
     hexpansion = models.OneToOneField("hexpansion.Hexpansion", on_delete=models.PROTECT, related_name="location")
+    install_image = models.ImageField(upload_to=UploadToPathAndRename(), null=True)
 
     difficulty = models.IntegerField(choices=LocationDifficulty)
 

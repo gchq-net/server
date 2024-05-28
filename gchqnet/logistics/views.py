@@ -160,6 +160,7 @@ class PlannedLocationDeployView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, S
         location.description = self.object.description
         location.difficulty = self.object.difficulty
         location.hexpansion = form.cleaned_data["hexpansion"]
+        location.install_image = form.cleaned_data["image"]
         location.created_by = self.request.user
         location.save()
 
