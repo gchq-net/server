@@ -5,7 +5,9 @@ from typing import Literal, TypedDict
 from django.conf import settings
 from django.urls import reverse
 from django.utils.crypto import constant_time_compare
+from django_prometheus.conf import NAMESPACE
 from notifications.signals import notify
+from prometheus_client import Counter
 
 from gchqnet.accounts.models.badge import Badge
 from gchqnet.achievements.repository import award_first_capture, handle_location_capture_for_groups
@@ -16,6 +18,13 @@ from gchqnet.quest.models.location import Location, LocationDifficulty
 from gchqnet.quest.models.scores import ScoreRecord
 
 from .scores import update_score_for_user
+
+capture_submissions = Counter(
+    "gchqnet_capture_submissions_total",
+    "Number of captures submitted.",
+    ["hexpansion_id", "hexpansion_name", "location_id", "location_name", "username", "success", "repeat"],
+    namespace=NAMESPACE,
+)
 
 
 class CaptureSuccess(TypedDict):
@@ -54,6 +63,15 @@ def record_attempted_capture(
     try:
         location: Location = hexpansion.location
     except Location.DoesNotExist:
+        capture_submissions.labels(
+            hexpansion_id=hexpansion.id,
+            hexpansion_name=hexpansion.human_identifier,
+            location_id="",
+            location_name="",
+            username=badge.user.username,
+            success=0,
+            repeat=0,
+        ).inc()
         return CaptureFailure(result="fail", message="Hexpansion not installed")
 
     expected_response_bytes = badge_response_calculation(
@@ -66,6 +84,15 @@ def record_attempted_capture(
     expected_response_hex = "".join(f"{x:02x}" for x in expected_response_bytes)
 
     if validate_hmac and not constant_time_compare(expected_response_hex, hmac):
+        capture_submissions.labels(
+            hexpansion_id=hexpansion.id,
+            hexpansion_name=hexpansion.human_identifier,
+            location_id=location.id,
+            location_name=location.display_name,
+            username=badge.user.username,
+            success=0,
+            repeat=0,
+        ).inc()
         return CaptureFailure(result="fail", message="Invalid HMAC - Contact Support")
 
     # Log that a capture attempt of a location was made.
@@ -76,6 +103,15 @@ def record_attempted_capture(
     )
 
     if CaptureEvent.objects.filter(created_by=badge.user, location=location).exists():
+        capture_submissions.labels(
+            hexpansion_id=hexpansion.id,
+            hexpansion_name=hexpansion.human_identifier,
+            location_id=location.id,
+            location_name=location.display_name,
+            username=badge.user.username,
+            success=1,
+            repeat=1,
+        ).inc()
         return CaptureSuccess(
             result="success",
             repeat=True,
@@ -97,6 +133,15 @@ def record_attempted_capture(
     award_first_capture(location, badge.user)
     handle_location_capture_for_groups(badge.user, location, update_score=False)
     update_score_for_user(badge.user)
+    capture_submissions.labels(
+        hexpansion_id=hexpansion.id,
+        hexpansion_name=hexpansion.human_identifier,
+        location_id=location.id,
+        location_name=location.display_name,
+        username=badge.user.username,
+        success=1,
+        repeat=0,
+    ).inc()
     return CaptureSuccess(
         result="success",
         repeat=False,

@@ -5,7 +5,9 @@ from uuid import UUID
 
 from django.db import models
 from django.urls import reverse
+from django_prometheus.conf import NAMESPACE
 from notifications.signals import notify
+from prometheus_client import Counter
 
 from gchqnet.accounts.models.user import User
 from gchqnet.quest.models.location import Location
@@ -18,6 +20,21 @@ if TYPE_CHECKING:
     from django.contrib.auth.models import AnonymousUser
 
 AchievementAwardResult = Literal["success", "failure", "already_obtained"]
+
+
+basic_achievement_awards = Counter(
+    "gchqnet_achievement_awards_total",
+    "Number of basic achievements awarded.",
+    ["id", "display_name", "award_type", "difficulty", "username"],
+    namespace=NAMESPACE,
+)
+
+location_group_awards = Counter(
+    "gchqnet_location_group_completions_total",
+    "Number of location groups completed.",
+    ["id", "display_name", "difficulty", "username"],
+    namespace=NAMESPACE,
+)
 
 
 def award_builtin_basic_achievement(
@@ -38,6 +55,9 @@ def award_builtin_basic_achievement(
     )
 
     if created:
+        basic_achievement_awards.labels(
+            achievement_id, achievement.display_name, achievement.award_type, achievement.difficulty, user.username
+        ).inc()
         ScoreRecord.objects.create(
             basic_achievement_event=bae,
             user=user,
@@ -132,6 +152,7 @@ def handle_location_capture_for_groups(user: User, location: Location, *, update
                 defaults={"created_by": user},
             )
             if created:
+                location_group_awards.labels(group.id, group.display_name, group.difficulty, user.username).inc()
                 ScoreRecord.objects.create(
                     location_group_achievement_event=obj,
                     user=user,
