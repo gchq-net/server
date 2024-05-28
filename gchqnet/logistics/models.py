@@ -33,6 +33,7 @@ class PlannedLocation(ExportModelOperationsMixin("planned_location"), models.Mod
         help_text="Further description of the planned location of the installation.", blank=True
     )
     difficulty = models.IntegerField(choices=LocationDifficulty, blank=True, null=True)
+    is_installed = models.BooleanField(default=False)
 
     # Location
     lat = models.DecimalField(

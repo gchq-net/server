@@ -72,7 +72,7 @@ class PlannedLocationsListView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, Li
 
     def get_queryset(self) -> models.QuerySet[PlannedLocation]:
         query = self.get_search_query()
-        return PlannedLocation.objects.filter(
+        return PlannedLocation.objects.filter(is_installed=False).filter(
             models.Q(display_name__icontains=query)
             | models.Q(internal_name__icontains=query)
             | models.Q(hint__icontains=query)
@@ -112,12 +112,14 @@ class PlannedLocationCreateView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, C
 
 class PlannedLocationEditView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, UpdateView):
     template_name = "pages/logistics/planned_locations/edit.html"
-    model = PlannedLocation
     form_class = PlannedLocationEditForm
     breadcrumbs = [
         (reverse_lazy("logistics:home"), "Logistics Admin"),
         (reverse_lazy("logistics:planned_list"), "Planned Locations"),
     ]
+
+    def get_queryset(self) -> models.QuerySet[PlannedLocation]:
+        return PlannedLocation.objects.filter(is_installed=False)
 
     def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
         return super().get_breadcrumbs() + [(None, self.object.internal_name)]
@@ -128,12 +130,14 @@ class PlannedLocationEditView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, Upd
 
 class PlannedLocationDeployView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, SingleObjectMixin, FormView):
     template_name = "pages/logistics/planned_locations/deploy.html"
-    model = PlannedLocation
     form_class = PlannedLocationDeployForm
     breadcrumbs = [
         (reverse_lazy("logistics:home"), "Logistics Admin"),
         (reverse_lazy("logistics:planned_list"), "Planned Locations"),
     ]
+
+    def get_queryset(self) -> models.QuerySet[PlannedLocation]:
+        return PlannedLocation.objects.filter(is_installed=False)
 
     def get_initial(self) -> dict[str, Any]:
         planned = self.get_object()
@@ -165,7 +169,8 @@ class PlannedLocationDeployView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, S
             long=form.cleaned_data["long"],
             created_by=self.request.user,
         )
-        self.object.delete()
+        self.object.is_installed = True
+        self.object.save(update_fields=["is_installed"])
         messages.success(self.request, f"Successfully deployed {location.display_name}")
         return redirect("logistics:planned_list")
 
@@ -202,6 +207,9 @@ class PlannedLocationDeleteView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, D
         (reverse_lazy("logistics:home"), "Logistics Admin"),
         (reverse_lazy("logistics:planned_list"), "Planned Locations"),
     ]
+
+    def get_queryset(self) -> models.QuerySet[PlannedLocation]:
+        return PlannedLocation.objects.filter(is_installed=False)
 
     def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
         return super().get_breadcrumbs() + [

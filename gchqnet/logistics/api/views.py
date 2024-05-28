@@ -31,7 +31,7 @@ class PlannedLocationViewset(viewsets.GenericViewSet):
     def geojson(self, request: Request) -> Response:
         assert request.user.is_authenticated
 
-        planned_locations = PlannedLocation.objects.all()
+        planned_locations = PlannedLocation.objects.filter(is_installed=False)
 
         exclude_id = self.request.GET.get("exclude")
         planned_locations = planned_locations.exclude(id=exclude_id)
