@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.contrib.auth.views import RedirectURLMixin
@@ -17,6 +18,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, TemplateView, UpdateView
+from django_prometheus.conf import NAMESPACE
+from prometheus_client import Counter
 
 from gchqnet.accounts.mixins import LoginPageMixin
 from gchqnet.achievements.repository import award_builtin_basic_achievement
@@ -34,6 +37,14 @@ from .models import User
 
 if TYPE_CHECKING:  # pragma: nocover
     from django.db.models import QuerySet
+
+
+logins_counter = Counter(
+    "gchqnet_account_logins_total",
+    "Number of user logins by method.",
+    ["method"],
+    namespace=NAMESPACE,
+)
 
 
 class AccountSettingsView(LoginRequiredMixin, BreadcrumbsMixin, UpdateView):
@@ -93,6 +104,10 @@ class CredentialsLoginView(LoginPageMixin, BreadcrumbsMixin, DjangoLoginView):
     form_class = CredentialsLoginForm
     breadcrumbs = [(reverse_lazy("accounts:login"), "Login to GCHQ.NET"), (None, "Login using your password")]
 
+    def form_valid(self, form: AuthenticationForm) -> HttpResponse:
+        logins_counter.labels("password").inc()
+        return super().form_valid(form)
+
 
 class BadgeLoginLandingView(LoginPageMixin, BreadcrumbsMixin, TemplateView):
     template_name = "pages/accounts/login_badge_landing.html"
@@ -142,6 +157,7 @@ class BadgeLoginChallengePromptView(LoginPageMixin, RedirectURLMixin, Breadcrumb
         else:
             # Award beyond the badge
             award_builtin_basic_achievement("145047b2-697b-4ce9-9f2d-b3ef03c2e507", form.user)
+            logins_counter.labels("otp").inc()
             auth_login(self.request, form.user)
             return super().form_valid(form)
 
