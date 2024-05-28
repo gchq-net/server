@@ -63,4 +63,4 @@ class PlannedLocation(ExportModelOperationsMixin("planned_location"), models.Mod
         return self.internal_name
 
     def is_ready_to_deploy(self) -> bool:
-        return bool(self.display_name and self.difficulty and self.description and self.lat and self.long)
+        return bool(self.display_name and self.hint and self.difficulty and self.description and self.lat and self.long)
