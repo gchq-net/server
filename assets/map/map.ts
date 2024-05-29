@@ -85,7 +85,7 @@ class EventMap {
             Paths: 'paths_',
             'Buried Services': 'services_',
             Water: 'site_water_',
-            Hexpansions: 'hexpansions',
+            'GCHQ.NET': 'hexpansions',
             DKs: 'dk_',
             'NOC-Physical': 'noc_',
             Power: 'power_',
@@ -96,7 +96,7 @@ class EventMap {
 
         this.map_el = document.getElementById('map')
 
-        const layers_enabled = ['Background', 'Structures', 'Paths', 'Hexpansions']
+        const layers_enabled = ['Background', 'Structures', 'Paths', 'GCHQ.NET']
 
         this.layer_switcher = new LayerSwitcher(this.layers, layers_enabled)
 
