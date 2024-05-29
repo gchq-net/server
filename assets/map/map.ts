@@ -43,7 +43,7 @@ function buildMapStyle(layers: Record<string, string>, hexpansionEndpoint: strin
                 {
                     "type": "Feature",
                     "properties": {},
-                    "geometry": {"type": "Point", "coordinates": [-2.375416, 52.040808]}
+                    "geometry": {"type": "Point", "coordinates": [-2.3755269, 52.0412778]}
                 }
             ],
         }
@@ -85,7 +85,7 @@ class EventMap {
             Paths: 'paths_',
             'Buried Services': 'services_',
             Water: 'site_water_',
-            Hexpansions: 'hexpansions',
+            'GCHQ.NET': 'hexpansions',
             DKs: 'dk_',
             'NOC-Physical': 'noc_',
             Power: 'power_',
@@ -96,7 +96,7 @@ class EventMap {
 
         this.map_el = document.getElementById('map')
 
-        const layers_enabled = ['Background', 'Structures', 'Paths', 'Hexpansions']
+        const layers_enabled = ['Background', 'Structures', 'Paths', 'GCHQ.NET']
 
         this.layer_switcher = new LayerSwitcher(this.layers, layers_enabled)
 
