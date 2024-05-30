@@ -26,7 +26,9 @@
   {% include "components/quest/leaderboard-table.html" with players=page_obj %}
   {% if page_obj %}
     {% include "components/govuk/pagination.html" with extra_classes="gchqnet-pagination--center" %}
-  {% else %}
+  {% elif search_query %}
     <p class="govuk-body">There are no results. Perhaps check that you spelled your search correctly?</p>
+  {% else %}
+    <p class="govuk-body">There aren't any players yet - you'll need to wait until badges are released!</p>
   {% endif %}
 {% endblock %}
