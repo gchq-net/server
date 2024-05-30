@@ -56,7 +56,7 @@ function buildMapStyle(layers: Record<string, string>, hexpansionEndpoint: strin
                 {
                     "type": "Feature",
                     "properties": {},
-                    "geometry": {"type": "Point", "coordinates": [-2.3773782, 52.0422803]}
+                    "geometry": {"type": "Point", "coordinates": [-2.3772806057248, 52.0422999931301]}
                 }
             ],
         }
