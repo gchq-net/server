@@ -10,7 +10,7 @@ from notifications.signals import notify
 from prometheus_client import Counter
 
 from gchqnet.accounts.models.badge import Badge
-from gchqnet.achievements.repository import award_first_capture, handle_location_capture_for_groups
+from gchqnet.achievements.repository import handle_location_capture_for_groups
 from gchqnet.hexpansion.crypto import badge_response_calculation
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.quest.models.captures import CaptureEvent, CaptureLog, RawCaptureEvent
@@ -130,7 +130,7 @@ def record_attempted_capture(
         description=f"You have gained {location.difficulty} points.",
         actions=[{"href": reverse("quest:location_detail", args=[location.id]), "title": "View"}],
     )
-    award_first_capture(location, badge.user)
+    # award_first_capture(location, badge.user)
     handle_location_capture_for_groups(badge.user, location, update_score=False)
     update_score_for_user(badge.user)
     capture_submissions.labels(
