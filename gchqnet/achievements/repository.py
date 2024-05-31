@@ -143,9 +143,24 @@ def has_user_captured_group(user: User, location_group: LocationGroup) -> bool:
     return bool(location_ids_for_group.count()) and (of_which_found == location_ids_for_group.count())
 
 
+def has_user_started_group(user: User, location_group: LocationGroup) -> bool:
+    location_ids_for_group = location_group.locations.values("id")
+    of_which_found = user.capture_events.filter(location__in=location_ids_for_group).count()
+    return of_which_found == 1
+
+
 def handle_location_capture_for_groups(user: User, location: Location, *, update_score: bool = False) -> None:
     for group in location.groups.all():
-        if has_user_captured_group(user, group):
+        if has_user_started_group(user, group):
+            notify.send(
+                user,
+                recipient=user,
+                verb="found your first location in",
+                target=group,
+                description="You have started to find locations in a group. Try and find the rest!",
+                actions=[{"href": reverse("achievements:location_group_detail", args=[group.id]), "title": "View"}],
+            )
+        elif has_user_captured_group(user, group):
             obj, created = LocationGroupAchievementEvent.objects.get_or_create(
                 location_group=group,
                 user=user,
