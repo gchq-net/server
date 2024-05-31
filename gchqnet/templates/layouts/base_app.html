@@ -10,6 +10,18 @@
       {% include "components/govuk/breadcrumbs.html" %}
     {% endblock %}
     <main class="govuk-main-wrapper govuk-main-class" id="main-content">
+      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+        <div class="govuk-notification-banner__header">
+          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+            Important
+          </h2>
+        </div>
+        <div class="govuk-notification-banner__content">
+          <p class="govuk-notification-banner__heading">
+            You will need to update your badge firmware before you can use our app to play!
+          </p>
+        </div>
+      </div>
       {% block header %}
         <div class="gchqnet-page-header-actions">
           <div class="gchqnet-page-header-actions__title">
