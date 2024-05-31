@@ -17,6 +17,7 @@
           {% difficulty_tag lo.difficulty %}
         </td>
         <td class="govuk-table__cell">
+          <a class="govuk-link" href="{% url 'logistics:locations_edit' lo.id %}">Edit</a>
           <a class="govuk-link" href="{% url 'quest:location_detail' lo.id %}">View</a>
         </td>
       </tr>

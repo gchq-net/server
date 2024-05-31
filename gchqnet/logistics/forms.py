@@ -11,6 +11,7 @@ from django.forms import Form, ModelForm
 from gchqnet.accounts.models.user import User
 from gchqnet.hexpansion.models import Hexpansion
 from gchqnet.logistics.models import PlannedLocation
+from gchqnet.quest.models.location import Location
 
 
 class PlannedLocationCreateForm(ModelForm):
@@ -71,3 +72,35 @@ class PlannedLocationDeleteForm(Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.add_input(Submit("submit", "Confirm Delete", css_class="govuk-button--warning"))
+
+
+class LocationEditForm(ModelForm):
+    lat = forms.DecimalField(
+        label="Latitude",
+        max_digits=16,
+        decimal_places=13,
+        validators=[MinValueValidator(-90), MaxValueValidator(90)],
+        widget=forms.HiddenInput(),
+    )
+    long = forms.DecimalField(
+        label="Longitude",
+        max_digits=16,
+        decimal_places=13,
+        validators=[MinValueValidator(-180), MaxValueValidator(180)],
+        widget=forms.HiddenInput(),
+    )
+
+    class Meta:
+        model = Location
+        fields = ("display_name", "hint", "internal_name", "difficulty", "description")
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        lat_initial = kwargs.pop("lat", None)
+        long_initial = kwargs.pop("long", None)
+        super().__init__(*args, **kwargs)
+
+        self.fields["lat"].initial = lat_initial
+        self.fields["long"].initial = long_initial
+
+        self.helper = FormHelper()
+        self.helper.add_input(Submit("submit", "Save"))

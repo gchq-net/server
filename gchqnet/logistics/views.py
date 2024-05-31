@@ -10,6 +10,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from gchqnet.core.mixins import BreadcrumbsMixin
 from gchqnet.logistics.forms import (
+    LocationEditForm,
     PlannedLocationCreateForm,
     PlannedLocationDeleteForm,
     PlannedLocationDeployForm,
@@ -49,6 +50,40 @@ class LocationsListView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, ListView)
             search_query=self.get_search_query(),
             **kwargs,
         )
+
+
+class LocationEditView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, UpdateView):
+    model = Location
+    form_class = LocationEditForm
+    template_name = "pages/logistics/locations/edit.html"
+    breadcrumbs = [
+        (reverse_lazy("logistics:home"), "Logistics Admin"),
+        (reverse_lazy("logistics:locations_list"), "Locations"),
+    ]
+
+    def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
+        return super().get_breadcrumbs() + [(None, self.object.display_name)]
+
+    def get_success_url(self) -> str:
+        return reverse("logistics:locations_edit", args=[self.object.id])
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        if self.object.coordinates:
+            kwargs["lat"] = self.object.coordinates.lat
+            kwargs["long"] = self.object.coordinates.long
+        return kwargs
+
+    def form_valid(self, form: LocationEditForm) -> HttpResponse:
+        if (
+            self.object.coordinates
+            and (lat := form.cleaned_data.get("lat"))
+            and (long := form.cleaned_data.get("long", None))
+        ):
+            self.object.coordinates.lat = lat
+            self.object.coordinates.long = long
+            self.object.coordinates.save()
+        return super().form_valid(form)
 
 
 class LocationMapView(AllowedLogisticsAccessMixin, BreadcrumbsMixin, TemplateView):
