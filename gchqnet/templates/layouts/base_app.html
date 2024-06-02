@@ -21,6 +21,7 @@
         </div>
       {% endblock %}
       {% include "components/messages.html" %}
+      {% include "components/govuk/notification-banner.html" with title="Urgent" heading="A hexpansion has been removed. If you see someone with a detached one or any others missing, call 4247 immediately." %}
       {% block content %}{% endblock %}
     </main>
   </div>
