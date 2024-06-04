@@ -78,19 +78,22 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
     def geojson(self, request: Request) -> Response:
         assert request.user.is_authenticated
 
-        captures = request.user.capture_events.select_related("location", "location__coordinates")
+        if settings.GAME_MODE == "post":
+            locations = Location.objects.all()
+        else:
+            locations = Location.objects.filter(capture_events__in=request.user.capture_events.values("id"))
 
         if group_query := request.GET.get("group"):
             try:
                 group = LocationGroup.objects.get(id=group_query)
-                captures = captures.filter(location__groups=group)
+                locations = locations.filter(groups=group)
             except LocationGroup.DoesNotExist:
                 raise
 
-        def _difficulty_label(capture: CaptureEvent) -> str:
-            return LocationDifficulty(capture.location.difficulty).label
+        def _difficulty_label(location: Location) -> str:
+            return LocationDifficulty(location.difficulty).label
 
-        def _colour_for_difficulty(capture: CaptureEvent) -> str:
+        def _colour_for_difficulty(location: Location) -> str:
             lut = {
                 LocationDifficulty.EASY.value: "#648FFF",
                 LocationDifficulty.MEDIUM.value: "#785EF0",
@@ -98,11 +101,11 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
                 LocationDifficulty.INSANE.value: "#FE6100",
                 LocationDifficulty.IMPOSSIBLE.value: "#1AFF1A",
             }
-            return lut[capture.location.difficulty]
+            return lut[location.difficulty]
 
-        def _has_coords(capture: CaptureEvent) -> bool:
+        def _has_coords(location: Location) -> bool:
             try:
-                _ = capture.location.coordinates
+                _ = location.coordinates
                 return True
             except ObjectDoesNotExist:
                 return False
@@ -114,23 +117,24 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
                     "type": "Feature",
                     "properties": {
                         "id": idx,
-                        "name": capture.location.display_name,
-                        "difficulty": _difficulty_label(capture),
-                        "colour": _colour_for_difficulty(capture),
+                        "name": location.display_name,
+                        "difficulty": _difficulty_label(location),
+                        "colour": _colour_for_difficulty(location),
                     },
                     "geometry": {
                         "coordinates": [
-                            capture.location.coordinates.long,
-                            capture.location.coordinates.lat,
+                            location.coordinates.long,
+                            location.coordinates.lat,
                         ],
                         "type": "Point",
                     },
                     "id": 0,
                 }
-                for idx, capture in enumerate(captures)
-                if _has_coords(capture)
+                for idx, location in enumerate(locations)
+                if _has_coords(location)
             ],
         }
+
         serializer = LocationGeoJSONSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, content_type="application/geo+json")
