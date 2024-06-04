@@ -25,7 +25,7 @@ def _generate_capture(user: User) -> Location:
         app_rev="0.0.0",
         fw_rev="0.0.0",
     )
-    location.first_capture_event.delete()
+    # location.first_capture_event.delete()
     update_score_for_user(user)
     return location
 
