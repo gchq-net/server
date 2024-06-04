@@ -1,5 +1,6 @@
 from typing import Any
 
+from django.conf import settings
 from django.db.models.query import QuerySet
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, TemplateView
@@ -23,7 +24,7 @@ class LocationDetailView(BreadcrumbsMixin, DetailView):
             return None
 
     def get_breadcrumbs(self) -> list[tuple[str | None, str]]:
-        if self.get_capture_event():
+        if self.get_capture_event() or settings.GAME_MODE == "post":
             display_name = self.object.display_name
         else:
             display_name = "???"

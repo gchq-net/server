@@ -23,10 +23,10 @@
             Achieved {{ event.basic_achievement.display_name }}
           {% elif event.type == 'first_capture' %}
             {# First to capture #}
-            First to capture <a class="govuk-link" href="{% url 'quest:location_detail' event.location_id %}">{% if event.location_id in user_found_locations %}{{ event.location }}{% else %}???{% endif %}</a>
+            First to capture <a class="govuk-link" href="{% url 'quest:location_detail' event.location_id %}">{% if event.location_id in user_found_locations or GAME_MODE == "post" %}{{ event.location }}{% else %}???{% endif %}</a>
           {% else %}
             {# capture #}
-            Captured <a class="govuk-link" href="{% url 'quest:location_detail' event.location_id %}">{% if event.location_id in user_found_locations %}{{ event.location }}{% else %}???{% endif %}</a>
+            Captured <a class="govuk-link" href="{% url 'quest:location_detail' event.location_id %}">{% if event.location_id in user_found_locations or GAME_MODE == "post" %}{{ event.location }}{% else %}???{% endif %}</a>
           {% endif %}
         </td>
         <td class="govuk-table__cell">

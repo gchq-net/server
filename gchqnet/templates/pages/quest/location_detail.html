@@ -2,13 +2,13 @@
 {% load location_tags static %}
 {% load humanize %}
 
-{% block title %}{% if capture_event %}{{ object.display_name }}{% else %}???{% endif %}{% endblock %}
+{% block title %}{% if capture_event or GAME_MODE == "post" %}{{ object.display_name }}{% else %}???{% endif %}{% endblock %}
 
 {% block header %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
       <div class="gchqnet-page-header-actions__title">
-        <h1 class="govuk-heading-xl">{% if capture_event %}{{ object.display_name }}{% else %}???{% endif %}</h1>
+        <h1 class="govuk-heading-xl">{% if capture_event or GAME_MODE == "post" %}{{ object.display_name }}{% else %}???{% endif %}</h1>
       </div>
     </div>
     <div class="govuk-grid-column-one-half">
@@ -53,7 +53,7 @@
             Name
           </dt>
           <dd class="govuk-summary-list__value">
-            {% if capture_event %}{{ object.display_name }}{% else %}???{% endif %}
+            {% if capture_event or GAME_MODE == "post" %}{{ object.display_name }}{% else %}???{% endif %}
           </dd>
         </div>
       </dl>
