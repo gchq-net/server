@@ -16,4 +16,83 @@
 
 {% block content %}
   <h2 class="govuk-heading-l">Thanks For Playing!</h2>
+  <p class="govuk-body">Thank you all so much for playing at EMF2024. We've had an overwhelming positive response to GCHQ.NET: Great Camp Hexpansion Quest and are delighted to say that we will be returning with a new exciting game in 2026</p>
+  <p class="govuk-body">Our personal highlight was when a child told us how they had a favourite slot on their badge to put our hexpansions into.</p>
+
+  <h2 class="govuk-heading-l">Where were they all?</h2>
+  <p class="govuk-body">Many of you have asked us to reveal all of the locations that you were unable to find. We've updated our map to show all locations to everyone, and the names of them should also now show in My Profile.</p>
+
+  <h2 class="govuk-heading-l">Keep in Touch & Feedback</h2>
+  <p class="govuk-body">Several of you asked if you'd be able to help plan our next game. We'd love to have more of you on board, and have setup a discord server that you can join. Everyone is welcome.</p>
+  <p class="govuk-body">Please send us your photos and feedback via Discord, Mastodon or email: <a href="mailto:emf@gchq.net">emf@gchq.net</a></p>
+
+  <h2 class="govuk-heading-l">Statistics</h2>
+  <p class="govuk-body">It wouldn't be EMF without some statistics!</p>
+
+  <div class="govuk-inset-text">
+    We can only measure data that was uploaded from badges using our app. Some of these figures may be higher than measured.
+  </div>
+
+  <h3 class="govuk-heading-m">Graphs</h3>
+
+  <h3 class="govuk-heading-m">Figures</h3>
+
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Number of players
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ player_count }}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Number of hexpansions
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ hexpansion_count }}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Total unique captures
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ capture_count }}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Total insertions logged
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ capture_log_count }}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Number of private leaderboards
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ leaderboard_count }}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Pints of water in our scoreboard TV
+      </dt>
+      <dd class="govuk-summary-list__value">
+        1
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Faxes received
+      </dt>
+      <dd class="govuk-summary-list__value">
+        18
+      </dd>
+    </div>
+  </dl>
 {% endblock %}
