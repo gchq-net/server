@@ -1,0 +1,19 @@
+{% extends "layouts/base_app.html" %}
+{% load static %}
+
+{% block title %}Great Camp Hexpansion Quest{% endblock %}
+
+{% block action_buttons %}
+  <div class="govuk-button-group gchqnet-page-header-actions__action">
+    <a class="govuk-button" data-module="govuk-button" href="{% url 'quest:map' %}">
+      Map
+    </a>
+    <a class="govuk-button" data-module="govuk-button" href="{% url 'quest:global-scoreboard' %}">
+      Scores
+    </a>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <h2 class="govuk-heading-l">Thanks For Playing!</h2>
+{% endblock %}

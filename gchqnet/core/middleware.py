@@ -21,7 +21,9 @@ class PublicAccessMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
-        if (not (settings.PUBLIC_MODE or request.user.is_authenticated)) and self._request_is_affected(request):
+        if (not (settings.GAME_MODE != "holding" or request.user.is_authenticated)) and self._request_is_affected(
+            request
+        ):
             return redirect("content:holding")
 
         response = self.get_response(request)

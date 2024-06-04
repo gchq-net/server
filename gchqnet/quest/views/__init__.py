@@ -1,3 +1,4 @@
+from .home import HomepageView
 from .leaderboard import (
     LeaderboardCreateView,
     LeaderboardDetailActivityView,
@@ -13,6 +14,7 @@ from .scoreboard import GlobalRecentActivityView, GlobalScoreboardView
 __all__ = [
     "GlobalRecentActivityView",
     "GlobalScoreboardView",
+    "HomepageView",
     "LeaderboardCreateView",
     "LeaderboardDetailView",
     "LeaderboardDetailActivityView",

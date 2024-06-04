@@ -7,7 +7,7 @@
                 <span class="gchqnet-header__logotext">GCHQ.NET</span>
             </a>
         </div>
-        {% if PUBLIC_MODE or request.user.is_authenticated %}
+        {% if GAME_MODE != "holding" or request.user.is_authenticated %}
             <div class="govuk-header__content">
                 <a href="{% url 'quest:home' %}" class="govuk-header__link govuk-header__service-name">
                     Great Camp Hexpansion Quest
@@ -18,11 +18,19 @@
                     </button>
                     {% with view=request.resolver_match.view_name %}
                         <ul id="navigation" class="govuk-header__navigation-list">
-                            <li class="govuk-header__navigation-item {% if view == "quest:home" %}govuk-header__navigation-item--active{% endif %}">
-                                <a class="govuk-header__link" href="{% url 'quest:home' %}">
-                                    Live Scores
-                                </a>
-                            </li>
+                            {% if GAME_MODE != "post" %}
+                                <li class="govuk-header__navigation-item {% if view == "quest:home" %}govuk-header__navigation-item--active{% endif %}">
+                                    <a class="govuk-header__link" href="{% url 'quest:home' %}">
+                                        Live Scores
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="govuk-header__navigation-item {% if view == "quest:global-scoreboard" %}govuk-header__navigation-item--active{% endif %}">
+                                    <a class="govuk-header__link" href="{% url 'quest:global-scoreboard' %}">
+                                        Scores
+                                    </a>
+                                </li>
+                            {% endif %}
                             <li class="govuk-header__navigation-item {% if view == "content:play" %}govuk-header__navigation-item--active{% endif %}">
                                 <a class="govuk-header__link" href="{% url 'content:play' %}">
                                     How to Play

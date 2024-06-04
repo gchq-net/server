@@ -27,5 +27,5 @@ CSRF_COOKIE_SECURE = True
 
 USE_X_FORWARDED_HOST = True
 
-PUBLIC_MODE = os.environ.get("PUBLIC_MODE", "false") == "true"
+GAME_MODE = os.environ.get("PUBLIC_MODE", "holding")
 PLAUSIBLE_DOMAIN = os.environ.get("PLAUSIBLE_DOMAIN")

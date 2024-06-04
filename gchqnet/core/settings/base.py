@@ -149,7 +149,11 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 # GCHQNET
-PUBLIC_MODE = True
+# GAME_MODE must be one of:
+# - holding
+# - live
+# - post
+GAME_MODE = "live"
 
 # Crispy Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = ["gds"]

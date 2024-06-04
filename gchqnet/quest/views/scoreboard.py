@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from django.conf import settings
 from django.contrib import messages
+from django.http import HttpRequest
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView
 
@@ -19,6 +22,17 @@ class GlobalScoreboardView(BreadcrumbsMixin, ListView):
     paginate_by = 15
     ordering = ("rank",)
     breadcrumbs = [(None, "Global Leaderboard")]
+    is_root_page = False
+
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Any:
+        # If not post game mode, redirect to the home page version.
+        if not self.is_root_page and settings.GAME_MODE != "post":
+            return redirect("quest:home")
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_search_query(self) -> str:
         if query := self.request.GET.get("search", ""):

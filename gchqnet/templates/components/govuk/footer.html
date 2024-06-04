@@ -3,7 +3,7 @@
   <div class="govuk-width-container">
     <div class="govuk-footer__meta">
       <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
-        {% if PUBLIC_MODE or request.user.is_authenticated %}
+        {% if GAME_MODE != "holding" or request.user.is_authenticated %}
           <h2 class="govuk-visually-hidden">Support links</h2>
           <ul class="govuk-footer__inline-list">
             <li class="govuk-footer__inline-list-item">
