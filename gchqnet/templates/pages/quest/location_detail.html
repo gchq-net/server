@@ -15,7 +15,7 @@
       <link rel="stylesheet" href="{% static 'map/map.css' %}">
       <script src="{% static 'map/map.js' %}"></script>
       <noscript>You need Javascript enabled to view this map.</noscript>
-      {% if capture_event and object.coordinates %}
+      {% if capture_event and object.coordinates or GAME_MODE == "post" and object.coordinates %}
         <div id="map" data-zoom="18" data-lat="{{ object.coordinates.lat }}" data-long="{{ object.coordinates.long }}" style="min-height: 300px;"></div>
       {% else %}
         <div id="map" data-zoom="14" data-lat="52.04161" data-long="-2.37749" style="min-height: 300px;"></div>

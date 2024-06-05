@@ -23,8 +23,8 @@
   <p class="govuk-body">Many of you have asked us to reveal all of the locations that you were unable to find. We've updated our map to show all locations to everyone, and the names of them should also now show in My Profile.</p>
 
   <h2 class="govuk-heading-l">Keep in Touch & Feedback</h2>
-  <p class="govuk-body">Several of you asked if you'd be able to help plan our next game. We'd love to have more of you on board, and have setup a discord server that you can join. Everyone is welcome.</p>
-  <p class="govuk-body">Please send us your photos and feedback via Discord, Mastodon or email: <a href="mailto:emf@gchq.net">emf@gchq.net</a></p>
+  <p class="govuk-body">Several of you asked if you'd be able to help plan our next game. We'd love to have more of you on board, and have setup a <a href="https://discord.gg/7WUDNeH7DK">Discord server</a> that you can join. Everyone is welcome.</p>
+  <p class="govuk-body">Please send us your photos and feedback via <a href="https://discord.gg/7WUDNeH7DK">Discord</a>, <a href="https://chaos.social/@GCHQNET">Mastodon</a> or email: <a href="mailto:emf@gchq.net">emf@gchq.net</a></p>
 
   <h2 class="govuk-heading-l">Statistics</h2>
   <p class="govuk-body">It wouldn't be EMF without some statistics!</p>
@@ -34,13 +34,25 @@
   </div>
 
   <h3 class="govuk-heading-m">Graphs</h3>
+  <div class="gchqnet-thanks__image_container">
+    <figure>
+      <img class="gchqnet-thanks__image" src="{% static 'img/thanks/captures.png' %}" alt="A graph of captures per hour."/>
+      <figcaption class="govuk-body gchqnet-thanks__image_caption">Some of you were up playing all night!</figcaption>
+    </figure>
+  </div>
+  <div class="gchqnet-thanks__image_container">
+    <figure>
+      <img class="gchqnet-thanks__image" src="{% static 'img/thanks/views.png' %}" alt="A graph of page hits. There is a spike for each day of EMF."/>
+      <figcaption class="govuk-body gchqnet-thanks__image_caption">We think the 5k hits was probably from multiple devices per player.</figcaption>
+    </figure>
+  </div>
 
   <h3 class="govuk-heading-m">Figures</h3>
 
   <dl class="govuk-summary-list">
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
-        Players
+        Players (Field Agents)
       </dt>
       <dd class="govuk-summary-list__value">
         {{ player_count }} registered badges
@@ -84,6 +96,14 @@
       </dt>
       <dd class="govuk-summary-list__value">
         1
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Hexpansions that went "missing"
+      </dt>
+      <dd class="govuk-summary-list__value">
+        4
       </dd>
     </div>
     <div class="govuk-summary-list__row">

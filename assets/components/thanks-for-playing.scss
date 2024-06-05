@@ -1,4 +1,4 @@
-.gchqnet-play {
+.gchqnet-thanks {
     &__image_container {
         display: flex;
         align-items: center;
@@ -6,7 +6,8 @@
     }
 
     &__image {
-        width: 75%;
+        width: 300px;
+        max-width: 500px;
     }
 
     &__image_caption {
