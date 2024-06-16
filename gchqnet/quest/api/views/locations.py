@@ -74,14 +74,15 @@ class LocationViewset(viewsets.ReadOnlyModelViewSet):
             200: LocationGeoJSONSerializer,
         },
     )
-    @action(url_path="my-finds", methods=["GET"], detail=False)
+    @action(url_path="my-finds", methods=["GET"], detail=False, permission_classes=[permissions.AllowAny])
     def geojson(self, request: Request) -> Response:
-        assert request.user.is_authenticated
-
         if settings.GAME_MODE == "post":
             locations = Location.objects.all()
         else:
-            locations = Location.objects.filter(capture_events__in=request.user.capture_events.values("id"))
+            if request.user.is_authenticated:
+                locations = Location.objects.filter(capture_events__in=request.user.capture_events.values("id"))
+            else:
+                locations = Location.objects.none()
 
         if group_query := request.GET.get("group"):
             try:

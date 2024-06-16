@@ -168,8 +168,8 @@ class TestLocationGeoJSONAPI:
     def test_get_unauthenticated(self, client: Client) -> None:
         resp = client.get(self.url)
 
-        assert resp.status_code == HTTPStatus.FORBIDDEN
-        assert resp.json() == {"detail": "Authentication credentials were not provided."}
+        assert resp.status_code == HTTPStatus.OK
+        assert resp.json() == {"features": [], "type": "FeatureCollection"}
 
     def test_get_no_locations(self, client: Client, user: User) -> None:
         client.force_login(user)
